@@ -1,0 +1,7 @@
+obj
+bin
+.vs
+.nuget
+packages
+/ElectionStatistics.ManagementConsole/appsettings.json
+/ElectionStatistics.WebSite/appsettings.Development.json

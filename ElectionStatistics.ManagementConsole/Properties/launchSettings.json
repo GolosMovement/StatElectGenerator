@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ElectionStatistics.ManagementConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "Download-ElectionResults 100100067795849"
+    }
+  }
+}
