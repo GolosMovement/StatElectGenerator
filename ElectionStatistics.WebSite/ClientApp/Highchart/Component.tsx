@@ -1,7 +1,8 @@
 import * as Highcharts from 'highcharts';
 import * as React from 'react';
 
-export class HighchartComponent extends React.Component<{}, {}> {
+
+export class HighchartComponent extends React.Component<Highcharts.Options, {}> {
     private chartRef?: HTMLElement;
    
     public componentDidMount() {
@@ -18,28 +19,11 @@ export class HighchartComponent extends React.Component<{}, {}> {
 
     private renderChart() {
         Highcharts.chart({
+            ...this.props,
             chart: {
-                type: 'bar',
+                ...this.props.chart,
                 renderTo: this.chartRef,
-            },
-            title: {
-                text: 'Fruit Consumption'
-            },
-            xAxis: {
-                categories: ['Apples', 'Bananas', 'Oranges']
-            },
-            yAxis: {
-                title: {
-                    text: 'Fruit eaten'
-                }
-            },
-            series: [{
-                name: 'Jane',
-                data: [1, 0, 4]
-            }, {
-                name: 'John',
-                data: [5, 7, 3]
-            }]
-        })
+            }
+        } as Highcharts.Options);
     }
 }

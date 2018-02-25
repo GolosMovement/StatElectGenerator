@@ -16,14 +16,21 @@ interface ChartPageState {
 }
 
 // At runtime, Redux will merge together...
-type ChartsPageProps = 
+type ChartPageProps = 
     ChartPageState & 
     typeof chartActionCreators &
     RouteComponentProps<ChartPageRouteProps>
 
-class ChartPagePresenter extends React.Component<ChartsPageProps, {}> {
+class ChartPagePresenter extends React.Component<ChartPageProps, {}> {
     public componentWillMount() {
         this.props.requestElections();
+        if (this.props.chart.showChart && this.props.chart.selectedElectionId != null) {
+            this.props.requestChartData({
+                electionId: this.props.chart.selectedElectionId,
+                candidateId: 20,
+                stepSize: 1
+            });
+        }
     }
 
     public render() {
@@ -87,8 +94,17 @@ class ChartPagePresenter extends React.Component<ChartsPageProps, {}> {
     }
 
     private renderChart() {
-        if (this.props.chart.showChart) {
-            return <HighchartComponent />;
+        if (this.props.chart.showChart && this.props.chart.isDataLoaded) {
+            return <HighchartComponent 
+                title={{ text: '' }}
+                chart={{ type: 'column' }}
+                yAxis={{
+                    title: {
+                        text: 'Явка'
+                    }
+                }}
+                series={this.props.chart.series}
+            />;
         }
         else {
             return null;
