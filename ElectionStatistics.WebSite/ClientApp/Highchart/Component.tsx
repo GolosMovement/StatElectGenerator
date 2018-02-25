@@ -22,6 +22,7 @@ export class HighchartComponent extends React.Component<Highcharts.Options, {}> 
             ...this.props,
             chart: {
                 ...this.props.chart,
+                zoomType: "x",
                 renderTo: this.chartRef,
             }
         } as Highcharts.Options);
