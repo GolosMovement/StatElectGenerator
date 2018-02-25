@@ -4,8 +4,6 @@ import { RouteComponentProps, Link } from 'react-router-dom';
 import * as QueryString from 'query-string'
 
 import Select, { Option } from 'react-select';
-import 'react-select/dist/react-select.css';
-
 
 import { LazyItems } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
@@ -71,10 +69,20 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
 
     public render() {
         return (
-            <div>
-                {this.renderSelect()}
-                {this.renderButton()}
-                {this.renderChart()}
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-md-3">
+                        {this.renderSelect()}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-3">
+                        {this.renderButton()}
+                    </div>
+                </div>
+                <div className="row">
+                    {this.renderChart()}
+                </div>
             </div>
         );
     }
@@ -129,7 +137,7 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
             <Link 
                 className={className}
                 disabled={disabled}
-                to={{ pathname: "/histogram", search: QueryString.stringify(queryParams)}}>
+                to={{ search: QueryString.stringify(queryParams)}}>
                 Построить гистограмму
             </Link>
         );
@@ -152,7 +160,7 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
                 chart={{ type: 'column' }}
                 yAxis={{
                     title: {
-                        text: 'Явка'
+                        text: 'Количество избирателей зарегистрированных на участках'
                     }
                 }}
                 series={this.state.chart.series}
