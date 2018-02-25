@@ -32,11 +32,8 @@ interface ChartPageState {
     chart: ChartState;
 }
 
-class NumberSelect extends Select<number> {
-}
-
-export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
-    constructor(props: ChartPageProps) {
+export abstract class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
+    constructor(private chartType: string, props: ChartPageProps) {
         super(props);
 
         this.state = this.getStateWithRouteProps({
@@ -122,7 +119,6 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
         if (this.state.elections.isLoading) {
             return (
                 <Select
-                    name="form-field-name"
                     isLoading={true}
                 />);
         }
@@ -132,7 +128,7 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
 
             return (
                 <Select
-                    name="form-field-name"
+                    clearable={false}
                     onChange={this.handleElectionSelected}
                     value={this.state.chart.electionId}
                     options={options}
@@ -181,7 +177,6 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
         else if (this.state.candidates.isLoading) {
             return (
                 <Select
-                    name="form-field-name"
                     isLoading={true}
                 />);
         }
@@ -191,7 +186,7 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
 
             return (
                 <Select
-                    name="form-field-name"
+                    clearable={false}
                     onChange={this.handleCandidateSelected}
                     value={this.state.chart.candidateId}
                     options={options}
@@ -218,10 +213,12 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
                 className={className}
                 disabled={disabled}
                 to={{ search: QueryString.stringify(queryParams)}}>
-                Построить гистограмму
+                Построить
             </Link>
         );
     }
+
+    protected abstract loadChartData() : Promise<Highcharts.IndividualSeriesOptions[]>;
 
     private tryLoadChartData() {
         if (this.state.chart.electionId != null &&
@@ -234,11 +231,7 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
                 }
             });
             
-            ChartsController.Instance.getHistogramData({
-                    electionId: this.state.chart.electionId,
-                    candidateId: this.state.chart.candidateId,
-                    stepSize: 1
-                })
+            this.loadChartData()
                 .then(series => {
                     this.setState({
                         ...this.state,
@@ -266,7 +259,7 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
         else if (this.state.chart.series != null) {
             return <HighchartComponent 
                 title={{ text: '' }}
-                chart={{ type: 'column' }}
+                chart={{ type: this.chartType }}
                 yAxis={{
                     title: {
                         text: 'Количество избирателей зарегистрированных на участках'
@@ -291,5 +284,32 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
                 candidateId: routeProps.candidateId
             }
         };
+    }
+}
+
+export class HistogramPage extends ChartPage {
+    constructor(props: ChartPageProps){
+        super("column", props);
+    }
+
+    protected loadChartData(): Promise<Highcharts.IndividualSeriesOptions[]> {
+        return ChartsController.Instance.getHistogramData({
+            electionId: this.state.chart.electionId as number,
+            candidateId: this.state.chart.candidateId as number,
+            stepSize: 1
+        });
+    }
+}
+
+export class ScatterplotPage extends ChartPage {
+    constructor(props: ChartPageProps){
+        super("scatter", props);
+    }
+
+    protected loadChartData(): Promise<Highcharts.IndividualSeriesOptions[]> {
+        return ChartsController.Instance.getScatterplotData({
+            electionId: this.state.chart.electionId as number,
+            candidateId: this.state.chart.candidateId as number
+        });
     }
 }

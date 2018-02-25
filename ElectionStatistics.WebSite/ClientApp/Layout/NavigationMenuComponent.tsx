@@ -13,6 +13,11 @@ export class NavigationMenuComponent extends React.Component<{}, {}> {
                                 <span className='glyphicon glyphicon-th'></span> Гистограмма
                             </NavLink>
                         </li>
+                        <li>
+                            <NavLink to={ '/scatterplot' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-th'></span> Скаттерплот
+                            </NavLink>
+                        </li>
                     </ul>
                 </div>
             </div>
