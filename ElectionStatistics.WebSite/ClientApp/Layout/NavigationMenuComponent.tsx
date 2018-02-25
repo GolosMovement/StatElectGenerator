@@ -5,26 +5,12 @@ export class NavigationMenuComponent extends React.Component<{}, {}> {
     public render() {
         return <div className='main-nav'>
                 <div className='navbar navbar-inverse'>
-                <div className='navbar-header'>
-                    <button type='button' className='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
-                        <span className='sr-only'>Toggle navigation</span>
-                        <span className='icon-bar'></span>
-                        <span className='icon-bar'></span>
-                        <span className='icon-bar'></span>
-                    </button>
-                    <Link className='navbar-brand' to={ '/' }>Электоральная статистика</Link>
-                </div>
                 <div className='clearfix'></div>
                 <div className='navbar-collapse collapse'>
                     <ul className='nav navbar-nav'>
                         <li>
-                            <NavLink exact to={ '/' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-home'></span> О сайте
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to={ '/charts' } activeClassName='active'>
-                                <span className='glyphicon glyphicon-th'></span> Графики
+                            <NavLink to={ '/histogram' } activeClassName='active'>
+                                <span className='glyphicon glyphicon-th'></span> Гистограмма
                             </NavLink>
                         </li>
                     </ul>

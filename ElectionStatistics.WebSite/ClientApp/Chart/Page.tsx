@@ -6,22 +6,22 @@ import * as QueryString from 'query-string'
 import Select, { Option } from 'react-select';
 import { HighchartComponent } from '../Highchart/Component';
 
-import { ChartsState, chartsActionCreators, ChartsPageRouteProps } from './State';
+import { ChartState, chartActionCreators, ChartPageRouteProps } from './State';
 import { ElectionsState } from '../Elections/State';
 import { ApplicationState } from '../ApplicationState';
 
-interface ChartsPageState {
+interface ChartPageState {
     elections: ElectionsState,
-    charts: ChartsState
+    chart: ChartState
 }
 
 // At runtime, Redux will merge together...
 type ChartsPageProps = 
-    ChartsPageState & 
-    typeof chartsActionCreators &
-    RouteComponentProps<ChartsPageRouteProps>
+    ChartPageState & 
+    typeof chartActionCreators &
+    RouteComponentProps<ChartPageRouteProps>
 
-class ChartsPagePresenter extends React.Component<ChartsPageProps, {}> {
+class ChartPagePresenter extends React.Component<ChartsPageProps, {}> {
     public componentWillMount() {
         this.props.requestElections();
     }
@@ -52,7 +52,7 @@ class ChartsPagePresenter extends React.Component<ChartsPageProps, {}> {
                 <Select
                     name="form-field-name"
                     onChange={this.handleChange}
-                    value={this.props.charts.selectedElectionId}
+                    value={this.props.chart.selectedElectionId}
                     options={options}
                 />
             );
@@ -66,13 +66,13 @@ class ChartsPagePresenter extends React.Component<ChartsPageProps, {}> {
     private renderButton() {
         let className = "btn btn-primary"
         let disabled = false;
-        if (this.props.charts.selectedElectionId == null) {
+        if (this.props.chart.selectedElectionId == null) {
             className += "btn btn-primary disabled";
             disabled = true;
         }
 
-        const queryParams: ChartsPageRouteProps = {
-            electionId: this.props.charts.selectedElectionId,
+        const queryParams: ChartPageRouteProps = {
+            electionId: this.props.chart.selectedElectionId,
             showChart: true
         }
 
@@ -80,14 +80,14 @@ class ChartsPagePresenter extends React.Component<ChartsPageProps, {}> {
             <Link 
                 className={className}
                 disabled={disabled}
-                to={{ pathname: "/charts", search: QueryString.stringify(queryParams)}}>
-                Построить график
+                to={{ pathname: "/histogram", search: QueryString.stringify(queryParams)}}>
+                Построить гистограмму
             </Link>
         );
     }
 
     private renderChart() {
-        if (this.props.charts.showChart) {
+        if (this.props.chart.showChart) {
             return <HighchartComponent />;
         }
         else {
@@ -95,7 +95,7 @@ class ChartsPagePresenter extends React.Component<ChartsPageProps, {}> {
         }
     }
 }
-export const ChartsPage = connect(
-    (state: ApplicationState) => state as ChartsPageState,
-    chartsActionCreators
-)(ChartsPagePresenter) as typeof ChartsPagePresenter;
+export const ChartPage = connect(
+    (state: ApplicationState) => state as ChartPageState,
+    chartActionCreators
+)(ChartPagePresenter) as typeof ChartPagePresenter;

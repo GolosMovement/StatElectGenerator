@@ -5,15 +5,15 @@ import * as QueryString from 'query-string'
 import { AppThunkAction, LazyItems } from '../ApplicationState';
 import { ElectionsState, electionsActionCreators, Election } from '../Elections/State';
 
-export interface ChartsState {
+export interface ChartState {
     selectedElectionId?: number;
     regionId?: number;
     showChart?: boolean;
 }
 
-export interface ChartsPageRouteProps {
-    electionId?: number,
-    showChart?: boolean
+export interface ChartPageRouteProps {
+    electionId?: number;
+    showChart?: boolean;
 }
 
 interface SelectElectionAction {
@@ -28,18 +28,18 @@ interface SelectRegionAction {
 
 type KnownAction = SelectElectionAction | SelectRegionAction;
 
-export const chartsActionCreators = {
+export const chartActionCreators = {
     ...electionsActionCreators,
     selectElection: (electionId: number) => <SelectElectionAction>{ type: "SELECT_ELECTION", electionId: electionId },
     selectRegion: (regionId: number) => <SelectRegionAction>{ type: "SELECT_REGION", regionId: regionId },
 };
 
-export const chartsInitialState: ChartsState = { };
+export const chartInitialState: ChartState = { };
 
-export const chartsReducer: Reducer<ChartsState> = (state: ChartsState, incomingAction: Action) => {
+export const chartReducer: Reducer<ChartState> = (state: ChartState, incomingAction: Action) => {
     if (incomingAction.type == LOCATION_CHANGE)    {
         const locationChangeAction = incomingAction as LocationChangeAction;
-        const routeProps = QueryString.parse(locationChangeAction.payload.search) as ChartsPageRouteProps;
+        const routeProps = QueryString.parse(locationChangeAction.payload.search) as ChartPageRouteProps;
         return {
             ...state,
             selectedElectionId: routeProps.electionId,
@@ -63,5 +63,5 @@ export const chartsReducer: Reducer<ChartsState> = (state: ChartsState, incoming
             const exhaustiveCheck: never = action;
     }
 
-    return state || chartsInitialState;
+    return state || chartInitialState;
 };

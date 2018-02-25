@@ -1,10 +1,10 @@
 import { ElectionsState, electionsReducer, electionsInitialState } from './Elections/State';
-import { ChartsState, chartsReducer, chartsInitialState } from './Charts/State';
+import { ChartState, chartReducer, chartInitialState } from './Chart/State';
 
 // The top-level state object
 export interface ApplicationState {
     elections: ElectionsState;
-    charts: ChartsState;
+    chart: ChartState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -12,7 +12,7 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
     elections: electionsReducer,
-    charts: chartsReducer
+    chart: chartReducer
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
@@ -28,5 +28,5 @@ export interface LazyItems<TItem> {
 
 export const applicationInitialState: ApplicationState = {
     elections: electionsInitialState,
-    charts: chartsInitialState
+    chart: chartInitialState
 }
