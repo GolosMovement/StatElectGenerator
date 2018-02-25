@@ -1,36 +1,72 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 
 import { RouteComponentProps, Link } from 'react-router-dom';
 import * as QueryString from 'query-string'
+
 import Select, { Option } from 'react-select';
+import 'react-select/dist/react-select.css';
+
+
+import { LazyItems } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
 
-import { ChartState, chartActionCreators, ChartPageRouteProps } from './State';
-import { ElectionsState } from '../Elections/State';
-import { ApplicationState } from '../ApplicationState';
+import { Election, ElectionsController } from './ElectionsController';
+import { ChartsController } from './ChartsController';
 
-interface ChartPageState {
-    elections: ElectionsState,
-    chart: ChartState
+interface ChartPageRouteProps {
+    electionId?: number;
 }
 
-// At runtime, Redux will merge together...
-type ChartPageProps = 
-    ChartPageState & 
-    typeof chartActionCreators &
-    RouteComponentProps<ChartPageRouteProps>
+interface ChartPageProps extends RouteComponentProps<ChartPageRouteProps> {
+}
 
-class ChartPagePresenter extends React.Component<ChartPageProps, {}> {
+interface ChartState {
+    isLoading: boolean;
+    electionId?: number;
+    regionId?: number;
+    series?: Highcharts.IndividualSeriesOptions[];
+}
+
+interface ChartPageState {
+    elections: LazyItems<Election>;
+    chart: ChartState;
+}
+
+export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
+    constructor(props: ChartPageProps) {
+        super(props);
+
+        const routeProps = QueryString.parse(props.location.search) as ChartPageRouteProps;
+
+        this.state = {
+            elections: {
+                isLoading: true,
+                items: []
+            },
+            chart: {                
+                isLoading: false,
+                electionId: routeProps.electionId
+            }
+        };
+                
+        this.loadElections();
+    }
+
     public componentWillMount() {
-        this.props.requestElections();
-        if (this.props.chart.showChart && this.props.chart.selectedElectionId != null) {
-            this.props.requestChartData({
-                electionId: this.props.chart.selectedElectionId,
-                candidateId: 20,
-                stepSize: 1
-            });
-        }
+        this.loadChartDataIfRequired();
+    }
+
+    public componentWillReceiveProps() {
+        const routeProps = QueryString.parse(this.props.location.search) as ChartPageRouteProps;
+
+        this.setState({
+            ...this.state,
+            chart: {
+                ...this.state.chart,
+                electionId: routeProps.electionId
+            }
+        });
+        this.loadChartDataIfRequired();
     }
 
     public render() {
@@ -44,7 +80,7 @@ class ChartPagePresenter extends React.Component<ChartPageProps, {}> {
     }
 
     private renderSelect() {
-        if (!this.props.elections || !this.props.elections.isLoaded) {
+        if (this.state.elections.isLoading) {
             return (
                 <Select
                     name="form-field-name"
@@ -52,35 +88,41 @@ class ChartPagePresenter extends React.Component<ChartPageProps, {}> {
                 />);
         }
         else {
-            const options = this.props.elections.items
+            const options = this.state.elections.items
                 .map(election => ({ value: election.id as number, label: election.name }));
 
             return (
                 <Select
                     name="form-field-name"
-                    onChange={this.handleChange}
-                    value={this.props.chart.selectedElectionId}
+                    onChange={this.handleElectionSelected}
+                    value={this.state.chart.electionId}
                     options={options}
                 />
             );
         }
     }
 
-    private handleChange = (selectedOption: any) => {
-        this.props.selectElection(selectedOption.value)
+    private handleElectionSelected = (selectedOption: any) => {
+        this.setState({
+            ...this.state,
+            chart: {
+                ...this.state.chart,
+                isLoading: false,
+                electionId: selectedOption.value
+            }
+        });
     }
 
     private renderButton() {
         let className = "btn btn-primary"
         let disabled = false;
-        if (this.props.chart.selectedElectionId == null) {
+        if (this.state.chart.electionId == null) {
             className += "btn btn-primary disabled";
             disabled = true;
         }
 
         const queryParams: ChartPageRouteProps = {
-            electionId: this.props.chart.selectedElectionId,
-            showChart: true
+            electionId: this.state.chart.electionId
         }
 
         return (
@@ -94,7 +136,17 @@ class ChartPagePresenter extends React.Component<ChartPageProps, {}> {
     }
 
     private renderChart() {
-        if (this.props.chart.showChart && this.props.chart.isDataLoaded) {
+        if (this.state.chart.isLoading) {
+            return (
+                <div>
+                    <img 
+                        src="preloader.svg" 
+                        height="200px"
+                        width="200px" />
+                </div>
+            );
+        }
+        else if (this.state.chart.series != null) {
             return <HighchartComponent 
                 title={{ text: '' }}
                 chart={{ type: 'column' }}
@@ -103,15 +155,52 @@ class ChartPagePresenter extends React.Component<ChartPageProps, {}> {
                         text: 'Явка'
                     }
                 }}
-                series={this.props.chart.series}
+                series={this.state.chart.series}
             />;
         }
         else {
             return null;
         }
     }
+
+    private loadElections() {        
+        ElectionsController.Instance.getElections()
+            .then(elections => {
+                this.setState({
+                    ...this.state,
+                    elections: {
+                        isLoading: false,
+                        items: elections
+                    }
+                });
+            });
+    }
+
+    private loadChartDataIfRequired() {
+        if (this.state.chart.electionId != null) {
+            this.setState({
+                ...this.state,
+                chart: {
+                    ...this.state.chart,
+                    isLoading: true
+                }
+            });
+            
+            ChartsController.Instance.getHistogramData({
+                    electionId: this.state.chart.electionId as number,
+                    candidateId: 20,
+                    stepSize: 1
+                })
+                .then(series => {
+                    this.setState({
+                        ...this.state,
+                        chart: {
+                            ...this.state.chart,
+                            isLoading: false,
+                            series: series
+                        }
+                    });
+                });
+        }
+    }
 }
-export const ChartPage = connect(
-    (state: ApplicationState) => state as ChartPageState,
-    chartActionCreators
-)(ChartPagePresenter) as typeof ChartPagePresenter;

@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectionStatistics.Model", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectionStatistics.ManagementConsole", "ElectionStatistics.ManagementConsole\ElectionStatistics.ManagementConsole.csproj", "{E22CE51D-B034-40DF-95D9-5C149A972E5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectionStatistics.WebSite", "ElectionStatistics.WebSite\ElectionStatistics.WebSite.csproj", "{3465E696-3676-4AA0-B99D-F899AD35B274}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectionStatistics.WebSite", "ElectionStatistics.WebSite\ElectionStatistics.WebSite.csproj", "{3465E696-3676-4AA0-B99D-F899AD35B274}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
