@@ -7,13 +7,13 @@
     "@types/geojson": {
       "version": "7946.0.1",
       "resolved": "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.1.tgz",
-      "integrity": "sha512-BXY6tH16Snp/ZdX6cFlBD8yfEArcZemzxEGciXkMmp1/tU76oyqkxJq91JQzT8SXWzRPwj//dw0/FdCSnnT8mw==",
+      "integrity": "sha1-H8QSgOQvCPDVaEAaVWvJfDT1Ji4=",
       "dev": true
     },
     "@types/highcharts": {
       "version": "5.0.16",
       "resolved": "https://registry.npmjs.org/@types/highcharts/-/highcharts-5.0.16.tgz",
-      "integrity": "sha512-zs0cNqrDwARQdENPaP0On71FknCb0Oi5raqGnYlJnEa8ttn3U79ZXels/BtVp9NhoecD/BWkuzbewRmCDvKy1A==",
+      "integrity": "sha1-yFKBrElpYdcshn0LFmfUOgiOf1E=",
       "dev": true,
       "requires": {
         "@types/geojson": "7946.0.1"
@@ -28,7 +28,7 @@
     "@types/query-string": {
       "version": "5.0.1",
       "resolved": "https://registry.npmjs.org/@types/query-string/-/query-string-5.0.1.tgz",
-      "integrity": "sha512-qlH3YtJ5ipp6z5SU9G0LJsBnNEZqTKPeGjNIyMcGD5Dhbooz0CCsW/sILsgb+LBRrDeTehRtQviXV2kfLm3dqg==",
+      "integrity": "sha1-bLQcckyxZE1WwtHa58eyBOcGs54=",
       "dev": true
     },
     "@types/react": {
@@ -79,7 +79,7 @@
     "@types/react-select": {
       "version": "1.2.0",
       "resolved": "https://registry.npmjs.org/@types/react-select/-/react-select-1.2.0.tgz",
-      "integrity": "sha512-OGP4vA2h6BrM+rSvUnM2LNHf4CFnFzzlmGjRk7LmQD04rhgROrFQu/HnRTiwbD+6QO8cumr2101opgPMxmhw9A==",
+      "integrity": "sha1-LykVT6u8Uw/YOFjH8ko0z049OGk=",
       "dev": true,
       "requires": {
         "@types/react": "15.0.35"
@@ -1361,6 +1361,12 @@
       "version": "1.2.0",
       "resolved": "https://registry.npmjs.org/decamelize/-/decamelize-1.2.0.tgz",
       "integrity": "sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=",
+      "dev": true
+    },
+    "decode-uri-component": {
+      "version": "0.2.0",
+      "resolved": "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.0.tgz",
+      "integrity": "sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=",
       "dev": true
     },
     "define-property": {
@@ -2745,7 +2751,7 @@
     "highcharts": {
       "version": "6.0.6",
       "resolved": "https://registry.npmjs.org/highcharts/-/highcharts-6.0.6.tgz",
-      "integrity": "sha512-acNW7HhEVnl7g8Rbi22vfyhKTfvpTl6Sio45fkZ/ejkco/v7qeKtdruo+kDoJ4e0Fqw/b2d5L9/9N00WZO8xKg==",
+      "integrity": "sha1-yJbs6M26sYtPi3szq5ZHqnFQxRA=",
       "dev": true
     },
     "history": {
@@ -3603,6 +3609,18 @@
         "prepend-http": "1.0.4",
         "query-string": "4.3.4",
         "sort-keys": "1.1.2"
+      },
+      "dependencies": {
+        "query-string": {
+          "version": "4.3.4",
+          "resolved": "https://registry.npmjs.org/query-string/-/query-string-4.3.4.tgz",
+          "integrity": "sha1-u7aTucqRXCMlFbIosaArYJBD2+s=",
+          "dev": true,
+          "requires": {
+            "object-assign": "4.1.1",
+            "strict-uri-encode": "1.1.0"
+          }
+        }
       }
     },
     "num2fraction": {
@@ -4472,11 +4490,12 @@
       "dev": true
     },
     "query-string": {
-      "version": "4.3.4",
-      "resolved": "https://registry.npmjs.org/query-string/-/query-string-4.3.4.tgz",
-      "integrity": "sha1-u7aTucqRXCMlFbIosaArYJBD2+s=",
+      "version": "5.1.0",
+      "resolved": "https://registry.npmjs.org/query-string/-/query-string-5.1.0.tgz",
+      "integrity": "sha512-F3DkxxlY0AqD/rwe4YAwjRE2HjOkKW7TxsuteyrS/Jbwrxw887PqYBL4sWUJ9D/V1hmFns0SCD6FDyvlwo9RCQ==",
       "dev": true,
       "requires": {
+        "decode-uri-component": "0.2.0",
         "object-assign": "4.1.1",
         "strict-uri-encode": "1.1.0"
       }
@@ -4608,7 +4627,7 @@
     "react-input-autosize": {
       "version": "2.2.1",
       "resolved": "https://registry.npmjs.org/react-input-autosize/-/react-input-autosize-2.2.1.tgz",
-      "integrity": "sha512-3+K4CD13iE4lQQ2WlF8PuV5htfmTRLH6MDnfndHM6LuBRszuXnuyIfE7nhSKt8AzRBZ50bu0sAhkNMeS5pxQQA==",
+      "integrity": "sha1-7EKPoVsVkplPtfmqFbsetrr0IPg=",
       "dev": true,
       "requires": {
         "prop-types": "15.5.10"
@@ -4653,7 +4672,7 @@
     "react-select": {
       "version": "1.2.1",
       "resolved": "https://registry.npmjs.org/react-select/-/react-select-1.2.1.tgz",
-      "integrity": "sha512-vaCgT2bEl+uTyE/uKOEgzE5Dc/wLtzhnBvoHCeuLoJWc4WuadN6WQDhoL42DW+TziniZK2Gaqe/wUXydI3NSaQ==",
+      "integrity": "sha1-ov5YpWnrFNyqZUOBYmC5flOBINE=",
       "dev": true,
       "requires": {
         "classnames": "2.2.5",

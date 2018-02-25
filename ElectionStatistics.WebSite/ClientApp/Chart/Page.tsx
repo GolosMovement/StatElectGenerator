@@ -8,11 +8,12 @@ import Select, { Option } from 'react-select';
 import { LazyItems } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
 
-import { Election, ElectionsController } from './ElectionsController';
+import { ElectionDto, CandidateDto, DictionariesController } from './DictionariesController';
 import { ChartsController } from './ChartsController';
 
 interface ChartPageRouteProps {
     electionId?: number;
+    candidateId?: number;
 }
 
 interface ChartPageProps extends RouteComponentProps<ChartPageRouteProps> {
@@ -21,50 +22,50 @@ interface ChartPageProps extends RouteComponentProps<ChartPageRouteProps> {
 interface ChartState {
     isLoading: boolean;
     electionId?: number;
-    regionId?: number;
+    candidateId?: number;
     series?: Highcharts.IndividualSeriesOptions[];
 }
 
 interface ChartPageState {
-    elections: LazyItems<Election>;
+    elections: LazyItems<ElectionDto>;
+    candidates: LazyItems<CandidateDto>;
     chart: ChartState;
+}
+
+class NumberSelect extends Select<number> {
 }
 
 export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
     constructor(props: ChartPageProps) {
         super(props);
 
-        const routeProps = QueryString.parse(props.location.search) as ChartPageRouteProps;
-
-        this.state = {
+        this.state = this.getStateWithRouteProps({
             elections: {
                 isLoading: true,
                 items: []
             },
-            chart: {                
+            candidates: {
                 isLoading: false,
-                electionId: routeProps.electionId
+                items: []
+            },
+            chart: {                
+                isLoading: false
             }
-        };
-                
-        this.loadElections();
+        });
     }
 
-    public componentWillMount() {
-        this.loadChartDataIfRequired();
+    public componentWillMount() {                
+        this.loadElections();
+        this.tryLoadCandidates();
+        this.tryLoadChartData();
     }
 
     public componentWillReceiveProps() {
-        const routeProps = QueryString.parse(this.props.location.search) as ChartPageRouteProps;
-
-        this.setState({
-            ...this.state,
-            chart: {
-                ...this.state.chart,
-                electionId: routeProps.electionId
-            }
-        });
-        this.loadChartDataIfRequired();
+        this.setState(
+            this.getStateWithRouteProps(this.state)
+        );
+        this.tryLoadCandidates();
+        this.tryLoadChartData();
     }
 
     public render() {
@@ -72,7 +73,12 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-3">
-                        {this.renderSelect()}
+                        {this.renderElectionsSelect()}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-3">
+                        {this.renderCandidatesSelect()}
                     </div>
                 </div>
                 <div className="row">
@@ -87,7 +93,32 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
         );
     }
 
-    private renderSelect() {
+    private loadElections() {        
+        DictionariesController.Instance.getElections()
+            .then(elections => {
+                this.setState({
+                    ...this.state,
+                    elections: {
+                        isLoading: false,
+                        items: elections
+                    }
+                });
+            });
+    }
+
+    private handleElectionSelected = (selectedOption: any) => {
+        this.setState(
+            {
+                ...this.state,
+                chart: {
+                    ...this.state.chart,
+                    electionId: selectedOption.value
+                }
+            },
+            this.tryLoadCandidates);        
+    }
+
+    private renderElectionsSelect() {
         if (this.state.elections.isLoading) {
             return (
                 <Select
@@ -110,15 +141,63 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
         }
     }
 
-    private handleElectionSelected = (selectedOption: any) => {
+    private tryLoadCandidates() {
+        if (this.state.chart.electionId != null) {
+            this.setState({
+                ...this.state,
+                candidates: {
+                    isLoading: true,
+                    items: []
+                }
+            });
+
+            DictionariesController.Instance.getCandidatesByElection(this.state.chart.electionId)
+                .then(candidates => {
+                    this.setState({
+                        ...this.state,
+                        candidates: {
+                            isLoading: false,
+                            items: candidates
+                        }
+                    });
+                });
+        }
+    }
+
+    private handleCandidateSelected = (selectedOption: any) => {
         this.setState({
             ...this.state,
             chart: {
                 ...this.state.chart,
-                isLoading: false,
-                electionId: selectedOption.value
+                candidateId: selectedOption.value
             }
         });
+    }
+
+    private renderCandidatesSelect() {
+        if (this.state.chart.electionId == null) {
+            return null;
+        }
+        else if (this.state.candidates.isLoading) {
+            return (
+                <Select
+                    name="form-field-name"
+                    isLoading={true}
+                />);
+        }
+        else {
+            const options = this.state.candidates.items
+                .map(candidate => ({ value: candidate.id as number, label: candidate.name }));
+
+            return (
+                <Select
+                    name="form-field-name"
+                    onChange={this.handleCandidateSelected}
+                    value={this.state.chart.candidateId}
+                    options={options}
+                />
+            );
+        }
     }
 
     private renderButton() {
@@ -130,7 +209,8 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
         }
 
         const queryParams: ChartPageRouteProps = {
-            electionId: this.state.chart.electionId
+            electionId: this.state.chart.electionId,
+            candidateId: this.state.chart.candidateId
         }
 
         return (
@@ -141,6 +221,35 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
                 Построить гистограмму
             </Link>
         );
+    }
+
+    private tryLoadChartData() {
+        if (this.state.chart.electionId != null &&
+            this.state.chart.candidateId != null) {
+            this.setState({
+                ...this.state,
+                chart: {
+                    ...this.state.chart,
+                    isLoading: true
+                }
+            });
+            
+            ChartsController.Instance.getHistogramData({
+                    electionId: this.state.chart.electionId,
+                    candidateId: this.state.chart.candidateId,
+                    stepSize: 1
+                })
+                .then(series => {
+                    this.setState({
+                        ...this.state,
+                        chart: {
+                            ...this.state.chart,
+                            isLoading: false,
+                            series: series
+                        }
+                    });
+                });
+        }
     }
 
     private renderChart() {
@@ -171,44 +280,16 @@ export class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
         }
     }
 
-    private loadElections() {        
-        ElectionsController.Instance.getElections()
-            .then(elections => {
-                this.setState({
-                    ...this.state,
-                    elections: {
-                        isLoading: false,
-                        items: elections
-                    }
-                });
-            });
-    }
-
-    private loadChartDataIfRequired() {
-        if (this.state.chart.electionId != null) {
-            this.setState({
-                ...this.state,
-                chart: {
-                    ...this.state.chart,
-                    isLoading: true
-                }
-            });
-            
-            ChartsController.Instance.getHistogramData({
-                    electionId: this.state.chart.electionId as number,
-                    candidateId: 20,
-                    stepSize: 1
-                })
-                .then(series => {
-                    this.setState({
-                        ...this.state,
-                        chart: {
-                            ...this.state.chart,
-                            isLoading: false,
-                            series: series
-                        }
-                    });
-                });
-        }
+    private getStateWithRouteProps(state: ChartPageState): ChartPageState {
+        const routeProps = QueryString.parse(this.props.location.search) as ChartPageRouteProps;
+        
+        return {
+            ...state,
+            chart: {
+                ...state.chart,
+                electionId: routeProps.electionId,
+                candidateId: routeProps.candidateId
+            }
+        };
     }
 }
