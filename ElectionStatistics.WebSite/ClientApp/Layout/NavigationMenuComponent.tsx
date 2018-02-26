@@ -9,7 +9,7 @@ export class NavigationMenuComponent extends React.Component<{}, {}> {
                 <div className='navbar-collapse collapse'>
                     <ul className='nav navbar-nav'>
                         <li>
-                            <NavLink to={ '/' } activeClassName='active'>
+                            <NavLink to={ '/histogram' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-th'></span> Гистограмма
                             </NavLink>
                         </li>

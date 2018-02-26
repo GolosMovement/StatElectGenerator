@@ -66,15 +66,16 @@ namespace ElectionStatistics.WebSite
 					votes => votes.ElectionResultId,
 					(result, votes) => new
 					{
-						VotersCount = result.InsideBallotsCount + result.OutsideBallotsCount,
+						DistrictName = result.ElectoralDistrict.Name,
 						Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
 							? 0
 							: (double)votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
 					})
+				.ToArray()
 				.Select(arg => new[]
 				{
 					arg.Value,
-					arg.VotersCount
+					int.Parse(arg.DistrictName.Replace("УИК №", ""))
 				})
 				.ToArray();
 
@@ -115,6 +116,6 @@ namespace ElectionStatistics.WebSite
 		{
 			public string Name { get; set; }
 			public double[][] Data { get; set; }
-	}
+		}
 	}
 }

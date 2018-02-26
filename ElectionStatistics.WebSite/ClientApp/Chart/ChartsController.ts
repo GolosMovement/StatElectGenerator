@@ -5,6 +5,7 @@ import { IDictionary } from '../Common'
 
 export interface ChartBuildParameters {
     electionId: number;
+    districtId: number | null,
     candidateId: number;
 }
 

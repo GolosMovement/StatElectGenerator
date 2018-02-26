@@ -3,72 +3,56 @@ import * as React from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import * as QueryString from 'query-string'
 
-import Select, { Option } from 'react-select';
-
 import { LazyItems } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
 
 import { ElectionDto, ElectoralDistrictDto, CandidateDto, DictionariesController } from './DictionariesController';
 import { ChartsController } from './ChartsController';
+import { SelectValue } from 'antd/lib/select';
+import { LazySelect, LazySelectProps } from '../Common';
+import { Spin } from 'antd';
 
 interface ChartPageRouteProps {
     electionId?: number;
     candidateId?: number;
+    districtId?: number;
 }
 
 interface ChartPageProps extends RouteComponentProps<ChartPageRouteProps> {
 }
 
-interface ChartState {
-    isLoading: boolean;
-    electionId?: number;
-    districtIds: number[];
-    candidateId?: number;
-    series?: Highcharts.IndividualSeriesOptions[];
-}
-
 interface ChartPageState {
-    elections: LazyItems<ElectionDto>;
-    districts: LazyItems<ElectoralDistrictDto>;
-    candidates: LazyItems<CandidateDto>;
-    chart: ChartState;
+    isLoading: boolean;
+    electionId: number | null;
+    districtId: number | null;
+    candidateId: number | null;
+    series?: Highcharts.IndividualSeriesOptions[];
 }
 
 export abstract class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
     constructor(props: ChartPageProps) {
         super(props);
 
-        this.state = this.getStateWithRouteProps({
-            elections: {
-                isLoading: true,
-                items: []
-            },
-            districts: {
-                isLoading: false,
-                items: []
-            },
-            candidates: {
-                isLoading: false,
-                items: []
-            },
-            chart: {                
-                isLoading: false,
-                districtIds: []
-            }
-        });
+        this.state = this.getStateFromRouteProps();
     }
 
-    public componentWillMount() {                
-        this.loadElections();
-        this.tryLoadCandidates();
+    private getStateFromRouteProps(): ChartPageState {
+        const routeProps = QueryString.parse(this.props.location.search) as ChartPageRouteProps;
+        
+        return {
+            isLoading: false,
+            electionId: routeProps.electionId || null,
+            districtId: routeProps.districtId || null,
+            candidateId: routeProps.candidateId || null
+        };
+    }
+
+    public componentWillMount() {        
         this.tryLoadChartData();
     }
 
     public componentWillReceiveProps() {
-        this.setState(
-            this.getStateWithRouteProps(this.state)
-        );
-        this.tryLoadCandidates();
+        this.setState(this.getStateFromRouteProps());
         this.tryLoadChartData();
     }
 
@@ -78,6 +62,11 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                 <div className="row">
                     <div className="col-md-3">
                         {this.renderElectionsSelect()}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-3">
+                        {this.renderDistrictsSelect()}
                     </div>
                 </div>
                 <div className="row">
@@ -97,232 +86,110 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         );
     }
 
-    private loadElections() {        
-        DictionariesController.Instance.getElections()
-            .then(elections => {
-                this.setState({
-                    ...this.state,
-                    elections: {
-                        isLoading: false,
-                        items: elections
-                    }
-                });
-            });
-    }
-
-    private handleElectionSelected = (selectedOption: any) => {
-        this.setState(
-            {
-                ...this.state,
-                chart: {
-                    ...this.state.chart,
-                    electionId: selectedOption.value
-                }
-            },
-            this.tryLoadCandidates);        
-    }
-
     private renderElectionsSelect() {
-        if (this.state.elections.isLoading) {
-            return (
-                <Select
-                    isLoading={true}
-                />);
-        }
-        else {
-            const options = this.state.elections.items
-                .map(election => ({ value: election.id as number, label: election.name }));
+        const Select = LazySelect as new (props: LazySelectProps<ElectionDto, number>) => LazySelect<ElectionDto, number>;
 
-            return (
-                <Select
-                    clearable={false}
-                    onChange={this.handleElectionSelected}
-                    value={this.state.chart.electionId}
-                    options={options}
-                />
-            );
-        }
-    }
-
-    private tryLoadDisticts() {
-        if (this.state.chart.electionId != null) {
-            this.setState({
+        return <Select
+            placeholder="Укажите выборы"
+            itemsPromise={DictionariesController.Instance.getElections()}
+            selectedValue={this.state.electionId}
+            getValue={election => election.id} 
+            getText={election => election.name}
+            onChange={electionId => this.setState({
                 ...this.state,
-                districts: {
-                    isLoading: true,
-                    items: []
-                }
-            });
-
-            DictionariesController.Instance.getDistricts(this.state.chart.electionId)
-                .then(districts => {
-                    this.setState({
-                        ...this.state,
-                        districts: {
-                            isLoading: false,
-                            items: districts
-                        }
-                    });
-                });
-        }
+                electionId: electionId
+            })}/>
     }
 
-    private handleDistrictSelected = (selectedOption: any) => {
-        if (selectedOption == null) {
-            this.state.chart.districtIds.pop();
-        }
-        else {
-            this.state.chart.districtIds.push(selectedOption.value);
-        }
-        this.setState({
-            ...this.state
-        });
-    }
-
-    private renderDistrictsSelects() {
-        if (this.state.chart.electionId == null) {
+    private renderDistrictsSelect() {
+        if (this.state.electionId == null) {
             return null;
         }
-        else if (this.state.districts.isLoading) {
-            return (
-                <Select
-                    isLoading={true}
-                />);
-        }
         else {
-            const options = this.state.districts.items
-                .map(candidate => ({ value: candidate.id as number, label: candidate.name }));
+            const Select = LazySelect as new (props: LazySelectProps<CandidateDto, number>) => LazySelect<CandidateDto, number>;
 
-            return (
-                <Select
-                    onChange={this.handleDistrictSelected}
-                    value={this.state.chart.candidateId}
-                    options={options}
-                />
-            );
+            return <Select
+                allowClear
+                placeholder="Все округа"
+                itemsPromise={DictionariesController.Instance.getDistricts(this.state.electionId)}
+                selectedValue={this.state.districtId}
+                getValue={district => district.id} 
+                getText={district => district.name}
+                onChange={districtId => this.setState({
+                    ...this.state,
+                    districtId: districtId
+                })}/>
         }
-    }
-
-    private tryLoadCandidates() {
-        if (this.state.chart.electionId != null) {
-            this.setState({
-                ...this.state,
-                candidates: {
-                    isLoading: true,
-                    items: []
-                }
-            });
-
-            DictionariesController.Instance.getCandidates(this.state.chart.electionId)
-                .then(candidates => {
-                    this.setState({
-                        ...this.state,
-                        candidates: {
-                            isLoading: false,
-                            items: candidates
-                        }
-                    });
-                });
-        }
-    }
-
-    private handleCandidateSelected = (selectedOption: any) => {
-        this.setState({
-            ...this.state,
-            chart: {
-                ...this.state.chart,
-                candidateId: selectedOption.value
-            }
-        });
     }
 
     private renderCandidatesSelect() {
-        if (this.state.chart.electionId == null) {
+        if (this.state.electionId == null) {
             return null;
         }
-        else if (this.state.candidates.isLoading) {
-            return (
-                <Select
-                    isLoading={true}
-                />);
-        }
         else {
-            const options = this.state.candidates.items
-                .map(candidate => ({ value: candidate.id as number, label: candidate.name }));
+            const Select = LazySelect as new (props: LazySelectProps<CandidateDto, number>) => LazySelect<CandidateDto, number>;
 
-            return (
-                <Select
-                    clearable={false}
-                    onChange={this.handleCandidateSelected}
-                    value={this.state.chart.candidateId}
-                    options={options}
-                />
-            );
+            return <Select
+                placeholder="Выберите кандидата"
+                itemsPromise={DictionariesController.Instance.getCandidates(this.state.electionId)}
+                selectedValue={this.state.candidateId}
+                getValue={candidate => candidate.id} 
+                getText={candidate => candidate.name}
+                onChange={candidateId => this.setState({
+                    ...this.state,
+                    candidateId: candidateId
+                })}/>
         }
     }
 
     private renderButton() {
-        let className = "btn btn-primary"
-        let disabled = false;
-        if (this.state.chart.electionId == null) {
-            className += "btn btn-primary disabled";
-            disabled = true;
+        if (this.state.electionId === null ||
+            this.state.candidateId === null) {
+            return null;
         }
-
-        const queryParams: ChartPageRouteProps = {
-            electionId: this.state.chart.electionId,
-            candidateId: this.state.chart.candidateId
+        else {
+            const queryParams: ChartPageRouteProps = {
+                electionId: this.state.electionId,
+                districtId: this.state.districtId || undefined,
+                candidateId: this.state.candidateId
+            }
+    
+            return (
+                <Link 
+                    className="btn btn-primary"               
+                    to={{ search: QueryString.stringify(queryParams)}}>
+                    Построить
+                </Link>
+            );
         }
-
-        return (
-            <Link 
-                className={className}
-                disabled={disabled}
-                to={{ search: QueryString.stringify(queryParams)}}>
-                Построить
-            </Link>
-        );
     }
 
     protected abstract loadChartData() : Promise<Highcharts.IndividualSeriesOptions[]>;
 
     private tryLoadChartData() {
-        if (this.state.chart.electionId != null &&
-            this.state.chart.candidateId != null) {
+        if (this.state.electionId !== null &&
+            this.state.candidateId !== null) {
             this.setState({
                 ...this.state,
-                chart: {
-                    ...this.state.chart,
-                    isLoading: true
-                }
+                isLoading: true
             });
             
             this.loadChartData()
                 .then(series => {
                     this.setState({
                         ...this.state,
-                        chart: {
-                            ...this.state.chart,
-                            isLoading: false,
-                            series: series
-                        }
+                        isLoading: false,
+                        series: series
                     });
                 });
         }
     }
 
     private tryRenderChart() {
-        if (this.state.chart.isLoading) {
-            return (
-                <div>
-                    <img 
-                        src="preloader.svg" 
-                        height="200px"
-                        width="200px" />
-                </div>
-            );
+        if (this.state.isLoading) {
+            return <Spin size="large" />;
         }
-        else if (this.state.chart.series != null) {
+        else if (this.state.series != null) {
             return this.renderChart();
         }
         else {
@@ -331,26 +198,14 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
     }
 
     protected abstract renderChart() : JSX.Element;
-
-    private getStateWithRouteProps(state: ChartPageState): ChartPageState {
-        const routeProps = QueryString.parse(this.props.location.search) as ChartPageRouteProps;
-        
-        return {
-            ...state,
-            chart: {
-                ...state.chart,
-                electionId: routeProps.electionId,
-                candidateId: routeProps.candidateId
-            }
-        };
-    }
 }
 
 export class LinePage extends ChartPage {    
     protected loadChartData(): Promise<Highcharts.IndividualSeriesOptions[]> {
         return ChartsController.Instance.getHistogramData({
-            electionId: this.state.chart.electionId as number,
-            candidateId: this.state.chart.candidateId as number,
+            electionId: this.state.electionId as number,
+            districtId: this.state.districtId,
+            candidateId: this.state.candidateId as number,
             stepSize: 1
         });
     }
@@ -364,7 +219,12 @@ export class LinePage extends ChartPage {
                         text: 'Количество избирателей зарегистрированных на участках'
                     }
                 }}
-                series={this.state.chart.series}                
+                xAxis={{
+                    min: 0,
+                    max: 100,
+                    gridLineWidth: 1
+                }}
+                series={this.state.series}                
                 plotOptions={{
                     line: {
                         step: 'center',
@@ -380,8 +240,9 @@ export class LinePage extends ChartPage {
 export class ScatterplotPage extends ChartPage {
     protected loadChartData(): Promise<Highcharts.IndividualSeriesOptions[]> {
         return ChartsController.Instance.getScatterplotData({
-            electionId: this.state.chart.electionId as number,
-            candidateId: this.state.chart.candidateId as number
+            electionId: this.state.electionId as number,
+            districtId: this.state.districtId,
+            candidateId: this.state.candidateId as number
         });
     }
 
@@ -391,10 +252,26 @@ export class ScatterplotPage extends ChartPage {
                 chart={{ type: 'scatter' }}
                 yAxis={{
                     title: {
-                        text: 'Количество избирателей зарегистрированных на участках'
+                        text: '№ УИКа'
                     }
                 }}
-                series={this.state.chart.series}
+                xAxis={{
+                    min: 0,
+                    max: 100,
+                    gridLineWidth: 1
+                }}
+                series={(this.state.series as Highcharts.IndividualSeriesOptions[])
+                    .map(s => ({
+                        ...s, 
+                        marker: {
+                            radius: 2
+                        },
+                        tooltip: {
+                            followPointer: false,
+                            pointFormat: 'УИК №{point.y}<br />{point.x:.1f}%'
+                        }
+                    }))
+                }
             />;
     }
 }

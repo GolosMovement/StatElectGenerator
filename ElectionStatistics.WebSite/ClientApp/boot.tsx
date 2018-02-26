@@ -1,5 +1,5 @@
 import './css/site.css';
-import 'react-select/dist/react-select.css';
+import 'antd/dist/antd.css';
 import 'bootstrap';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
