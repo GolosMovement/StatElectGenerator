@@ -20,7 +20,7 @@ namespace ElectionStatistics.WebSite
 		[HttpGet, Route("histogram")]
 		public IEnumerable<ChartSeriesDto> GetDataForHistogram(HistogramBuildParameters parameters)
 		{
-			var results = modelContext.ElectionResults.ByElection(parameters.ElectionId);
+			var results = parameters.GetElectionResults(modelContext);
 			var candidate = modelContext.Candidates.GetById(parameters.CandidateId);
 
 			var data = results
@@ -56,7 +56,7 @@ namespace ElectionStatistics.WebSite
 		[HttpGet, Route("scatterplot")]
 		public IEnumerable<ChartSeriesDto> GetDataForScatterplot(ChartBuildParameters parameters)
 		{
-			var results = modelContext.ElectionResults.ByElection(parameters.ElectionId);
+			var results = parameters.GetElectionResults(modelContext);
 			var candidate = modelContext.Candidates.GetById(parameters.CandidateId);
 
 			var data = results
@@ -91,7 +91,19 @@ namespace ElectionStatistics.WebSite
 		public class ChartBuildParameters
 		{
 			public int ElectionId { get; set; }
+			public int? DistrictId { get; set; }
 			public int CandidateId { get; set; }
+
+			public IQueryable<ElectionResult> GetElectionResults(ModelContext modelContext)
+			{
+				var results = modelContext.ElectionResults.ByElection(ElectionId);
+				if (DistrictId != null)
+				{
+					var electoralDistrict = modelContext.ElectoralDistricts.GetById(DistrictId.Value);
+					results = results.ByHigherDistrict(electoralDistrict);
+				}
+				return results;
+			}
 		}
 
 		public class HistogramBuildParameters : ChartBuildParameters

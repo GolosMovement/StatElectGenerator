@@ -8,6 +8,12 @@ export interface ElectionDto {
     name: string;
 }
 
+export interface ElectoralDistrictDto {
+    id: number;
+    name: string;
+    lowerDitsrticts: ElectoralDistrictDto[];
+}
+
 export interface CandidateDto {
     id: number;
     name: string;
@@ -17,6 +23,7 @@ export class DictionariesController {
     private static instance: DictionariesController;
 
     private elections?: Promise<ElectionDto[]>;
+    private districtsByElection: IDictionary<Promise<ElectoralDistrictDto[]>> = {};
     private candidatesByElection: IDictionary<Promise<CandidateDto[]>> = {};
 
     private constructor()
@@ -36,9 +43,17 @@ export class DictionariesController {
         return this.elections;
     }
 
-    public getCandidatesByElection(electionId: number) : Promise<CandidateDto[]> {
+    public getDistricts(electionId: number) : Promise<ElectoralDistrictDto[]> {
+        if (!this.districtsByElection[electionId]) {
+            this.districtsByElection[electionId] = fetch(`api/districts?electionId=${electionId}`)
+                .then(response => response.json() as Promise<ElectoralDistrictDto[]>)
+        }
+        return this.districtsByElection[electionId];
+    }
+
+    public getCandidates(electionId: number) : Promise<CandidateDto[]> {
         if (!this.candidatesByElection[electionId]) {
-            this.candidatesByElection[electionId] = fetch(`api/candidates/by-election?electionId=${electionId}`)
+            this.candidatesByElection[electionId] = fetch(`api/candidates?electionId=${electionId}`)
                 .then(response => response.json() as Promise<CandidateDto[]>)
         }
         return this.candidatesByElection[electionId];

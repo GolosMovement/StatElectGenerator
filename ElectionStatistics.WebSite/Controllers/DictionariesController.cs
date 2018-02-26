@@ -29,23 +29,70 @@ namespace ElectionStatistics.WebSite
 				.ToArray();
 		}
 
-		[HttpGet, Route("candidates/by-election")]
-		public IEnumerable<CandidateDto> GetCandidatesByElection(int electionId)
-		{
-			return modelContext.Candidates
-				.ByElection(modelContext, electionId)
-				.Select(election => new CandidateDto
-				{
-					Id = election.Id,
-					Name = election.ShortName
-				})
-				.ToArray();
-		}
-
 		public class ElectionDto
 		{
 			public int Id { get; set; }
 			public string Name { get; set; }
+		}
+
+
+		[HttpGet, Route("districts")]
+		public IEnumerable<ElectoralDistrictDto> GetDistrict(int electionId)
+		{
+			var election = modelContext.Elections.GetById(electionId);
+			var districtsByHigherDistrtict = modelContext.ElectoralDistricts
+				.ByElection(modelContext, electionId)
+				.ToArray()
+				.GroupBy(district => district.HigherDistrictId)
+				.ToDictionary(
+					grouping => grouping.Key.Value,
+					grouping => grouping.ToArray());
+
+			return districtsByHigherDistrtict.Values
+				.SelectMany(districts => districts)
+				.Where(district => district.HigherDistrictId == election.ElectoralDistrictId)
+				.Select(district => BuildDistrictDto(district, districtsByHigherDistrtict))
+				.ToArray();
+		}
+
+		private ElectoralDistrictDto BuildDistrictDto(
+			ElectoralDistrict district,
+			Dictionary<int, ElectoralDistrict[]> districtsByHigherDistrtict)
+		{
+			var result = new ElectoralDistrictDto
+			{
+				Id = district.Id,
+				Name = district.Name
+			};
+
+			if (districtsByHigherDistrtict.TryGetValue(district.Id, out var lowerDistricts))
+			{
+				result.LowerDitsrticts = lowerDistricts
+					.Select(lowerDistrict => BuildDistrictDto(lowerDistrict, districtsByHigherDistrtict))
+					.ToArray();
+			}
+
+			return result;
+		}
+
+		public class ElectoralDistrictDto
+		{
+			public int Id { get; set; }
+			public string Name { get; set; }
+			public ElectoralDistrictDto[] LowerDitsrticts { get; set; }
+		}
+
+		[HttpGet, Route("candidates")]
+		public IEnumerable<CandidateDto> GetCandidates(int electionId)
+		{
+			return modelContext.Candidates
+				.ByElection(modelContext, electionId)
+				.Select(candidate => new CandidateDto
+				{
+					Id = candidate.Id,
+					Name = candidate.ShortName
+				})
+				.ToArray();
 		}
 
 		public class CandidateDto
