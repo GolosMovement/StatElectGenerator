@@ -22,8 +22,7 @@ interface LazySelectState<TItem>
 
 export class LazySelect<TItem, TValue extends React.Key> extends React.Component<LazySelectProps<TItem, TValue>, LazySelectState<TItem>>
 {
-    constructor(props: LazySelectProps<TItem, TValue>)
-    {
+    constructor(props: LazySelectProps<TItem, TValue>) {
         super(props);
         this.state = {
             items: [],

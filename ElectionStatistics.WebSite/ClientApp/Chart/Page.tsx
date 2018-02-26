@@ -9,7 +9,7 @@ import { HighchartComponent } from '../Highchart/Component';
 import { ElectionDto, ElectoralDistrictDto, CandidateDto, DictionariesController } from './DictionariesController';
 import { ChartsController } from './ChartsController';
 import { SelectValue } from 'antd/lib/select';
-import { LazySelect, LazySelectProps } from '../Common';
+import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps } from '../Common';
 import { Spin } from 'antd';
 
 interface ChartPageRouteProps {
@@ -106,7 +106,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
             return null;
         }
         else {
-            const Select = LazySelect as new (props: LazySelectProps<CandidateDto, number>) => LazySelect<CandidateDto, number>;
+            const Select = LazyTreeSelect as new (props: LazyTreeSelectProps<ElectoralDistrictDto, number>) => LazyTreeSelect<ElectoralDistrictDto, number>;
 
             return <Select
                 allowClear
@@ -115,6 +115,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                 selectedValue={this.state.districtId}
                 getValue={district => district.id} 
                 getText={district => district.name}
+                getChildren={district => district.lowerDitsrticts}
                 onChange={districtId => this.setState({
                     ...this.state,
                     districtId: districtId

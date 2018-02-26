@@ -1,7 +1,7 @@
 import * as QueryString from 'query-string'
 import * as Highcharts from 'highcharts';
 
-import { IDictionary } from '../Common'
+import { IStringDictionary } from '../Common'
 
 export interface ElectionDto {
     id: number;
@@ -23,8 +23,8 @@ export class DictionariesController {
     private static instance: DictionariesController;
 
     private elections?: Promise<ElectionDto[]>;
-    private districtsByElection: IDictionary<Promise<ElectoralDistrictDto[]>> = {};
-    private candidatesByElection: IDictionary<Promise<CandidateDto[]>> = {};
+    private districtsByElection: IStringDictionary<Promise<ElectoralDistrictDto[]>> = {};
+    private candidatesByElection: IStringDictionary<Promise<CandidateDto[]>> = {};
 
     private constructor()
     {

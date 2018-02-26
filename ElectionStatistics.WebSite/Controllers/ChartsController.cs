@@ -35,7 +35,7 @@ namespace ElectionStatistics.WebSite
 							? 0
 							: (double) votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
 					})
-				.GroupBy(arg => Math.Ceiling(arg.Value / parameters.StepSize) * parameters.StepSize)
+				.GroupBy(arg => Math.Round(arg.Value / parameters.StepSize) * parameters.StepSize)
 				.Select(grouping => new []
 				{
 					grouping.Key,

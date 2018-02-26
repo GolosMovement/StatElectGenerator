@@ -1,7 +1,7 @@
 import * as QueryString from 'query-string'
 import * as Highcharts from 'highcharts';
 
-import { IDictionary } from '../Common'
+import { IStringDictionary } from '../Common'
 
 export interface ChartBuildParameters {
     electionId: number;
@@ -16,8 +16,8 @@ export interface HistogramBuildParameters extends ChartBuildParameters {
 export class ChartsController {
     private static instance: ChartsController;
 
-    private readonly histogramDataPromises: IDictionary<Promise<Highcharts.IndividualSeriesOptions[]>> = {};
-    private readonly scatterplotDataPromises: IDictionary<Promise<Highcharts.IndividualSeriesOptions[]>> = {};
+    private readonly histogramDataPromises: IStringDictionary<Promise<Highcharts.IndividualSeriesOptions[]>> = {};
+    private readonly scatterplotDataPromises: IStringDictionary<Promise<Highcharts.IndividualSeriesOptions[]>> = {};
 
     private constructor()
     {

@@ -52,6 +52,7 @@ namespace ElectionStatistics.WebSite
 				.SelectMany(districts => districts)
 				.Where(district => district.HigherDistrictId == election.ElectoralDistrictId)
 				.Select(district => BuildDistrictDto(district, districtsByHigherDistrtict))
+				.OrderBy(dto => dto.Name)
 				.ToArray();
 		}
 
@@ -69,6 +70,7 @@ namespace ElectionStatistics.WebSite
 			{
 				result.LowerDitsrticts = lowerDistricts
 					.Select(lowerDistrict => BuildDistrictDto(lowerDistrict, districtsByHigherDistrtict))
+					.OrderBy(dto => dto.Name)
 					.ToArray();
 			}
 
