@@ -17,7 +17,7 @@ namespace ElectionStatistics.WebSite
 			this.modelContext = modelContext;
 		}
 
-		[HttpGet, Route("histogram")]
+		[HttpGet, Route("histogram"), ResponseCache(CacheProfileName = "Default")]
 		public HighchartsOptions GetDataForHistogram(HistogramBuildParameters parameters)
 		{
 			var results = parameters.GetElectionResults(modelContext);
@@ -75,7 +75,7 @@ namespace ElectionStatistics.WebSite
 			};
 		}
 
-		[HttpGet, Route("scatterplot")]
+		[HttpGet, Route("scatterplot"), ResponseCache(CacheProfileName = "Default")]
 		public HighchartsOptions GetDataForScatterplot(ChartBuildParameters parameters)
 		{
 			var results = parameters.GetElectionResults(modelContext);
@@ -125,49 +125,7 @@ namespace ElectionStatistics.WebSite
 				})
 				.GroupBy(arg => arg.HighestDistrict);
 
-			IEnumerable<ScatterplotChartSeries> series;
-			if (sourceData.Length >= 10000)
-			{
-				series = seriesGrouping
-					.Select(grouping => new FastScatterplotChartSeries
-					{
-						Name = grouping.Key.Name,
-						Tooltip = new SeriesTooltipOptions
-						{
-							PointFormat = "{point.y:.1f}%"
-						},
-						Data = grouping
-							.Select(arg => new[]
-							{
-								arg.Index,
-								arg.Value
-							})
-							.ToArray()
-					});
-			}
-			else
-			{
-				series = seriesGrouping
-					.Select(grouping => new FullScatterplotChartSeries
-					{
-						Name = grouping.Key.Name,
-						Tooltip = new SeriesTooltipOptions
-						{
-							PointFormat = "{point.name}<br />{point.y:.1f}%"
-						},
-						Data = grouping
-							.Select(arg => new Point
-							{
-								Name = arg.DistrictName,
-								X = arg.Index,
-								Y = arg.Value
-							})
-							.ToArray()
-					});
-			}
-				
-
-			return new HighchartsOptions
+			var highchartsOptions = new HighchartsOptions
 			{
 				YAxis = new AxisOptions
 				{
@@ -186,9 +144,56 @@ namespace ElectionStatistics.WebSite
 					{
 						Enabled = false
 					}
-				},
-				Series = series.Cast<ChartSeries>().ToArray()
+				}
 			};
+			if (sourceData.Length >= 10000)
+			{
+				highchartsOptions.Legend = new LegendOptions { Enabled = false };
+
+				highchartsOptions.Series = seriesGrouping
+					.Select(grouping => new FastScatterplotChartSeries
+					{
+						Name = grouping.Key.Name,
+						Tooltip = new SeriesTooltipOptions
+						{
+							PointFormat = "{point.y:.1f}%"
+						},
+						Data = grouping
+							.Select(arg => new[]
+							{
+								arg.Index,
+								arg.Value
+							})
+							.ToArray()
+					})
+					.Cast<ChartSeries>()
+					.ToArray();
+			}
+			else
+			{
+				highchartsOptions.Series = seriesGrouping
+					.Select(grouping => new FullScatterplotChartSeries
+					{
+						Name = grouping.Key.Name,
+						Tooltip = new SeriesTooltipOptions
+						{
+							PointFormat = "{point.name}<br />{point.y:.1f}%"
+						},
+						Data = grouping
+							.Select(arg => new Point
+							{
+								Name = arg.DistrictName,
+								X = arg.Index,
+								Y = arg.Value
+							})
+							.ToArray()
+					})
+					.Cast<ChartSeries>()
+					.ToArray(); ;
+			}
+				
+
+			return highchartsOptions;
 		}
 
 		public class ChartBuildParameters

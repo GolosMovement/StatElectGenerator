@@ -2,9 +2,15 @@
 {
 	public class HighchartsOptions
 	{
+		public LegendOptions Legend { get; set; }
 		public AxisOptions XAxis { get; set; }
 		public AxisOptions YAxis { get; set; }
 		public ChartSeries[] Series { get; set; }
+	}
+
+	public class LegendOptions
+	{
+		public bool Enabled { get; set; } = true;
 	}
 
 	public class AxisOptions

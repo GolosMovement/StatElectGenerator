@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ElectionStatistics.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,9 +26,18 @@ namespace ElectionStatistics.WebSite
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services
-				.AddMvc()
+		{
+			services.AddResponseCaching();
+			services
+				.AddMvc(options =>
+				{
+					options.CacheProfiles.Add("Default",
+						new CacheProfile
+						{
+							Duration = 3600,
+							VaryByQueryKeys = new [] { "*" }
+						});
+				})
 				.AddJsonOptions(options =>
 				{
 					options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -39,8 +49,10 @@ namespace ElectionStatistics.WebSite
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
+		{
+			app.UseResponseCaching();
+
+			if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
@@ -51,10 +63,10 @@ namespace ElectionStatistics.WebSite
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+				app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
+			app.UseStaticFiles();
 
 			app.UseMvc(routes =>
             {

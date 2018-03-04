@@ -17,7 +17,7 @@ namespace ElectionStatistics.WebSite
 			this.modelContext = modelContext;
 		}
 
-		[HttpGet, Route("elections")]
+		[HttpGet, Route("elections"), ResponseCache(Duration = 300)]
 		public IEnumerable<ElectionDto> GetElections()
 		{
 			return modelContext.Elections
@@ -35,7 +35,7 @@ namespace ElectionStatistics.WebSite
 			public string Name { get; set; }
 		}
 
-		[HttpGet, Route("districts")]
+		[HttpGet, Route("districts"), ResponseCache(CacheProfileName = "Default")]
 		public IEnumerable<ElectoralDistrictDto> GetDistrict(int electionId, bool forScatterplot)
 		{
 			var election = modelContext.Elections.GetById(electionId);
@@ -95,7 +95,7 @@ namespace ElectionStatistics.WebSite
 			public ElectoralDistrictDto[] LowerDitsrticts { get; set; }
 		}
 
-		[HttpGet, Route("candidates")]
+		[HttpGet, Route("candidates"), ResponseCache(CacheProfileName = "Default")]
 		public IEnumerable<CandidateDto> GetCandidates(int electionId)
 		{
 			return modelContext.Candidates

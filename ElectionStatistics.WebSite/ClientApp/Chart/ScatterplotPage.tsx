@@ -37,7 +37,17 @@ export class ScatterplotPage extends ChartPage {
                         ...s.tooltip,
                         followPointer: false
                     }
-                }))
+                })),
+            plotOptions: {
+                series: {
+                    animation: false,
+                    states: {
+                        hover: {
+                            enabled: false
+                        }
+                    }
+                }
+            },
         };
 
         return <HighchartComponent options={options} />;
