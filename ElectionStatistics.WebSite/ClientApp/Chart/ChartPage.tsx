@@ -7,7 +7,7 @@ import { LazyItems } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
 
 import { ElectionDto, ElectoralDistrictDto, CandidateDto, DictionariesController } from './DictionariesController';
-import { ChartsController } from './ChartsController';
+import { ChartsController, ChartBuildParameters } from './ChartsController';
 import { SelectValue } from 'antd/lib/select';
 import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps } from '../Common';
 import { Spin } from 'antd';
@@ -100,18 +100,20 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                 electionId: electionId
             })}/>
     }
+    
+    protected abstract getDistricts(electionId: number) : Promise<ElectoralDistrictDto[]>;
 
     private renderDistrictsSelect() {
         if (this.state.electionId == null) {
             return null;
         }
         else {
-            const Select = LazyTreeSelect as new (props: LazyTreeSelectProps<ElectoralDistrictDto, number>) => LazyTreeSelect<ElectoralDistrictDto, number>;
+            const TreeSelect = LazyTreeSelect as new (props: LazyTreeSelectProps<ElectoralDistrictDto, number>) => LazyTreeSelect<ElectoralDistrictDto, number>;
 
-            return <Select
+            return <TreeSelect
                 allowClear
                 placeholder="Все округа"
-                itemsPromise={DictionariesController.Instance.getDistricts(this.state.electionId)}
+                itemsPromise={this.getDistricts(this.state.electionId)}
                 selectedValue={this.state.districtId}
                 getValue={district => district.id} 
                 getText={district => district.name}
@@ -165,7 +167,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         }
     }
 
-    protected abstract loadChartData() : Promise<Highcharts.IndividualSeriesOptions[]>;
+    protected abstract getChartData(parameters: ChartBuildParameters) : Promise<Highcharts.IndividualSeriesOptions[]>;
 
     private tryLoadChartData() {
         if (this.state.electionId !== null &&
@@ -175,7 +177,11 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                 isLoading: true
             });
             
-            this.loadChartData()
+            this.getChartData({
+                    electionId: this.state.electionId,
+                    districtId: this.state.districtId,
+                    candidateId: this.state.candidateId
+                })
                 .then(series => {
                     this.setState({
                         ...this.state,

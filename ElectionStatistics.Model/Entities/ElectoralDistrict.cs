@@ -14,11 +14,7 @@ namespace ElectionStatistics.Model
         {
             Name = name;
             HigherDistrict = higherDistrict;
-            HierarchyPath = higherDistrict == null 
-                ? null 
-                : higherDistrict.HierarchyPath == null
-                    ? higherDistrict.Id.ToString()
-                    : higherDistrict.HierarchyPath + "\\" + higherDistrict.Id;
+            HierarchyPath = higherDistrict?.GetChildrenHierarchyPath();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -32,5 +28,13 @@ namespace ElectionStatistics.Model
 
         [MaxLength(100)]
         public string HierarchyPath { get; set; }
-    }
+
+	    public string GetChildrenHierarchyPath()
+	    {
+		    return HierarchyPath == null
+			    ? Id.ToString()
+			    : HierarchyPath + "\\" + Id;
+	    }
+
+	}
 }

@@ -12,9 +12,9 @@ namespace ElectionStatistics.Model
             if (items == null)
                 throw new ArgumentNullException("items");
 
-            var hierarchyPath = district.HierarchyPath + "\\" + district.Id;
+            var childrenHierarchyPath = district.GetChildrenHierarchyPath();
             return items
-                .Where(electionResult => electionResult.ElectoralDistrict.HierarchyPath.StartsWith(hierarchyPath));
+                .Where(electionResult => electionResult.ElectoralDistrict.HierarchyPath.StartsWith(childrenHierarchyPath));
         }
 
         public static IQueryable<ElectionResult> ByElection(

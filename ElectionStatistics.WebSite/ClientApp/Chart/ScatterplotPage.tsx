@@ -2,16 +2,20 @@ import * as React from 'react';
 
 import { HighchartComponent } from '../Highchart/Component';
 
-import { ChartsController } from './ChartsController';
+import { ChartsController, ChartBuildParameters } from './ChartsController';
 import { ChartPage } from './ChartPage';
+import { ElectoralDistrictDto, DictionariesController } from './DictionariesController';
 
 export class ScatterplotPage extends ChartPage {
-    protected loadChartData(): Promise<Highcharts.IndividualSeriesOptions[]> {
-        return ChartsController.Instance.getScatterplotData({
-            electionId: this.state.electionId as number,
-            districtId: this.state.districtId,
-            candidateId: this.state.candidateId as number
+    protected getDistricts(electionId: number): Promise<ElectoralDistrictDto[]> {
+        return DictionariesController.Instance.getDistricts({
+            electionId: electionId,
+            forScatterplot: true
         });
+    }
+    
+    protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.IndividualSeriesOptions[]> {
+        return ChartsController.Instance.getScatterplotData(parameters);
     }
 
     protected renderChart(): JSX.Element {
@@ -20,12 +24,10 @@ export class ScatterplotPage extends ChartPage {
                 chart={{ type: 'scatter' }}
                 yAxis={{
                     title: {
-                        text: '№ УИКа'
+                        text: ''
                     }
                 }}
                 xAxis={{
-                    min: 0,
-                    max: 100,
                     gridLineWidth: 1
                 }}
                 series={(this.state.series as Highcharts.IndividualSeriesOptions[])
@@ -36,7 +38,7 @@ export class ScatterplotPage extends ChartPage {
                         },
                         tooltip: {
                             followPointer: false,
-                            pointFormat: 'УИК №{point.y}<br />{point.x:.1f}%'
+                            pointFormat: '{point.name}<br />{point.y:.1f}%'
                         }
                     }))
                 }

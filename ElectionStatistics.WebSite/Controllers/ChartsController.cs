@@ -45,7 +45,7 @@ namespace ElectionStatistics.WebSite
 
 			return new[]
 			{
-				new ChartSeriesDto
+				new SimpleArrayChartSeriesDto
 				{
 					Name = candidate.ShortName,
 					Data = data
@@ -58,35 +58,54 @@ namespace ElectionStatistics.WebSite
 		{
 			var results = parameters.GetElectionResults(modelContext);
 			var candidate = modelContext.Candidates.GetById(parameters.CandidateId);
-
-			var data = results
+			var highestDistricts = parameters.GetHighestDistricts(modelContext).ToArray();
+			return results
 				.Join(
 					modelContext.ElectionCandidatesVotes.ByCandidate(candidate),
 					result => result.Id,
 					votes => votes.ElectionResultId,
 					(result, votes) => new
 					{
+						result.ElectoralDistrict.Id,
 						DistrictName = result.ElectoralDistrict.Name,
 						Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
 							? 0
-							: (double)votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
+							: (double)votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount),
+						result.ElectoralDistrict.HierarchyPath
 					})
 				.ToArray()
-				.Select(arg => new[]
+				.Select(arg => new
 				{
+					arg.Id,
+					arg.DistrictName,
 					arg.Value,
-					int.Parse(arg.DistrictName.Replace("УИК №", ""))
+					HighestDistrict = highestDistricts.Single(district => 
+						arg.HierarchyPath.StartsWith(district.GetChildrenHierarchyPath()))
+				})
+				.OrderBy(arg => arg.HighestDistrict.Name)
+				.ThenBy(arg => arg.Id)
+				.Select((arg, index) => new
+				{
+					arg.Id,
+					arg.DistrictName,
+					arg.Value,
+					arg.HighestDistrict,
+					Index = index
+				})
+				.GroupBy(arg => arg.HighestDistrict)
+				.Select(grouping => new PointsChartSeriesDto
+				{
+					Name = grouping.Key.Name,
+					Data = grouping
+						.Select(arg => new PointDto
+						{
+							Name = arg.DistrictName,
+							X = arg.Index,
+							Y = arg.Value
+						})
+						.ToArray()
 				})
 				.ToArray();
-
-			return new[]
-			{
-				new ChartSeriesDto
-				{
-					Name = candidate.ShortName,
-					Data = data
-				}
-			};
 		}
 
 		public class ChartBuildParameters
@@ -100,10 +119,23 @@ namespace ElectionStatistics.WebSite
 				var results = modelContext.ElectionResults.ByElection(ElectionId);
 				if (DistrictId != null)
 				{
-					var electoralDistrict = modelContext.ElectoralDistricts.GetById(DistrictId.Value);
-					results = results.ByHigherDistrict(electoralDistrict);
+					var district = modelContext.ElectoralDistricts.GetById(DistrictId.Value);
+					results = results.ByHigherDistrict(district);
 				}
 				return results;
+			}
+
+			public IQueryable<ElectoralDistrict> GetHighestDistricts(ModelContext modelContext)
+			{
+				if (DistrictId != null)
+				{
+					return modelContext.ElectoralDistricts.ByHigherDistrict(DistrictId.Value);
+				}
+				else
+				{
+					var election = modelContext.Elections.GetById(ElectionId);
+					return modelContext.ElectoralDistricts.ByHigherDistrict(election.ElectoralDistrictId);
+				}
 			}
 		}
 
@@ -115,7 +147,23 @@ namespace ElectionStatistics.WebSite
 		public class ChartSeriesDto
 		{
 			public string Name { get; set; }
+		}
+
+		public class SimpleArrayChartSeriesDto : ChartSeriesDto
+		{
 			public double[][] Data { get; set; }
+		}
+
+		public class PointsChartSeriesDto : ChartSeriesDto
+		{
+			public PointDto[] Data { get; set; }
+		}
+
+		public class PointDto
+		{
+			public string Name { get; set; }
+			public double X { get; set; }
+			public double Y { get; set; }
 		}
 	}
 }

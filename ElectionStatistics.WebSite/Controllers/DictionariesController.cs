@@ -35,9 +35,8 @@ namespace ElectionStatistics.WebSite
 			public string Name { get; set; }
 		}
 
-
 		[HttpGet, Route("districts")]
-		public IEnumerable<ElectoralDistrictDto> GetDistrict(int electionId)
+		public IEnumerable<ElectoralDistrictDto> GetDistrict(int electionId, bool forScatterplot)
 		{
 			var election = modelContext.Elections.GetById(electionId);
 			var districtsByHigherDistrtict = modelContext.ElectoralDistricts
@@ -47,6 +46,18 @@ namespace ElectionStatistics.WebSite
 				.ToDictionary(
 					grouping => grouping.Key.Value,
 					grouping => grouping.ToArray());
+
+			if (forScatterplot)
+			{
+				var lowestDistrictIds = districtsByHigherDistrtict
+					.Where(pair => !districtsByHigherDistrtict.ContainsKey(pair.Value.First().Id))
+					.Select(pair => pair.Key)
+					.ToArray();
+				foreach (var lowestDistrictId in lowestDistrictIds)
+				{
+					districtsByHigherDistrtict.Remove(lowestDistrictId);
+				}
+			}
 
 			return districtsByHigherDistrtict.Values
 				.SelectMany(districts => districts)

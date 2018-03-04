@@ -3,6 +3,11 @@ import * as Highcharts from 'highcharts';
 
 import { IStringDictionary } from '../Common'
 
+export interface CandidateDto {
+    id: number;
+    name: string;
+}
+
 export interface ElectionDto {
     id: number;
     name: string;
@@ -14,9 +19,9 @@ export interface ElectoralDistrictDto {
     lowerDitsrticts: ElectoralDistrictDto[];
 }
 
-export interface CandidateDto {
-    id: number;
-    name: string;
+export interface GetDistrtictsRequest {
+    electionId: number;
+    forScatterplot?: boolean;
 }
 
 export class DictionariesController {
@@ -43,12 +48,14 @@ export class DictionariesController {
         return this.elections;
     }
 
-    public getDistricts(electionId: number) : Promise<ElectoralDistrictDto[]> {
-        if (!this.districtsByElection[electionId]) {
-            this.districtsByElection[electionId] = fetch(`api/districts?electionId=${electionId}`)
+    public getDistricts(request: GetDistrtictsRequest) : Promise<ElectoralDistrictDto[]> {
+        const queryString = QueryString.stringify(request);
+
+        if (!this.districtsByElection[queryString]) {
+            this.districtsByElection[queryString] = fetch(`api/districts?${queryString}`)
                 .then(response => response.json() as Promise<ElectoralDistrictDto[]>)
         }
-        return this.districtsByElection[electionId];
+        return this.districtsByElection[queryString];
     }
 
     public getCandidates(electionId: number) : Promise<CandidateDto[]> {

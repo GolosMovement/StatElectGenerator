@@ -2,15 +2,20 @@ import * as React from 'react';
 
 import { HighchartComponent } from '../Highchart/Component';
 
-import { ChartsController } from './ChartsController';
+import { ChartsController, ChartBuildParameters } from './ChartsController';
 import { ChartPage } from './ChartPage';
+import { DictionariesController, ElectoralDistrictDto } from './DictionariesController';
 
-export class HistogramPage extends ChartPage {    
-    protected loadChartData(): Promise<Highcharts.IndividualSeriesOptions[]> {
+export class HistogramPage extends ChartPage {
+    protected getDistricts(electionId: number): Promise<ElectoralDistrictDto[]> {
+        return DictionariesController.Instance.getDistricts({
+            electionId: electionId
+        });
+    }
+
+    protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.IndividualSeriesOptions[]> {
         return ChartsController.Instance.getHistogramData({
-            electionId: this.state.electionId as number,
-            districtId: this.state.districtId,
-            candidateId: this.state.candidateId as number,
+            ...parameters,
             stepSize: 1
         });
     }
