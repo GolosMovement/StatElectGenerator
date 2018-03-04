@@ -7,13 +7,13 @@
     "@types/geojson": {
       "version": "7946.0.1",
       "resolved": "https://registry.npmjs.org/@types/geojson/-/geojson-7946.0.1.tgz",
-      "integrity": "sha1-H8QSgOQvCPDVaEAaVWvJfDT1Ji4=",
+      "integrity": "sha512-BXY6tH16Snp/ZdX6cFlBD8yfEArcZemzxEGciXkMmp1/tU76oyqkxJq91JQzT8SXWzRPwj//dw0/FdCSnnT8mw==",
       "dev": true
     },
     "@types/highcharts": {
-      "version": "5.0.16",
-      "resolved": "https://registry.npmjs.org/@types/highcharts/-/highcharts-5.0.16.tgz",
-      "integrity": "sha1-yFKBrElpYdcshn0LFmfUOgiOf1E=",
+      "version": "5.0.19",
+      "resolved": "https://registry.npmjs.org/@types/highcharts/-/highcharts-5.0.19.tgz",
+      "integrity": "sha512-Br4XVW6fLTbwgZTsIayxnCY64kRr1NwoiG1WBZ+xlXYM9339NPA2vkk4lVWL8j+cewV5exnZOG67xfxicaK8gg==",
       "dev": true,
       "requires": {
         "@types/geojson": "7946.0.1"

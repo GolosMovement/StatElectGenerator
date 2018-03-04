@@ -66,7 +66,7 @@ namespace ElectionStatistics.WebSite
 				},
 				Series = new []
 				{
-					new ChartSeries
+					new HistogramChartSeries
 					{
 						Name = candidate.ShortName,
 						Data = data
@@ -112,8 +112,9 @@ namespace ElectionStatistics.WebSite
 				.GroupBy(arg => arg.HighestDistrict)
 				.ToDictionary(grouping => grouping.Key, grouping => grouping.Min(arg => arg.Number));
 
-			var series = sourceData
+			var seriesGrouping = sourceData
 				.OrderBy(arg => districtOrderNumbers[arg.HighestDistrict])
+				.ThenBy(arg => arg.HighestDistrict.Name)
 				.ThenBy(arg => arg.Number)
 				.Select((arg, index) => new
 				{
@@ -122,25 +123,49 @@ namespace ElectionStatistics.WebSite
 					arg.HighestDistrict,
 					Index = index
 				})
-				.GroupBy(arg => arg.HighestDistrict)
-				.Select(grouping => new ScatterplotChartSeries
-				{
-					Name = grouping.Key.Name,
-					Tooltip = new SeriesTooltipOptions
+				.GroupBy(arg => arg.HighestDistrict);
+
+			IEnumerable<ScatterplotChartSeries> series;
+			if (sourceData.Length >= 10000)
+			{
+				series = seriesGrouping
+					.Select(grouping => new FastScatterplotChartSeries
 					{
-						PointFormat = "{point.name}<br />{point.y:.1f}%"
-					},
-					Data = grouping
-						.Select(arg => new Point
+						Name = grouping.Key.Name,
+						Tooltip = new SeriesTooltipOptions
 						{
-							Name = arg.DistrictName,
-							X = arg.Index,
-							Y = arg.Value
-						})
-						.ToArray()
-				})
-				.Cast<ChartSeries>()
-				.ToArray();
+							PointFormat = "{point.y:.1f}%"
+						},
+						Data = grouping
+							.Select(arg => new[]
+							{
+								arg.Index,
+								arg.Value
+							})
+							.ToArray()
+					});
+			}
+			else
+			{
+				series = seriesGrouping
+					.Select(grouping => new FullScatterplotChartSeries
+					{
+						Name = grouping.Key.Name,
+						Tooltip = new SeriesTooltipOptions
+						{
+							PointFormat = "{point.name}<br />{point.y:.1f}%"
+						},
+						Data = grouping
+							.Select(arg => new Point
+							{
+								Name = arg.DistrictName,
+								X = arg.Index,
+								Y = arg.Value
+							})
+							.ToArray()
+					});
+			}
+				
 
 			return new HighchartsOptions
 			{
@@ -155,12 +180,14 @@ namespace ElectionStatistics.WebSite
 				},
 				XAxis = new AxisOptions
 				{
+					Min = 0,
+					Max = sourceData.Length,
 					Labels = new AxisLabels
 					{
 						Enabled = false
 					}
 				},
-				Series = series
+				Series = series.Cast<ChartSeries>().ToArray()
 			};
 		}
 

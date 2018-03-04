@@ -28,12 +28,27 @@
 	public class ChartSeries
 	{
 		public string Name { get; set; }
+	}
+
+	public class HistogramChartSeries : ChartSeries
+	{
+		public SeriesTooltipOptions Tooltip { get; set; }
 		public Point[] Data { get; set; }
 	}
 
 	public class ScatterplotChartSeries : ChartSeries
 	{
 		public SeriesTooltipOptions Tooltip { get; set; }
+	}
+
+	public class FullScatterplotChartSeries : ScatterplotChartSeries
+	{
+		public Point[] Data { get; set; }
+	}
+
+	public class FastScatterplotChartSeries : ScatterplotChartSeries
+	{
+		public decimal[][] Data { get; set; }
 	}
 
 	public class SeriesTooltipOptions

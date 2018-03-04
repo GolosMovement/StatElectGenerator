@@ -19,18 +19,17 @@ export class ScatterplotPage extends ChartPage {
     }
 
     protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {    
-        const options: Highcharts.Options = {
+        const options = {
             ...optionsFromBackend,
             title: { text: '' },
             chart: { type: 'scatter' },
-            xAxis: {
-                labels: {
-                    enabled: false
-                }
+            boost: {
+                useGPUTranslations: true,
+                usePreAllocated: true
             },
             series: (optionsFromBackend.series as Highcharts.ScatterChartSeriesOptions[])
                 .map(s => ({
-                    ...s, 
+                    ...s,
                     marker: {
                         radius: 2
                     },
