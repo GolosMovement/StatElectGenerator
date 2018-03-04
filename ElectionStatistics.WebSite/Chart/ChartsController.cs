@@ -33,14 +33,16 @@ namespace ElectionStatistics.WebSite
 						VotersCount = result.InsideBallotsCount + result.OutsideBallotsCount,
 						Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
 							? 0
-							: (double) votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
+							: (decimal) votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
 					})
+				.ToArray() // На SQL сервере возникают ошибки округления
 				.GroupBy(arg => Math.Round(arg.Value / parameters.StepSize) * parameters.StepSize)
-				.Select(grouping => new []
+				.Select(grouping => new Point
 				{
-					grouping.Key,
-					grouping.Sum(arg => arg.VotersCount)
+					X = grouping.Key,
+					Y = grouping.Sum(arg => arg.VotersCount)
 				})
+				.OrderBy(point => point.X)
 				.ToArray();
 
 			return new HighchartsOptions
@@ -62,9 +64,9 @@ namespace ElectionStatistics.WebSite
 						Text = "Количество избирателей зарегистрированных на участках"
 					}
 				},
-				Series = new ChartSeries[]
+				Series = new []
 				{
-					new HistogramChartSeries
+					new ChartSeries
 					{
 						Name = candidate.ShortName,
 						Data = data
@@ -91,7 +93,7 @@ namespace ElectionStatistics.WebSite
 						DistrictName = result.ElectoralDistrict.Name,
 						Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
 							? 0
-							: (double)votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount),
+							: (decimal)votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount),
 						result.ElectoralDistrict.HierarchyPath
 					})
 				.ToArray()
@@ -195,7 +197,7 @@ namespace ElectionStatistics.WebSite
 
 		public class HistogramBuildParameters : ChartBuildParameters
 		{
-			public double StepSize { get; set; }
+			public decimal StepSize { get; set; }
 		}
 	}
 }
