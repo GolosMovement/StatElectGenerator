@@ -18,7 +18,7 @@ namespace ElectionStatistics.WebSite
 		}
 
 		[HttpGet, Route("histogram")]
-		public IEnumerable<ChartSeriesDto> GetDataForHistogram(HistogramBuildParameters parameters)
+		public HighchartsOptions GetDataForHistogram(HistogramBuildParameters parameters)
 		{
 			var results = parameters.GetElectionResults(modelContext);
 			var candidate = modelContext.Candidates.GetById(parameters.CandidateId);
@@ -43,23 +43,44 @@ namespace ElectionStatistics.WebSite
 				})
 				.ToArray();
 
-			return new[]
+			return new HighchartsOptions
 			{
-				new SimpleArrayChartSeriesDto
+				XAxis = new AxisOptions
 				{
-					Name = candidate.ShortName,
-					Data = data
+					Min = 0,
+					Max = 100,
+					Title = new TitleOptions
+					{
+						Text = "% за кандидата"
+					}
+				},
+				YAxis = new AxisOptions
+				{
+					Min = 0,
+					Title = new TitleOptions
+					{
+						Text = "Количество избирателей зарегистрированных на участках"
+					}
+				},
+				Series = new ChartSeries[]
+				{
+					new HistogramChartSeries
+					{
+						Name = candidate.ShortName,
+						Data = data
+					}
 				}
 			};
 		}
 
 		[HttpGet, Route("scatterplot")]
-		public IEnumerable<ChartSeriesDto> GetDataForScatterplot(ChartBuildParameters parameters)
+		public HighchartsOptions GetDataForScatterplot(ChartBuildParameters parameters)
 		{
 			var results = parameters.GetElectionResults(modelContext);
 			var candidate = modelContext.Candidates.GetById(parameters.CandidateId);
 			var highestDistricts = parameters.GetHighestDistricts(modelContext).ToArray();
-			return results
+
+			var sourceData = results
 				.Join(
 					modelContext.ElectionCandidatesVotes.ByCandidate(candidate),
 					result => result.Id,
@@ -76,28 +97,39 @@ namespace ElectionStatistics.WebSite
 				.ToArray()
 				.Select(arg => new
 				{
-					arg.Id,
+					Number = int.Parse(arg.DistrictName.Replace("УИК №", "")),
 					arg.DistrictName,
 					arg.Value,
-					HighestDistrict = highestDistricts.Single(district => 
-						arg.HierarchyPath.StartsWith(district.GetChildrenHierarchyPath()))
+					HighestDistrict = highestDistricts.Single(
+						district =>
+							arg.HierarchyPath.StartsWith(district.GetChildrenHierarchyPath()))
 				})
-				.OrderBy(arg => arg.HighestDistrict.Name)
-				.ThenBy(arg => arg.Id)
+				.ToArray();
+
+			var districtOrderNumbers = sourceData
+				.GroupBy(arg => arg.HighestDistrict)
+				.ToDictionary(grouping => grouping.Key, grouping => grouping.Min(arg => arg.Number));
+
+			var series = sourceData
+				.OrderBy(arg => districtOrderNumbers[arg.HighestDistrict])
+				.ThenBy(arg => arg.Number)
 				.Select((arg, index) => new
 				{
-					arg.Id,
 					arg.DistrictName,
 					arg.Value,
 					arg.HighestDistrict,
 					Index = index
 				})
 				.GroupBy(arg => arg.HighestDistrict)
-				.Select(grouping => new PointsChartSeriesDto
+				.Select(grouping => new ScatterplotChartSeries
 				{
 					Name = grouping.Key.Name,
+					Tooltip = new SeriesTooltipOptions
+					{
+						PointFormat = "{point.name}<br />{point.y:.1f}%"
+					},
 					Data = grouping
-						.Select(arg => new PointDto
+						.Select(arg => new Point
 						{
 							Name = arg.DistrictName,
 							X = arg.Index,
@@ -105,7 +137,29 @@ namespace ElectionStatistics.WebSite
 						})
 						.ToArray()
 				})
+				.Cast<ChartSeries>()
 				.ToArray();
+
+			return new HighchartsOptions
+			{
+				YAxis = new AxisOptions
+				{
+					Min = 0,
+					Max = 100,
+					Title = new TitleOptions
+					{
+						Text = "% за кандидата"
+					}
+				},
+				XAxis = new AxisOptions
+				{
+					Labels = new AxisLabels
+					{
+						Enabled = false
+					}
+				},
+				Series = series
+			};
 		}
 
 		public class ChartBuildParameters
@@ -142,28 +196,6 @@ namespace ElectionStatistics.WebSite
 		public class HistogramBuildParameters : ChartBuildParameters
 		{
 			public double StepSize { get; set; }
-		}
-
-		public class ChartSeriesDto
-		{
-			public string Name { get; set; }
-		}
-
-		public class SimpleArrayChartSeriesDto : ChartSeriesDto
-		{
-			public double[][] Data { get; set; }
-		}
-
-		public class PointsChartSeriesDto : ChartSeriesDto
-		{
-			public PointDto[] Data { get; set; }
-		}
-
-		public class PointDto
-		{
-			public string Name { get; set; }
-			public double X { get; set; }
-			public double Y { get; set; }
 		}
 	}
 }

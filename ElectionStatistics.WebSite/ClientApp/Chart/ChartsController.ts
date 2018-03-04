@@ -16,8 +16,8 @@ export interface HistogramBuildParameters extends ChartBuildParameters {
 export class ChartsController {
     private static instance: ChartsController;
 
-    private readonly histogramDataPromises: IStringDictionary<Promise<Highcharts.IndividualSeriesOptions[]>> = {};
-    private readonly scatterplotDataPromises: IStringDictionary<Promise<Highcharts.IndividualSeriesOptions[]>> = {};
+    private readonly histogramDataPromises: IStringDictionary<Promise<Highcharts.Options>> = {};
+    private readonly scatterplotDataPromises: IStringDictionary<Promise<Highcharts.Options>> = {};
 
     private constructor()
     {
@@ -28,20 +28,20 @@ export class ChartsController {
         return this.instance || (this.instance = new this());
     }
 
-    public getHistogramData(parameters: HistogramBuildParameters) : Promise<Highcharts.IndividualSeriesOptions[]> {
+    public getHistogramData(parameters: HistogramBuildParameters) : Promise<Highcharts.Options> {
         const parametersString = QueryString.stringify(parameters);
         if (!this.histogramDataPromises[parametersString]) {
             this.histogramDataPromises[parametersString] = fetch(`api/charts/histogram?${parametersString}`)
-                .then(response => response.json() as Promise<Highcharts.IndividualSeriesOptions[]>)
+                .then(response => response.json() as Promise<Highcharts.Options>)
         }
         return this.histogramDataPromises[parametersString];
     }
 
-    public getScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.IndividualSeriesOptions[]> {
+    public getScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
         const parametersString = QueryString.stringify(parameters);
         if (!this.scatterplotDataPromises[parametersString]) {
             this.scatterplotDataPromises[parametersString] = fetch(`api/charts/scatterplot?${parametersString}`)
-                .then(response => response.json() as Promise<Highcharts.IndividualSeriesOptions[]>)
+                .then(response => response.json() as Promise<Highcharts.Options>)
         }
         return this.scatterplotDataPromises[parametersString];
     }

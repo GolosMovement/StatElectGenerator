@@ -14,34 +14,33 @@ export class ScatterplotPage extends ChartPage {
         });
     }
     
-    protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.IndividualSeriesOptions[]> {
+    protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getScatterplotData(parameters);
     }
 
-    protected renderChart(): JSX.Element {
-        return <HighchartComponent 
-                title={{ text: '' }}
-                chart={{ type: 'scatter' }}
-                yAxis={{
-                    title: {
-                        text: ''
-                    }
-                }}
-                xAxis={{
-                    gridLineWidth: 1
-                }}
-                series={(this.state.series as Highcharts.IndividualSeriesOptions[])
-                    .map(s => ({
-                        ...s, 
-                        marker: {
-                            radius: 2
-                        },
-                        tooltip: {
-                            followPointer: false,
-                            pointFormat: '{point.name}<br />{point.y:.1f}%'
-                        }
-                    }))
+    protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {    
+        const options: Highcharts.Options = {
+            ...optionsFromBackend,
+            title: { text: '' },
+            chart: { type: 'scatter' },
+            xAxis: {
+                labels: {
+                    enabled: false
                 }
-            />;
+            },
+            series: (optionsFromBackend.series as Highcharts.ScatterChartSeriesOptions[])
+                .map(s => ({
+                    ...s, 
+                    marker: {
+                        radius: 2
+                    },
+                    tooltip: {
+                        ...s.tooltip,
+                        followPointer: false
+                    }
+                }))
+        };
+
+        return <HighchartComponent options={options} />;
     }
 }

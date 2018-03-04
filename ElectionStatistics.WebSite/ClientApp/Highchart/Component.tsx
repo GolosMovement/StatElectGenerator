@@ -2,7 +2,7 @@ import * as Highcharts from 'highcharts';
 import * as React from 'react';
 
 
-export class HighchartComponent extends React.Component<Highcharts.Options, {}> {
+export class HighchartComponent extends React.Component<{options: Highcharts.Options}, {}> {
     private chartRef?: HTMLElement;
    
     public componentDidMount() {
@@ -19,9 +19,9 @@ export class HighchartComponent extends React.Component<Highcharts.Options, {}> 
 
     private renderChart() {
         Highcharts.chart({
-            ...this.props,
+            ...this.props.options,
             chart: {
-                ...this.props.chart,
+                ...this.props.options.chart,
                 height: '50%',
                 zoomType: 'xy',
                 renderTo: this.chartRef,

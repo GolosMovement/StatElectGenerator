@@ -26,7 +26,7 @@ interface ChartPageState {
     electionId: number | null;
     districtId: number | null;
     candidateId: number | null;
-    series?: Highcharts.IndividualSeriesOptions[];
+    chartOptions?: Highcharts.Options;
 }
 
 export abstract class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
@@ -167,7 +167,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         }
     }
 
-    protected abstract getChartData(parameters: ChartBuildParameters) : Promise<Highcharts.IndividualSeriesOptions[]>;
+    protected abstract getChartData(parameters: ChartBuildParameters) : Promise<Highcharts.Options>;
 
     private tryLoadChartData() {
         if (this.state.electionId !== null &&
@@ -186,7 +186,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                     this.setState({
                         ...this.state,
                         isLoading: false,
-                        series: series
+                        chartOptions: series
                     });
                 });
         }
@@ -196,13 +196,13 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         if (this.state.isLoading) {
             return <Spin size="large" />;
         }
-        else if (this.state.series != null) {
-            return this.renderChart();
+        else if (this.state.chartOptions != null) {
+            return this.renderChart(this.state.chartOptions);
         }
         else {
             return null;
         }
     }
 
-    protected abstract renderChart() : JSX.Element;
+    protected abstract renderChart(optionsFromBackend: Highcharts.Options) : JSX.Element;
 }

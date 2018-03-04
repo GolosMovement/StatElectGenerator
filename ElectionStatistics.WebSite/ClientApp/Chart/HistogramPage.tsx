@@ -13,36 +13,28 @@ export class HistogramPage extends ChartPage {
         });
     }
 
-    protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.IndividualSeriesOptions[]> {
+    protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getHistogramData({
             ...parameters,
             stepSize: 1
         });
     }
 
-    protected renderChart(): JSX.Element {
-        return <HighchartComponent 
-                title={{ text: '' }}
-                chart={{ type: 'line' }}
-                yAxis={{
-                    title: {
-                        text: 'Количество избирателей зарегистрированных на участках'
+    protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {
+        const options = {
+            ...optionsFromBackend,
+            title: { text: '' },
+            chart: { type: 'line' },
+            plotOptions: {
+                line: {
+                    step: 'center',
+                    marker: {
+                        enabled: false
                     }
-                }}
-                xAxis={{
-                    min: 0,
-                    max: 100,
-                    gridLineWidth: 1
-                }}
-                series={this.state.series}                
-                plotOptions={{
-                    line: {
-                        step: 'center',
-                        marker: {
-                            enabled: false
-                        }
-                    }
-                }}
-            />;
+                }
+            }
+        };
+
+        return <HighchartComponent options={options} />;
     }
 }
