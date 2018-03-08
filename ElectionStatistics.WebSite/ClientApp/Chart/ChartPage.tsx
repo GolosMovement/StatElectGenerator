@@ -21,8 +21,8 @@ const toQueryStringParameter = (parameter: ChartParameter) => {
     }
 
     const queryStringParameter = {
-        ...parameter,
-        type: parameter.$type
+        type: parameter.$type,        
+        ...parameter
     };
     delete queryStringParameter.$type;
     return queryStringParameter as QueryStringChartParameter;
@@ -34,8 +34,8 @@ const fromQueryStringParameter = (queryStringParameter?: QueryStringChartParamet
     }
 
     const parameter = {
-        ...queryStringParameter,
-        $type: queryStringParameter.type
+        $type: queryStringParameter.type,
+        ...queryStringParameter
     };
     delete parameter.type;
     return parameter as ChartParameter;
@@ -69,8 +69,6 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
 
     private getStateFromRouteProps(): ChartPageState {
         const routeProps = QueryString.parse(this.props.location.search) as ChartPageRouteProps;
-        
-        console.log(routeProps);
 
         return {
             isLoading: false,
@@ -108,6 +106,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                         {this.renderParametersSelect(
                             "Выберите параметр для оси X",
                             this.state.x,
+                            this.getXParameters,
                             this.onXChange
                         )}
                     </div>
@@ -117,10 +116,12 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                         {this.renderParametersSelect(
                             "Выберите параметр для оси Y",
                             this.state.y,
+                            this.getYParameters,
                             this.onYChange
                         )}
                     </div>
                 </div>
+                { this.renderAdditionalParameterSelectors() }
                 <div className="row">
                     <div className="col-md-3">
                         {this.renderButton()}
@@ -177,6 +178,8 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         });
     }
 
+    protected abstract getXParameters(electionId: number) : Promise<NamedChartParameter[]>;
+
     private onYChange = (newY: ChartParameter | null) => {
         this.setState({
             ...this.state,
@@ -184,9 +187,12 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         });
     }
 
+    protected abstract getYParameters(electionId: number) : Promise<NamedChartParameter[]>;
+
     private renderParametersSelect(
         placeholder: string,
         selectedParameter: ChartParameter | null,
+        getParametersPromise: (electionId: number) => Promise<NamedChartParameter[]>,
         onChange: (newSelectedParameter: ChartParameter | null) => void) {
         if (this.state.electionId == null) {
             return null;
@@ -196,13 +202,17 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
 
             return <Select
                 placeholder={placeholder}
-                itemsPromise={DictionariesController.Instance.getParameters(this.state.electionId)}
+                itemsPromise={getParametersPromise(this.state.electionId)}
                 selectedValue={selectedParameter}
                 getValue={namedParameter => namedParameter.parameter} 
                 getText={namedParameter => namedParameter.name}
                 onChange={onChange} 
             />
         }
+    }
+
+    protected renderAdditionalParameterSelectors(): JSX.Element[] {
+        return [];
     }
 
     private renderButton() {

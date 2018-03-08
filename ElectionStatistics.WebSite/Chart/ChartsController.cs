@@ -30,18 +30,23 @@ namespace ElectionStatistics.WebSite
 				.Join(
 					parameters.X.GetParameters(modelContext),
 					result => result.Id,
-					votes => votes.ElectionResultId,
-					(result, parameterValue) => new
+					x => x.ElectionResultId,
+					(result, x) => x)
+				.Join(
+					parameters.Y.GetParameters(modelContext),
+					x => x.ElectionResultId,
+					y => y.ElectionResultId,
+					(x, y) => new
 					{
-						VotersCount = result.InsideBallotsCount + result.OutsideBallotsCount,
-						Value = parameterValue.Value
+						X = x.Value,
+						Y = y.Value
 					})
 				.ToArray() // На SQL сервере возникают ошибки округления
-				.GroupBy(arg => Math.Round(arg.Value / parameters.StepSize) * parameters.StepSize)
+				.GroupBy(arg => Math.Round(arg.X / parameters.StepSize) * parameters.StepSize)
 				.Select(grouping => new Point
 				{
 					X = grouping.Key,
-					Y = grouping.Sum(arg => arg.VotersCount)
+					Y = grouping.Sum(arg => arg.Y)
 				})
 				.OrderBy(point => point.X)
 				.ToArray();
@@ -50,15 +55,16 @@ namespace ElectionStatistics.WebSite
 			{
 				XAxis = new AxisOptions
 				{
-					Min = 0,
-					Max = 100
+					Min = parameters.X.MinValue,
+					Max = parameters.X.MaxValue
 				},
 				YAxis = new AxisOptions
 				{
-					Min = 0,
+					Min = parameters.Y.MinValue,
+					Max = parameters.Y.MinValue,
 					Title = new TitleOptions
 					{
-						Text = "Количество избирателей зарегистрированных на участках"
+						Text = parameters.Y.GetName(modelContext)
 					}
 				},
 				Series = new ChartSeries[]
@@ -102,7 +108,7 @@ namespace ElectionStatistics.WebSite
 					{
 						result.ElectoralDistrict.Id,
 						DistrictName = result.ElectoralDistrict.Name,
-						Value = parameterValue.Value,
+						Y = parameterValue.Value,
 						result.ElectoralDistrict.HierarchyPath
 					})
 				.ToArray()
@@ -110,7 +116,7 @@ namespace ElectionStatistics.WebSite
 				{
 					Number = int.Parse(arg.DistrictName.Replace("УИК №", "")),
 					arg.DistrictName,
-					arg.Value,
+					arg.Y,
 					HighestDistrict = highestDistricts.Single(
 						district =>
 							arg.HierarchyPath.StartsWith(district.GetChildrenHierarchyPath()))
@@ -128,7 +134,7 @@ namespace ElectionStatistics.WebSite
 				.Select((arg, index) => new
 				{
 					arg.DistrictName,
-					arg.Value,
+					arg.Y,
 					arg.HighestDistrict,
 					Index = index
 				})
@@ -136,15 +142,6 @@ namespace ElectionStatistics.WebSite
 
 			var highchartsOptions = new HighchartsOptions
 			{
-				YAxis = new AxisOptions
-				{
-					Min = 0,
-					Max = 100,
-					Title = new TitleOptions
-					{
-						Text = parameters.Y.GetName(modelContext)
-					}
-				},
 				XAxis = new AxisOptions
 				{
 					Min = 0,
@@ -152,6 +149,15 @@ namespace ElectionStatistics.WebSite
 					Labels = new AxisLabels
 					{
 						Enabled = false
+					}
+				},
+				YAxis = new AxisOptions
+				{
+					Min = parameters.Y.MinValue,
+					Max = parameters.Y.MinValue,
+					Title = new TitleOptions
+					{
+						Text = parameters.Y.GetName(modelContext)
 					}
 				}
 			};
@@ -171,7 +177,7 @@ namespace ElectionStatistics.WebSite
 							.Select(arg => new[]
 							{
 								arg.Index,
-								arg.Value
+								arg.Y
 							})
 							.ToArray()
 					})
@@ -193,7 +199,7 @@ namespace ElectionStatistics.WebSite
 							{
 								Name = arg.DistrictName,
 								X = arg.Index,
-								Y = arg.Value
+								Y = arg.Y
 							})
 							.ToArray()
 					})

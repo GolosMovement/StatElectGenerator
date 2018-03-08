@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { deepEqual } from '.';
 
 import { Select, Spin } from 'antd';
 import { SelectValue, OptionProps } from 'antd/lib/select';
@@ -85,7 +86,7 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
             return undefined;
         }
         else {
-            const selectedItem = this.state.items.filter(item => this.props.getValue(item) == this.props.selectedValue)[0];
+            const selectedItem = this.state.items.filter(item => deepEqual(this.props.getValue(item), this.props.selectedValue))[0];
             return this.props.getText(selectedItem);
         }
     }

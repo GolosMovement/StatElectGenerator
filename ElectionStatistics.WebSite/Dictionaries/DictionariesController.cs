@@ -88,15 +88,31 @@ namespace ElectionStatistics.WebSite
 		{
 			return modelContext.Candidates
 				.ByElection(modelContext, electionId)
-				.Select(candidate => new CandidateChartParameter
+				.Select(candidate => new CandidateVotePercentageChartParameter
 				{
 					CandidateId = candidate.Id
 				})
 				.ToArray()
 				.Concat(new ChartParameter[]
 				{
-					new AttendanceChartParameter()
+					new AttendancePercentageChartParameter()
 				})
+				.Select(parameter => new NamedChartParameter
+				{
+					Name = parameter.GetName(modelContext),
+					Parameter = parameter
+				})
+				.ToArray();
+		}
+
+		[HttpGet, Route("summary-parameters"), ResponseCache(CacheProfileName = "Default")]
+		public IEnumerable<NamedChartParameter> GetSummaryParameters()
+		{
+			return new ChartParameter[]
+				{
+					new SummaryVotersCountChartParameter(),
+					new PollingStationsCountChartParameter()
+				}
 				.Select(parameter => new NamedChartParameter
 				{
 					Name = parameter.GetName(modelContext),

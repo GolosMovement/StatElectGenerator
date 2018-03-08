@@ -29,6 +29,7 @@ export class DictionariesController {
     private elections?: Promise<ElectionDto[]>;
     private districtsByElection: INumberDictionary<Promise<ElectoralDistrictDto[]>> = {};
     private parametersByElection: INumberDictionary<Promise<NamedChartParameter[]>> = {};
+    private summaryParameters?: Promise<NamedChartParameter[]>;
 
     private constructor()
     {
@@ -61,5 +62,13 @@ export class DictionariesController {
                 .then(response => response.json() as Promise<NamedChartParameter[]>)
         }
         return this.parametersByElection[electionId];
+    }
+
+    public getSummaryParameters() : Promise<NamedChartParameter[]> {
+        if (!this.summaryParameters) {
+            this.summaryParameters = fetch(`api/summary-parameters`)
+                .then(response => response.json() as Promise<NamedChartParameter[]>)
+        }
+        return this.summaryParameters;
     }
 }

@@ -4,9 +4,17 @@ import { HighchartComponent } from '../Highchart/Component';
 
 import { ChartsController, ChartBuildParameters } from './ChartsController';
 import { ChartPage } from './ChartPage';
-import { ElectoralDistrictDto, DictionariesController } from './DictionariesController';
+import { ElectoralDistrictDto, DictionariesController, NamedChartParameter } from './DictionariesController';
 
-export class ScatterplotPage extends ChartPage {    
+export class ScatterplotPage extends ChartPage {
+    protected getXParameters(electionId: number): Promise<NamedChartParameter[]> {
+        return DictionariesController.Instance.getParameters(electionId);
+    }
+    
+    protected getYParameters(electionId: number): Promise<NamedChartParameter[]> {
+        return DictionariesController.Instance.getParameters(electionId);
+    }
+    
     protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getScatterplotData(parameters);
     }
@@ -34,7 +42,7 @@ export class ScatterplotPage extends ChartPage {
             plotOptions: {
                 series: {
                     animation: false,
-                    turboThreshold: 10000,
+                    turboThreshold: 100000,
                     states: {
                         hover: {
                             enabled: false
