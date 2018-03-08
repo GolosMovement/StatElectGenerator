@@ -3,9 +3,13 @@ import * as Highcharts from 'highcharts';
 
 import { INumberDictionary } from '../Common'
 
-export interface CandidateDto {
-    id: number;
+export interface NamedChartParameter {
     name: string;
+    parameter: ChartParameter;
+}
+
+export interface ChartParameter {
+    $type: string;
 }
 
 export interface ElectionDto {
@@ -24,7 +28,7 @@ export class DictionariesController {
 
     private elections?: Promise<ElectionDto[]>;
     private districtsByElection: INumberDictionary<Promise<ElectoralDistrictDto[]>> = {};
-    private candidatesByElection: INumberDictionary<Promise<CandidateDto[]>> = {};
+    private parametersByElection: INumberDictionary<Promise<NamedChartParameter[]>> = {};
 
     private constructor()
     {
@@ -51,11 +55,11 @@ export class DictionariesController {
         return this.districtsByElection[electionId];
     }
 
-    public getCandidates(electionId: number) : Promise<CandidateDto[]> {
-        if (!this.candidatesByElection[electionId]) {
-            this.candidatesByElection[electionId] = fetch(`api/candidates?electionId=${electionId}`)
-                .then(response => response.json() as Promise<CandidateDto[]>)
+    public getParameters(electionId: number) : Promise<NamedChartParameter[]> {
+        if (!this.parametersByElection[electionId]) {
+            this.parametersByElection[electionId] = fetch(`api/parameters?electionId=${electionId}`)
+                .then(response => response.json() as Promise<NamedChartParameter[]>)
         }
-        return this.candidatesByElection[electionId];
+        return this.parametersByElection[electionId];
     }
 }

@@ -83,23 +83,26 @@ namespace ElectionStatistics.WebSite
 			public ElectoralDistrictDto[] LowerDitsrticts { get; set; }
 		}
 
-		[HttpGet, Route("candidates"), ResponseCache(CacheProfileName = "Default")]
-		public IEnumerable<CandidateDto> GetCandidates(int electionId)
+		[HttpGet, Route("parameters"), ResponseCache(CacheProfileName = "Default")]
+		public IEnumerable<NamedChartParameter> GetParameters(int electionId)
 		{
 			return modelContext.Candidates
 				.ByElection(modelContext, electionId)
-				.Select(candidate => new CandidateDto
+				.Select(candidate => new CandidateChartParameter
 				{
-					Id = candidate.Id,
-					Name = candidate.ShortName
+					CandidateId = candidate.Id
+				})
+				.ToArray()
+				.Concat(new ChartParameter[]
+				{
+					new AttendanceChartParameter()
+				})
+				.Select(parameter => new NamedChartParameter
+				{
+					Name = parameter.GetName(modelContext),
+					Parameter = parameter
 				})
 				.ToArray();
-		}
-
-		public class CandidateDto
-		{
-			public int Id { get; set; }
-			public string Name { get; set; }
 		}
 	}
 }

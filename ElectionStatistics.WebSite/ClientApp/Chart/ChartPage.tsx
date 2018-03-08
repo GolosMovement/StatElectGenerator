@@ -1,21 +1,51 @@
 import * as React from 'react';
 
 import { RouteComponentProps, Link } from 'react-router-dom';
-import * as QueryString from 'query-string'
 
 import { LazyItems } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
 
-import { ElectionDto, ElectoralDistrictDto, CandidateDto, DictionariesController } from './DictionariesController';
+import { ElectionDto, ElectoralDistrictDto, NamedChartParameter, DictionariesController, ChartParameter } from './DictionariesController';
 import { ChartsController, ChartBuildParameters } from './ChartsController';
 import { SelectValue } from 'antd/lib/select';
-import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps } from '../Common';
+import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps, QueryString } from '../Common';
 import { Spin } from 'antd';
+
+interface QueryStringChartParameter {
+    type: string;
+}
+
+const toQueryStringParameter = (parameter: ChartParameter) => {
+    if (parameter == null) {
+        return undefined;
+    }
+
+    const queryStringParameter = {
+        ...parameter,
+        type: parameter.$type
+    };
+    delete queryStringParameter.$type;
+    return queryStringParameter as QueryStringChartParameter;
+}
+
+const fromQueryStringParameter = (queryStringParameter?: QueryStringChartParameter) => {
+    if (queryStringParameter == null) {
+        return null;
+    }
+
+    const parameter = {
+        ...queryStringParameter,
+        $type: queryStringParameter.type
+    };
+    delete parameter.type;
+    return parameter as ChartParameter;
+}
 
 interface ChartPageRouteProps {
     electionId?: number;
-    candidateId?: number;
     districtId?: number;
+    x?: QueryStringChartParameter;
+    y?: QueryStringChartParameter;
 }
 
 interface ChartPageProps extends RouteComponentProps<ChartPageRouteProps> {
@@ -25,7 +55,8 @@ interface ChartPageState {
     isLoading: boolean;
     electionId: number | null;
     districtId: number | null;
-    candidateId: number | null;
+    x: ChartParameter | null;
+    y: ChartParameter | null;
     chartOptions?: Highcharts.Options;
 }
 
@@ -39,11 +70,14 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
     private getStateFromRouteProps(): ChartPageState {
         const routeProps = QueryString.parse(this.props.location.search) as ChartPageRouteProps;
         
+        console.log(routeProps);
+
         return {
             isLoading: false,
             electionId: routeProps.electionId || null,
             districtId: routeProps.districtId || null,
-            candidateId: routeProps.candidateId || null
+            x: fromQueryStringParameter(routeProps.x),
+            y: fromQueryStringParameter(routeProps.y)
         };
     }
 
@@ -71,7 +105,20 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                 </div>
                 <div className="row">
                     <div className="col-md-3">
-                        {this.renderCandidatesSelect()}
+                        {this.renderParametersSelect(
+                            "Выберите параметр для оси X",
+                            this.state.x,
+                            this.onXChange
+                        )}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-3">
+                        {this.renderParametersSelect(
+                            "Выберите параметр для оси Y",
+                            this.state.y,
+                            this.onYChange
+                        )}
                     </div>
                 </div>
                 <div className="row">
@@ -123,36 +170,53 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         }
     }
 
-    private renderCandidatesSelect() {
+    private onXChange = (newX: ChartParameter | null) => {
+        this.setState({
+            ...this.state,
+            x: newX
+        });
+    }
+
+    private onYChange = (newY: ChartParameter | null) => {
+        this.setState({
+            ...this.state,
+            y: newY
+        });
+    }
+
+    private renderParametersSelect(
+        placeholder: string,
+        selectedParameter: ChartParameter | null,
+        onChange: (newSelectedParameter: ChartParameter | null) => void) {
         if (this.state.electionId == null) {
             return null;
         }
         else {
-            const Select = LazySelect as new (props: LazySelectProps<CandidateDto, number>) => LazySelect<CandidateDto, number>;
+            const Select = LazySelect as new (props: LazySelectProps<NamedChartParameter, ChartParameter>) => LazySelect<NamedChartParameter, ChartParameter>;
 
             return <Select
-                placeholder="Выберите кандидата"
-                itemsPromise={DictionariesController.Instance.getCandidates(this.state.electionId)}
-                selectedValue={this.state.candidateId}
-                getValue={candidate => candidate.id} 
-                getText={candidate => candidate.name}
-                onChange={candidateId => this.setState({
-                    ...this.state,
-                    candidateId: candidateId
-                })}/>
+                placeholder={placeholder}
+                itemsPromise={DictionariesController.Instance.getParameters(this.state.electionId)}
+                selectedValue={selectedParameter}
+                getValue={namedParameter => namedParameter.parameter} 
+                getText={namedParameter => namedParameter.name}
+                onChange={onChange} 
+            />
         }
     }
 
     private renderButton() {
         if (this.state.electionId === null ||
-            this.state.candidateId === null) {
+            this.state.x === null ||
+            this.state.y === null) {
             return null;
         }
         else {
             const queryParams: ChartPageRouteProps = {
                 electionId: this.state.electionId,
                 districtId: this.state.districtId || undefined,
-                candidateId: this.state.candidateId
+                x: toQueryStringParameter(this.state.x),
+                y: toQueryStringParameter(this.state.y)
             }
     
             return (
@@ -169,7 +233,8 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
 
     private tryLoadChartData() {
         if (this.state.electionId !== null &&
-            this.state.candidateId !== null) {
+            this.state.x !== null &&
+            this.state.y !== null) {
             this.setState({
                 ...this.state,
                 isLoading: true
@@ -178,7 +243,8 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
             this.getChartData({
                     electionId: this.state.electionId,
                     districtId: this.state.districtId,
-                    candidateId: this.state.candidateId
+                    x: this.state.x,
+                    y: this.state.y,
                 })
                 .then(series => {
                     this.setState({

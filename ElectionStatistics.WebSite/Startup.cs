@@ -12,12 +12,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace ElectionStatistics.WebSite
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -40,6 +41,8 @@ namespace ElectionStatistics.WebSite
 				})
 				.AddJsonOptions(options =>
 				{
+					options.SerializerSettings.SerializationBinder = new AttributeSerializationBinder();
+					options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
 					options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 				});
 

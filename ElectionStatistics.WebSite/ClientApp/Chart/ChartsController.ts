@@ -2,11 +2,13 @@ import * as QueryString from 'query-string'
 import * as Highcharts from 'highcharts';
 
 import { IStringDictionary } from '../Common'
+import { ChartParameter } from './DictionariesController';
 
 export interface ChartBuildParameters {
     electionId: number;
-    districtId: number | null,
-    candidateId: number;
+    districtId: number | null;
+    x: ChartParameter;
+    y: ChartParameter;
 }
 
 export interface HistogramBuildParameters extends ChartBuildParameters {
@@ -29,18 +31,18 @@ export class ChartsController {
     }
 
     public getHistogramData(parameters: HistogramBuildParameters) : Promise<Highcharts.Options> {
-        const parametersString = QueryString.stringify(parameters);
+        const parametersString = JSON.stringify(parameters);
         if (!this.histogramDataPromises[parametersString]) {
-            this.histogramDataPromises[parametersString] = fetch(`api/charts/histogram?${parametersString}`)
+            this.histogramDataPromises[parametersString] = fetch(`api/charts/histogram?parametersString=${parametersString}`)
                 .then(response => response.json() as Promise<Highcharts.Options>)
         }
         return this.histogramDataPromises[parametersString];
     }
 
     public getScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
-        const parametersString = QueryString.stringify(parameters);
+        const parametersString = JSON.stringify(parameters);
         if (!this.scatterplotDataPromises[parametersString]) {
-            this.scatterplotDataPromises[parametersString] = fetch(`api/charts/scatterplot?${parametersString}`)
+            this.scatterplotDataPromises[parametersString] = fetch(`api/charts/scatterplot?parametersString=${parametersString}`)
                 .then(response => response.json() as Promise<Highcharts.Options>)
         }
         return this.scatterplotDataPromises[parametersString];

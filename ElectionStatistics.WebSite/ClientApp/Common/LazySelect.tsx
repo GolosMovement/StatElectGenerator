@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Select, Spin } from 'antd';
 import { SelectValue, OptionProps } from 'antd/lib/select';
 
-export interface LazySelectProps<TItem, TValue extends React.Key> 
+export interface LazySelectProps<TItem, TValue> 
 {
     selectedValue: TValue | null;
     itemsPromise: Promise<TItem[]>;
@@ -20,7 +20,7 @@ interface LazySelectState<TItem>
     itemsPromise: Promise<TItem[]> | null;
 }
 
-export class LazySelect<TItem, TValue extends React.Key> extends React.Component<LazySelectProps<TItem, TValue>, LazySelectState<TItem>>
+export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<TItem, TValue>, LazySelectState<TItem>>
 {
     constructor(props: LazySelectProps<TItem, TValue>) {
         super(props);
@@ -55,10 +55,9 @@ export class LazySelect<TItem, TValue extends React.Key> extends React.Component
         }
         else {
             const options = this.state.items
-                .map(item => {
-                    const value = this.props.getValue(item);
+                .map((item, index) => {
                     const text = this.props.getText(item);
-                    return <Select.Option key={value} value={text}>{text}</Select.Option>
+                    return <Select.Option key={index} value={text}>{text}</Select.Option>
                 });
     
             return (
@@ -96,9 +95,13 @@ export class LazySelect<TItem, TValue extends React.Key> extends React.Component
     }
 
     private onChange = (value: SelectValue, option: React.ReactElement<any> | React.ReactElement<any>[]) => {
-        const selectedKey = option == null 
-            ? null 
-            : (option as React.ReactElement<any>).key as TValue;
-        this.props.onChange(selectedKey);
+        if (option == null) {
+            this.props.onChange(null);
+        }
+        else {
+            const selectedKey = (option as React.ReactElement<any>).key as number;
+            const selectedItem = this.state.items[selectedKey];
+            this.props.onChange(this.props.getValue(selectedItem));
+        }
     }
 }

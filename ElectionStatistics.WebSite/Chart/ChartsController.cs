@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using ElectionStatistics.Model;
 using Microsoft.AspNetCore.Mvc;
 
+using Newtonsoft.Json;
+
 namespace ElectionStatistics.WebSite
 {
 	[Route("api/charts")]
@@ -18,22 +20,21 @@ namespace ElectionStatistics.WebSite
 		}
 
 		[HttpGet, Route("histogram"), ResponseCache(CacheProfileName = "Default")]
-		public HighchartsOptions GetDataForHistogram(HistogramBuildParameters parameters)
+		public HighchartsOptions GetDataForHistogram(string parametersString)
 		{
+			var parameters = DeserialzeJson<HistogramBuildParameters>(parametersString);
+
 			var results = parameters.GetElectionResults(modelContext);
-			var candidate = modelContext.Candidates.GetById(parameters.CandidateId);
 
 			var data = results
 				.Join(
-					modelContext.ElectionCandidatesVotes.ByCandidate(candidate),
+					parameters.X.GetParameters(modelContext),
 					result => result.Id,
 					votes => votes.ElectionResultId,
-					(result, votes) => new
+					(result, parameterValue) => new
 					{
 						VotersCount = result.InsideBallotsCount + result.OutsideBallotsCount,
-						Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
-							? 0
-							: (decimal) votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
+						Value = parameterValue.Value
 					})
 				.ToArray() // На SQL сервере возникают ошибки округления
 				.GroupBy(arg => Math.Round(arg.Value / parameters.StepSize) * parameters.StepSize)
@@ -50,11 +51,7 @@ namespace ElectionStatistics.WebSite
 				XAxis = new AxisOptions
 				{
 					Min = 0,
-					Max = 100,
-					Title = new TitleOptions
-					{
-						Text = "% за кандидата"
-					}
+					Max = 100
 				},
 				YAxis = new AxisOptions
 				{
@@ -68,7 +65,7 @@ namespace ElectionStatistics.WebSite
 				{
 					new HistogramChartSeries
 					{
-						Name = candidate.ShortName,
+						Name = parameters.X.GetName(modelContext),
 						Data = data
 					}
 				}
@@ -76,10 +73,11 @@ namespace ElectionStatistics.WebSite
 		}
 
 		[HttpGet, Route("scatterplot"), ResponseCache(CacheProfileName = "Default")]
-		public HighchartsOptions GetDataForScatterplot(ChartBuildParameters parameters)
+		public HighchartsOptions GetDataForScatterplot(string parametersString)
 		{
+			var parameters = DeserialzeJson<ChartBuildParameters>(parametersString);
+
 			var results = parameters.GetElectionResults(modelContext);
-			var candidate = modelContext.Candidates.GetById(parameters.CandidateId);
 
 			ElectoralDistrict[] highestDistricts;
 			if (parameters.DistrictId != null)
@@ -97,16 +95,14 @@ namespace ElectionStatistics.WebSite
 
 			var sourceData = results
 				.Join(
-					modelContext.ElectionCandidatesVotes.ByCandidate(candidate),
+					parameters.Y.GetParameters(modelContext),
 					result => result.Id,
 					votes => votes.ElectionResultId,
-					(result, votes) => new
+					(result, parameterValue) => new
 					{
 						result.ElectoralDistrict.Id,
 						DistrictName = result.ElectoralDistrict.Name,
-						Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
-							? 0
-							: (decimal)votes.Count * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount),
+						Value = parameterValue.Value,
 						result.ElectoralDistrict.HierarchyPath
 					})
 				.ToArray()
@@ -146,7 +142,7 @@ namespace ElectionStatistics.WebSite
 					Max = 100,
 					Title = new TitleOptions
 					{
-						Text = "% за кандидата"
+						Text = parameters.Y.GetName(modelContext)
 					}
 				},
 				XAxis = new AxisOptions
@@ -202,18 +198,28 @@ namespace ElectionStatistics.WebSite
 							.ToArray()
 					})
 					.Cast<ChartSeries>()
-					.ToArray(); ;
+					.ToArray();
 			}
 				
 
 			return highchartsOptions;
 		}
 
+		private TValue DeserialzeJson<TValue>(string jsonString)
+		{
+			return JsonConvert.DeserializeObject<TValue>(jsonString, new JsonSerializerSettings
+			{
+				SerializationBinder = new AttributeSerializationBinder(),
+				TypeNameHandling = TypeNameHandling.Auto
+			});
+		}
+
 		public class ChartBuildParameters
 		{
 			public int ElectionId { get; set; }
 			public int? DistrictId { get; set; }
-			public int CandidateId { get; set; }
+			public ChartParameter X { get; set; }
+			public ChartParameter Y { get; set; }
 
 			public IQueryable<ElectionResult> GetElectionResults(ModelContext modelContext)
 			{
