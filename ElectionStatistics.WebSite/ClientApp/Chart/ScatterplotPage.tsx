@@ -34,6 +34,7 @@ export class ScatterplotPage extends ChartPage {
             plotOptions: {
                 series: {
                     animation: false,
+                    turboThreshold: 10000,
                     states: {
                         hover: {
                             enabled: false
