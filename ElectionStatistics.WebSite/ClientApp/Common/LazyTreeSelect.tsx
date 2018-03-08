@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { TreeSelect, Spin } from 'antd';
+import { IStringDictionary } from '.';
 const TreeNode = TreeSelect.TreeNode;
 
 export interface LazyTreeSelectProps<TItem, TValue extends React.Key> 
@@ -18,6 +19,7 @@ export interface LazyTreeSelectProps<TItem, TValue extends React.Key>
 interface LazyTreeSelectState<TItem>
 {
     items: TItem[];
+    itemsFilterValues: IStringDictionary<string[]>;
     itemsPromise: Promise<TItem[]> | null;
 }
 
@@ -27,6 +29,7 @@ export class LazyTreeSelect<TItem, TValue extends React.Key> extends React.Compo
         super(props);
         this.state = {
             items: [],
+            itemsFilterValues: {},
             itemsPromise: null
         };
     }
@@ -43,11 +46,31 @@ export class LazyTreeSelect<TItem, TValue extends React.Key> extends React.Compo
 
     private loadData() {
         this.props.itemsPromise.then(items => {
+            const itemsFilterValues: IStringDictionary<string[]> = {};
+
+            for (let item of items) {
+                this.addFilterValues(itemsFilterValues, item, []);
+            }
+
             this.setState({
                     items: items,
+                    itemsFilterValues: itemsFilterValues,
                     itemsPromise: this.props.itemsPromise
                 });
         });
+    }
+
+    private addFilterValues(itemsFilterValues: IStringDictionary<string[]>, item: TItem, parentValues: string[]) {
+        const currentValues = parentValues.concat([this.props.getText(item).toLowerCase()]);
+        const value = this.props.getValue(item) as string;
+        itemsFilterValues[value] = currentValues;
+
+        const children = this.props.getChildren(item);
+        if (children != null) {
+            for (let childItem of children) {
+                this.addFilterValues(itemsFilterValues, childItem, currentValues);
+            }
+        }
     }
 
     public render(): JSX.Element {   
@@ -75,8 +98,10 @@ export class LazyTreeSelect<TItem, TValue extends React.Key> extends React.Compo
         }
     }
 
-    private filterTreeNode(input: string, treeNode: any) {
-        return treeNode.props.title.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    private filterTreeNode = (input: string, treeNode: any) => {
+        const itemFilterValues = this.state.itemsFilterValues[treeNode.props.value];
+        const inputInLowerCase = input.toLowerCase();
+        return itemFilterValues.some(text => text.indexOf(inputInLowerCase) >= 0);
     }
 
     private buildTreeNode = (item: TItem): JSX.Element => {

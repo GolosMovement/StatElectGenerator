@@ -6,14 +6,7 @@ import { ChartsController, ChartBuildParameters } from './ChartsController';
 import { ChartPage } from './ChartPage';
 import { ElectoralDistrictDto, DictionariesController } from './DictionariesController';
 
-export class ScatterplotPage extends ChartPage {
-    protected getDistricts(electionId: number): Promise<ElectoralDistrictDto[]> {
-        return DictionariesController.Instance.getDistricts({
-            electionId: electionId,
-            forScatterplot: true
-        });
-    }
-    
+export class ScatterplotPage extends ChartPage {    
     protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getScatterplotData(parameters);
     }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ElectionStatistics.Model
@@ -26,7 +27,9 @@ namespace ElectionStatistics.Model
         public int? HigherDistrictId { get; set; }
         public virtual ElectoralDistrict HigherDistrict { get; set; }
 
-        [MaxLength(100)]
+		public virtual ICollection<ElectoralDistrict> LowerDistricts { get; set; }
+
+		[MaxLength(100)]
         public string HierarchyPath { get; set; }
 
 	    public string GetChildrenHierarchyPath()

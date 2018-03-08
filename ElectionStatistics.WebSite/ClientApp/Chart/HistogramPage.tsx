@@ -7,12 +7,6 @@ import { ChartPage } from './ChartPage';
 import { DictionariesController, ElectoralDistrictDto } from './DictionariesController';
 
 export class HistogramPage extends ChartPage {
-    protected getDistricts(electionId: number): Promise<ElectoralDistrictDto[]> {
-        return DictionariesController.Instance.getDistricts({
-            electionId: electionId
-        });
-    }
-
     protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getHistogramData({
             ...parameters,

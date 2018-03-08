@@ -100,8 +100,6 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                 electionId: electionId
             })}/>
     }
-    
-    protected abstract getDistricts(electionId: number) : Promise<ElectoralDistrictDto[]>;
 
     private renderDistrictsSelect() {
         if (this.state.electionId == null) {
@@ -113,7 +111,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
             return <TreeSelect
                 allowClear
                 placeholder="Все округа"
-                itemsPromise={this.getDistricts(this.state.electionId)}
+                itemsPromise={DictionariesController.Instance.getDistricts(this.state.electionId)}
                 selectedValue={this.state.districtId}
                 getValue={district => district.id} 
                 getText={district => district.name}

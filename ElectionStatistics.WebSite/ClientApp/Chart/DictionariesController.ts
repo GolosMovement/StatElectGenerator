@@ -1,7 +1,7 @@
 import * as QueryString from 'query-string'
 import * as Highcharts from 'highcharts';
 
-import { IStringDictionary } from '../Common'
+import { INumberDictionary } from '../Common'
 
 export interface CandidateDto {
     id: number;
@@ -19,17 +19,12 @@ export interface ElectoralDistrictDto {
     lowerDitsrticts: ElectoralDistrictDto[];
 }
 
-export interface GetDistrtictsRequest {
-    electionId: number;
-    forScatterplot?: boolean;
-}
-
 export class DictionariesController {
     private static instance: DictionariesController;
 
     private elections?: Promise<ElectionDto[]>;
-    private districtsByElection: IStringDictionary<Promise<ElectoralDistrictDto[]>> = {};
-    private candidatesByElection: IStringDictionary<Promise<CandidateDto[]>> = {};
+    private districtsByElection: INumberDictionary<Promise<ElectoralDistrictDto[]>> = {};
+    private candidatesByElection: INumberDictionary<Promise<CandidateDto[]>> = {};
 
     private constructor()
     {
@@ -48,14 +43,12 @@ export class DictionariesController {
         return this.elections;
     }
 
-    public getDistricts(request: GetDistrtictsRequest) : Promise<ElectoralDistrictDto[]> {
-        const queryString = QueryString.stringify(request);
-
-        if (!this.districtsByElection[queryString]) {
-            this.districtsByElection[queryString] = fetch(`api/districts?${queryString}`)
+    public getDistricts(electionId: number) : Promise<ElectoralDistrictDto[]> {
+        if (!this.districtsByElection[electionId]) {
+            this.districtsByElection[electionId] = fetch(`api/districts?electionId=${electionId}`)
                 .then(response => response.json() as Promise<ElectoralDistrictDto[]>)
         }
-        return this.districtsByElection[queryString];
+        return this.districtsByElection[electionId];
     }
 
     public getCandidates(electionId: number) : Promise<CandidateDto[]> {

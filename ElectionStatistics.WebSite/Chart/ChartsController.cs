@@ -64,7 +64,7 @@ namespace ElectionStatistics.WebSite
 						Text = "Количество избирателей зарегистрированных на участках"
 					}
 				},
-				Series = new []
+				Series = new ChartSeries[]
 				{
 					new HistogramChartSeries
 					{
@@ -80,7 +80,20 @@ namespace ElectionStatistics.WebSite
 		{
 			var results = parameters.GetElectionResults(modelContext);
 			var candidate = modelContext.Candidates.GetById(parameters.CandidateId);
-			var highestDistricts = parameters.GetHighestDistricts(modelContext).ToArray();
+
+			ElectoralDistrict[] highestDistricts;
+			if (parameters.DistrictId != null)
+			{
+				var highestDistrictsQueryable = modelContext.ElectoralDistricts.ByHigherDistrict(parameters.DistrictId.Value);
+				highestDistricts = highestDistrictsQueryable.Any(district => !district.LowerDistricts.Any()) 
+					? new [] { modelContext.ElectoralDistricts.GetById(parameters.DistrictId.Value) } 
+					: highestDistrictsQueryable.ToArray();
+			}
+			else
+			{
+				var election = modelContext.Elections.GetById(parameters.ElectionId);
+				highestDistricts = modelContext.ElectoralDistricts.ByHigherDistrict(election.ElectoralDistrictId).ToArray();
+			}
 
 			var sourceData = results
 				.Join(
@@ -211,19 +224,6 @@ namespace ElectionStatistics.WebSite
 					results = results.ByHigherDistrict(district);
 				}
 				return results;
-			}
-
-			public IQueryable<ElectoralDistrict> GetHighestDistricts(ModelContext modelContext)
-			{
-				if (DistrictId != null)
-				{
-					return modelContext.ElectoralDistricts.ByHigherDistrict(DistrictId.Value);
-				}
-				else
-				{
-					var election = modelContext.Elections.GetById(ElectionId);
-					return modelContext.ElectoralDistricts.ByHigherDistrict(election.ElectoralDistrictId);
-				}
 			}
 		}
 
