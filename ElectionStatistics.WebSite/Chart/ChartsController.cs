@@ -61,7 +61,7 @@ namespace ElectionStatistics.WebSite
 				YAxis = new AxisOptions
 				{
 					Min = parameters.Y.MinValue,
-					Max = parameters.Y.MinValue,
+					Max = parameters.Y.MaxValue,
 					Title = new TitleOptions
 					{
 						Text = parameters.Y.GetName(modelContext)
@@ -72,6 +72,64 @@ namespace ElectionStatistics.WebSite
 					new HistogramChartSeries
 					{
 						Name = parameters.X.GetName(modelContext),
+						Data = data
+					}
+				}
+			};
+		}
+
+		[HttpGet, Route("scatterplot"), ResponseCache(CacheProfileName = "Default")]
+		public HighchartsOptions GetDataForScatterplot(string parametersString)
+		{
+			var parameters = DeserialzeJson<ScatterplotBuildParameters>(parametersString);
+
+			var results = parameters.GetElectionResults(modelContext);
+
+			var data = parameters.X.GetParameters(modelContext)
+				.Join(
+					results,
+					x => x.ElectionResultId,
+					result => result.Id,
+					(x, result) => x)
+				.Join(
+					parameters.Y.GetParameters(modelContext),
+					x => x.ElectionResultId,
+					y => y.ElectionResultId,
+					(x, y) => new []
+					{
+						x.Value,
+						y.Value
+					})
+				.ToArray();
+
+			var xName = parameters.X.GetName(modelContext);
+			var yName = parameters.Y.GetName(modelContext);
+
+			return new HighchartsOptions
+			{
+				XAxis = new AxisOptions
+				{
+					Min = parameters.X.MinValue,
+					Max = parameters.X.MaxValue
+				},
+				YAxis = new AxisOptions
+				{
+					Min = parameters.Y.MinValue,
+					Max = parameters.Y.MaxValue,
+					Title = new TitleOptions
+					{
+						Text = yName
+					}
+				},
+				Series = new ChartSeries[]
+				{
+					new FastScatterplotChartSeries
+					{
+						Name = xName,
+						Tooltip = new SeriesTooltipOptions
+						{
+							PointFormat = $"{xName}: {{point.x:.1f}}<br/>{yName}: {{point.y:.1f}}"
+						},
 						Data = data
 					}
 				}
@@ -242,6 +300,12 @@ namespace ElectionStatistics.WebSite
 			public ChartParameter X { get; set; }
 			public ChartParameter Y { get; set; }
 			public decimal StepSize { get; set; }
+		}
+
+		public class ScatterplotBuildParameters : ChartBuildParameters
+		{
+			public ChartParameter X { get; set; }
+			public ChartParameter Y { get; set; }
 		}
 
 		public class LocationScatterplotBuildParameters : ChartBuildParameters

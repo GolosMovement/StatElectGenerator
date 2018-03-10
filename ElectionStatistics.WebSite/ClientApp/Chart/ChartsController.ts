@@ -20,6 +20,7 @@ export class ChartsController {
 
     private readonly histogramDataPromises: IStringDictionary<Promise<Highcharts.Options>> = {};
     private readonly scatterplotDataPromises: IStringDictionary<Promise<Highcharts.Options>> = {};
+    private readonly locationScatterplotDataPromises: IStringDictionary<Promise<Highcharts.Options>> = {};
 
     private constructor()
     {
@@ -39,12 +40,21 @@ export class ChartsController {
         return this.histogramDataPromises[parametersString];
     }
 
-    public getLocationScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
+    public getScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
         const parametersString = JSON.stringify(parameters);
         if (!this.scatterplotDataPromises[parametersString]) {
-            this.scatterplotDataPromises[parametersString] = fetch(`api/charts/location-scatterplot?parametersString=${parametersString}`)
+            this.scatterplotDataPromises[parametersString] = fetch(`api/charts/scatterplot?parametersString=${parametersString}`)
                 .then(response => response.json() as Promise<Highcharts.Options>)
         }
         return this.scatterplotDataPromises[parametersString];
+    }
+
+    public getLocationScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
+        const parametersString = JSON.stringify(parameters);
+        if (!this.locationScatterplotDataPromises[parametersString]) {
+            this.locationScatterplotDataPromises[parametersString] = fetch(`api/charts/location-scatterplot?parametersString=${parametersString}`)
+                .then(response => response.json() as Promise<Highcharts.Options>)
+        }
+        return this.locationScatterplotDataPromises[parametersString];
     }
 }

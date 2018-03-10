@@ -50,7 +50,7 @@ export class LocationScatterplotPage extends ChartPage {
         }
     }
 
-        protected tryLoadChartData() {
+    protected tryLoadChartData() {
         if (this.state.electionId !== null &&
             this.state.y !== null) {
             this.setState({

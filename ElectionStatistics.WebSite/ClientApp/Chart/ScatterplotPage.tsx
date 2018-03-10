@@ -33,7 +33,7 @@ export class ScatterplotPage extends ChartPage {
     }
     
     protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
-        return ChartsController.Instance.getLocationScatterplotData(parameters);
+        return ChartsController.Instance.getScatterplotData(parameters);
     }
 
     protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {    
