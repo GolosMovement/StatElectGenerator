@@ -26,12 +26,12 @@ namespace ElectionStatistics.WebSite
 
 			var results = parameters.GetElectionResults(modelContext);
 
-			var data = results
+			var data = parameters.X.GetParameters(modelContext)
 				.Join(
-					parameters.X.GetParameters(modelContext),
-					result => result.Id,
+					results,
 					x => x.ElectionResultId,
-					(result, x) => x)
+					result => result.Id,
+					(x, result) => x)
 				.Join(
 					parameters.Y.GetParameters(modelContext),
 					x => x.ElectionResultId,
@@ -78,10 +78,10 @@ namespace ElectionStatistics.WebSite
 			};
 		}
 
-		[HttpGet, Route("scatterplot"), ResponseCache(CacheProfileName = "Default")]
-		public HighchartsOptions GetDataForScatterplot(string parametersString)
+		[HttpGet, Route("location-scatterplot"), ResponseCache(CacheProfileName = "Default")]
+		public HighchartsOptions GetDataForLocationScatterplot(string parametersString)
 		{
-			var parameters = DeserialzeJson<ChartBuildParameters>(parametersString);
+			var parameters = DeserialzeJson<LocationScatterplotBuildParameters>(parametersString);
 
 			var results = parameters.GetElectionResults(modelContext);
 
@@ -154,7 +154,7 @@ namespace ElectionStatistics.WebSite
 				YAxis = new AxisOptions
 				{
 					Min = parameters.Y.MinValue,
-					Max = parameters.Y.MinValue,
+					Max = parameters.Y.MaxValue,
 					Title = new TitleOptions
 					{
 						Text = parameters.Y.GetName(modelContext)
@@ -224,8 +224,6 @@ namespace ElectionStatistics.WebSite
 		{
 			public int ElectionId { get; set; }
 			public int? DistrictId { get; set; }
-			public ChartParameter X { get; set; }
-			public ChartParameter Y { get; set; }
 
 			public IQueryable<ElectionResult> GetElectionResults(ModelContext modelContext)
 			{
@@ -241,6 +239,14 @@ namespace ElectionStatistics.WebSite
 
 		public class HistogramBuildParameters : ChartBuildParameters
 		{
+			public ChartParameter X { get; set; }
+			public ChartParameter Y { get; set; }
+			public decimal StepSize { get; set; }
+		}
+
+		public class LocationScatterplotBuildParameters : ChartBuildParameters
+		{
+			public ChartParameter Y { get; set; }
 			public decimal StepSize { get; set; }
 		}
 	}

@@ -7,12 +7,29 @@ import { ChartPage } from './ChartPage';
 import { DictionariesController, ElectoralDistrictDto, NamedChartParameter } from './DictionariesController';
 
 export class HistogramPage extends ChartPage {
-    protected getXParameters(electionId: number): Promise<NamedChartParameter[]> {
-        return DictionariesController.Instance.getParameters(electionId);
-    }
-
-    protected getYParameters(electionId: number): Promise<NamedChartParameter[]> {
-        return DictionariesController.Instance.getSummaryParameters();
+    protected renderAdditionalParameterSelectors(): JSX.Element[] {
+        return [        
+        (<div className="row">
+            <div className="col-md-3">
+                {this.renderParametersSelect(
+                    "Выберите параметр для оси X",
+                    this.state.x,
+                    electionId => DictionariesController.Instance.getParameters(electionId),
+                    this.onXChange
+                )}
+            </div>
+        </div>),
+        (<div className="row">
+            <div className="col-md-3">
+                {this.renderParametersSelect(
+                    "Выберите параметр для оси Y",
+                    this.state.y,
+                    electionId => DictionariesController.Instance.getSummaryParameters(),
+                    this.onYChange
+                )}
+            </div>
+        </div>)
+        ];
     }
 
     protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {

@@ -7,7 +7,7 @@ import { ChartParameter } from './DictionariesController';
 export interface ChartBuildParameters {
     electionId: number;
     districtId: number | null;
-    x: ChartParameter;
+    x?: ChartParameter;
     y: ChartParameter;
 }
 
@@ -39,10 +39,10 @@ export class ChartsController {
         return this.histogramDataPromises[parametersString];
     }
 
-    public getScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
+    public getLocationScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
         const parametersString = JSON.stringify(parameters);
         if (!this.scatterplotDataPromises[parametersString]) {
-            this.scatterplotDataPromises[parametersString] = fetch(`api/charts/scatterplot?parametersString=${parametersString}`)
+            this.scatterplotDataPromises[parametersString] = fetch(`api/charts/location-scatterplot?parametersString=${parametersString}`)
                 .then(response => response.json() as Promise<Highcharts.Options>)
         }
         return this.scatterplotDataPromises[parametersString];

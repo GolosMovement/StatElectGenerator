@@ -15,33 +15,7 @@ interface QueryStringChartParameter {
     type: string;
 }
 
-const toQueryStringParameter = (parameter: ChartParameter) => {
-    if (parameter == null) {
-        return undefined;
-    }
-
-    const queryStringParameter = {
-        type: parameter.$type,        
-        ...parameter
-    };
-    delete queryStringParameter.$type;
-    return queryStringParameter as QueryStringChartParameter;
-}
-
-const fromQueryStringParameter = (queryStringParameter?: QueryStringChartParameter) => {
-    if (queryStringParameter == null) {
-        return null;
-    }
-
-    const parameter = {
-        $type: queryStringParameter.type,
-        ...queryStringParameter
-    };
-    delete parameter.type;
-    return parameter as ChartParameter;
-}
-
-interface ChartPageRouteProps {
+export interface ChartPageRouteProps {
     electionId?: number;
     districtId?: number;
     x?: QueryStringChartParameter;
@@ -74,8 +48,8 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
             isLoading: false,
             electionId: routeProps.electionId || null,
             districtId: routeProps.districtId || null,
-            x: fromQueryStringParameter(routeProps.x),
-            y: fromQueryStringParameter(routeProps.y)
+            x: this.fromQueryStringParameter(routeProps.x),
+            y: this.fromQueryStringParameter(routeProps.y)
         };
     }
 
@@ -99,26 +73,6 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                 <div className="row">
                     <div className="col-md-3">
                         {this.renderDistrictsSelect()}
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-3">
-                        {this.renderParametersSelect(
-                            "Выберите параметр для оси X",
-                            this.state.x,
-                            this.getXParameters,
-                            this.onXChange
-                        )}
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-3">
-                        {this.renderParametersSelect(
-                            "Выберите параметр для оси Y",
-                            this.state.y,
-                            this.getYParameters,
-                            this.onYChange
-                        )}
                     </div>
                 </div>
                 { this.renderAdditionalParameterSelectors() }
@@ -171,25 +125,21 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         }
     }
 
-    private onXChange = (newX: ChartParameter | null) => {
+    protected onXChange = (newX: ChartParameter | null) => {
         this.setState({
             ...this.state,
             x: newX
         });
     }
 
-    protected abstract getXParameters(electionId: number) : Promise<NamedChartParameter[]>;
-
-    private onYChange = (newY: ChartParameter | null) => {
+    protected onYChange = (newY: ChartParameter | null) => {
         this.setState({
             ...this.state,
             y: newY
         });
     }
 
-    protected abstract getYParameters(electionId: number) : Promise<NamedChartParameter[]>;
-
-    private renderParametersSelect(
+    protected renderParametersSelect(
         placeholder: string,
         selectedParameter: ChartParameter | null,
         getParametersPromise: (electionId: number) => Promise<NamedChartParameter[]>,
@@ -215,7 +165,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         return [];
     }
 
-    private renderButton() {
+    protected renderButton() {
         if (this.state.electionId === null ||
             this.state.x === null ||
             this.state.y === null) {
@@ -225,8 +175,8 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
             const queryParams: ChartPageRouteProps = {
                 electionId: this.state.electionId,
                 districtId: this.state.districtId || undefined,
-                x: toQueryStringParameter(this.state.x),
-                y: toQueryStringParameter(this.state.y)
+                x: this.toQueryStringParameter(this.state.x),
+                y: this.toQueryStringParameter(this.state.y)
             }
     
             return (
@@ -241,7 +191,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
 
     protected abstract getChartData(parameters: ChartBuildParameters) : Promise<Highcharts.Options>;
 
-    private tryLoadChartData() {
+    protected tryLoadChartData() {
         if (this.state.electionId !== null &&
             this.state.x !== null &&
             this.state.y !== null) {
@@ -279,4 +229,30 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
     }
 
     protected abstract renderChart(optionsFromBackend: Highcharts.Options) : JSX.Element;
+
+    protected toQueryStringParameter(parameter: ChartParameter) {
+        if (parameter == null) {
+            return undefined;
+        }
+
+        const queryStringParameter = {
+            type: parameter.$type,        
+            ...parameter
+        };
+        delete queryStringParameter.$type;
+        return queryStringParameter as QueryStringChartParameter;
+    }
+
+    protected fromQueryStringParameter(queryStringParameter?: QueryStringChartParameter) {
+        if (queryStringParameter == null) {
+            return null;
+        }
+
+        const parameter = {
+            $type: queryStringParameter.type,
+            ...queryStringParameter
+        };
+        delete parameter.type;
+        return parameter as ChartParameter;
+    }
 }

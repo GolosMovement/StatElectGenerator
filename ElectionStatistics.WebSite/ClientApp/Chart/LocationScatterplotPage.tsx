@@ -3,23 +3,15 @@ import * as React from 'react';
 import { HighchartComponent } from '../Highchart/Component';
 
 import { ChartsController, ChartBuildParameters } from './ChartsController';
-import { ChartPage } from './ChartPage';
+import { ChartPage, ChartPageRouteProps } from './ChartPage';
 import { ElectoralDistrictDto, DictionariesController, NamedChartParameter } from './DictionariesController';
+import { QueryString } from '../Common';
+import { Link } from 'react-router-dom';
 
-export class ScatterplotPage extends ChartPage {
+export class LocationScatterplotPage extends ChartPage {
     protected renderAdditionalParameterSelectors(): JSX.Element[] {
-        return [        
-        (<div className="row">
-            <div className="col-md-3">
-                {this.renderParametersSelect(
-                    "Выберите параметр для оси X",
-                    this.state.x,
-                    electionId => DictionariesController.Instance.getParameters(electionId),
-                    this.onXChange
-                )}
-            </div>
-        </div>),
-        (<div className="row">
+        return [
+        <div className="row">
             <div className="col-md-3">
                 {this.renderParametersSelect(
                     "Выберите параметр для оси Y",
@@ -28,12 +20,57 @@ export class ScatterplotPage extends ChartPage {
                     this.onYChange
                 )}
             </div>
-        </div>)
+        </div>
         ];
     }
     
     protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getLocationScatterplotData(parameters);
+    }
+
+    protected renderButton() {
+        if (this.state.electionId === null ||
+            this.state.y === null) {
+            return null;
+        }
+        else {
+            const queryParams: ChartPageRouteProps = {
+                electionId: this.state.electionId,
+                districtId: this.state.districtId || undefined,
+                y: this.toQueryStringParameter(this.state.y)
+            }
+    
+            return (
+                <Link 
+                    className="btn btn-primary"               
+                    to={{ search: QueryString.stringify(queryParams)}}>
+                    Построить
+                </Link>
+            );
+        }
+    }
+
+        protected tryLoadChartData() {
+        if (this.state.electionId !== null &&
+            this.state.y !== null) {
+            this.setState({
+                ...this.state,
+                isLoading: true
+            });
+            
+            this.getChartData({
+                    electionId: this.state.electionId,
+                    districtId: this.state.districtId,
+                    y: this.state.y,
+                })
+                .then(series => {
+                    this.setState({
+                        ...this.state,
+                        isLoading: false,
+                        chartOptions: series
+                    });
+                });
+        }
     }
 
     protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {    
