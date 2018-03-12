@@ -15,9 +15,13 @@ interface QueryStringChartParameter {
     type: string;
 }
 
-export interface ChartPageRouteProps {
+export interface RoutePropsBase {
     electionId?: number;
     districtId?: number;
+}
+
+
+export interface ChartPageRouteProps extends RoutePropsBase {
     x?: QueryStringChartParameter;
     y?: QueryStringChartParameter;
 }
