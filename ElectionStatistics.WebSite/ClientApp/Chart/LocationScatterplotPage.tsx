@@ -3,7 +3,7 @@ import * as React from 'react';
 import { HighchartComponent } from '../Highchart/Component';
 
 import { ChartsController, ChartBuildParameters } from './ChartsController';
-import { ChartPage, ChartPageRouteProps } from './ChartPage';
+import { ChartPage, ScatterploChartPageRouteProps } from './ChartPage';
 import { ElectoralDistrictDto, DictionariesController, NamedChartParameter } from './DictionariesController';
 import { QueryString } from '../Common';
 import { Link } from 'react-router-dom';
@@ -34,7 +34,7 @@ export class LocationScatterplotPage extends ChartPage {
             return null;
         }
         else {
-            const queryParams: ChartPageRouteProps = {
+            const queryParams: ScatterploChartPageRouteProps = {
                 electionId: this.state.electionId,
                 districtId: this.state.districtId || undefined,
                 y: this.toQueryStringParameter(this.state.y)

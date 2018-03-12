@@ -86,17 +86,19 @@ namespace ElectionStatistics.WebSite
 		[HttpGet, Route("parameters"), ResponseCache(CacheProfileName = "Default")]
 		public IEnumerable<NamedChartParameter> GetParameters(int electionId)
 		{
-			return modelContext.Candidates
-				.ByElection(modelContext, electionId)
-				.Select(candidate => new CandidateVotePercentageChartParameter
+			return new ChartParameter[]
 				{
-					CandidateId = candidate.Id
-				})
-				.ToArray()
-				.Concat(new ChartParameter[]
-				{
-					new AttendancePercentageChartParameter()
-				})
+					new AttendancePercentageChartParameter(),
+					new OutsideVotersPercentageChartParameter(), 
+					new AbsenteeCertificateVotersPercentageChartParameter(), 
+					new InvalidBallotsPercentageChartParameter()
+				}
+				.Concat(modelContext.Candidates
+					.ByElection(modelContext, electionId)
+					.Select(candidate => new CandidateVotePercentageChartParameter
+					{
+						CandidateId = candidate.Id
+					}))
 				.Select(parameter => new NamedChartParameter
 				{
 					Name = parameter.GetName(modelContext),

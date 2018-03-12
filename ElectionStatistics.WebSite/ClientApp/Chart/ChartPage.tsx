@@ -15,18 +15,18 @@ interface QueryStringChartParameter {
     type: string;
 }
 
-export interface RoutePropsBase {
+export interface ChartPageRouteProps {
     electionId?: number;
     districtId?: number;
 }
 
 
-export interface ChartPageRouteProps extends RoutePropsBase {
+export interface ScatterploChartPageRouteProps extends ChartPageRouteProps {
     x?: QueryStringChartParameter;
     y?: QueryStringChartParameter;
 }
 
-interface ChartPageProps extends RouteComponentProps<ChartPageRouteProps> {
+interface ChartPageProps extends RouteComponentProps<ScatterploChartPageRouteProps> {
 }
 
 interface ChartPageState {
@@ -46,7 +46,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
     }
 
     private getStateFromRouteProps(): ChartPageState {
-        const routeProps = QueryString.parse(this.props.location.search) as ChartPageRouteProps;
+        const routeProps = QueryString.parse(this.props.location.search) as ScatterploChartPageRouteProps;
 
         return {
             isLoading: false,
@@ -176,7 +176,7 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
             return null;
         }
         else {
-            const queryParams: ChartPageRouteProps = {
+            const queryParams: ScatterploChartPageRouteProps = {
                 electionId: this.state.electionId,
                 districtId: this.state.districtId || undefined,
                 x: this.toQueryStringParameter(this.state.x),

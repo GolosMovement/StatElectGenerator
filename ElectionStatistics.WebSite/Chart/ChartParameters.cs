@@ -40,7 +40,7 @@ namespace ElectionStatistics.WebSite
 
 	}
 
-		[DataContract(Name = "candidateVotePercentage")]
+	[DataContract(Name = "candidateVotePercentage")]
 	public class CandidateVotePercentageChartParameter : PercentageChartParameter
 	{
 		[DataMember(Name = "candidateId")]
@@ -79,7 +79,61 @@ namespace ElectionStatistics.WebSite
 				});
 		}
 	}
-	
+
+	[DataContract(Name = "outsideVotersPercentage")]
+	public class OutsideVotersPercentageChartParameter : PercentageChartParameter
+	{
+		public override string GetName(ModelContext modelContext) => "Проголосовавшие вне участка (%)";
+
+		public override IQueryable<ParameterValue> GetParameters(ModelContext modelContext)
+		{
+			return modelContext.ElectionResults
+				.Select(result => new ParameterValue
+				{
+					ElectionResultId = result.Id,
+					Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
+						? 0
+						: (decimal)result.OutsideBallotsCount * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
+				});
+		}
+	}
+
+	[DataContract(Name = "absenteeCertificateVotersPercentage")]
+	public class AbsenteeCertificateVotersPercentageChartParameter : PercentageChartParameter
+	{
+		public override string GetName(ModelContext modelContext) => "Проголосовавшие по открепительным (%)";
+
+		public override IQueryable<ParameterValue> GetParameters(ModelContext modelContext)
+		{
+			return modelContext.ElectionResults
+				.Select(result => new ParameterValue
+				{
+					ElectionResultId = result.Id,
+					Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
+						? 0
+						: (decimal) result.AbsenteeCertificateVotersCount * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
+				});
+		}
+	}
+
+	[DataContract(Name = "invalidBallotsPercentage")]
+	public class InvalidBallotsPercentageChartParameter : PercentageChartParameter
+	{
+		public override string GetName(ModelContext modelContext) => "Недействительные бюллетени (%)";
+
+		public override IQueryable<ParameterValue> GetParameters(ModelContext modelContext)
+		{
+			return modelContext.ElectionResults
+				.Select(result => new ParameterValue
+				{
+					ElectionResultId = result.Id,
+					Value = result.InsideBallotsCount + result.OutsideBallotsCount == 0
+						? 0
+						: (decimal)result.InvalidBallotsCount * 100 / (result.InsideBallotsCount + result.OutsideBallotsCount)
+				});
+		}
+	}
+
 	public abstract class VotersCountBaseChartParameter : ChartParameter
 	{
 		public override IQueryable<ParameterValue> GetParameters(ModelContext modelContext)
