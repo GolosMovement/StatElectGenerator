@@ -1,4 +1,3 @@
-import * as QueryString from 'query-string'
 import * as Highcharts from 'highcharts';
 
 import { INumberDictionary } from '../Common'

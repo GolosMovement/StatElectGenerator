@@ -31,12 +31,6 @@
       "integrity": "sha512-CTUtLb6WqCCgp6P59QintjHWqzf4VL1uPA27bipLAPxFqrtK1gEYllePzTICGqQ8rYsCbpnsNypXjjDzGAAjEQ==",
       "dev": true
     },
-    "@types/query-string": {
-      "version": "5.0.1",
-      "resolved": "https://registry.npmjs.org/@types/query-string/-/query-string-5.0.1.tgz",
-      "integrity": "sha1-bLQcckyxZE1WwtHa58eyBOcGs54=",
-      "dev": true
-    },
     "@types/react": {
       "version": "16.0.38",
       "resolved": "https://registry.npmjs.org/@types/react/-/react-16.0.38.tgz",
@@ -1533,12 +1527,6 @@
       "integrity": "sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=",
       "dev": true
     },
-    "decode-uri-component": {
-      "version": "0.2.0",
-      "resolved": "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.0.tgz",
-      "integrity": "sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=",
-      "dev": true
-    },
     "define-property": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/define-property/-/define-property-1.0.0.tgz",
@@ -1996,7 +1984,7 @@
     "fsevents": {
       "version": "1.1.3",
       "resolved": "https://registry.npmjs.org/fsevents/-/fsevents-1.1.3.tgz",
-      "integrity": "sha512-WIr7iDkdmdbxu/Gh6eKEZJL6KPE74/5MEsf2whTOFNxbIoIixogroLdKYqB6FDav4Wavh/lZdzzd3b2KxIXC5Q==",
+      "integrity": "sha1-EfgjGPX+e7LNIpZaEI6TBiCCFtg=",
       "dev": true,
       "optional": true,
       "requires": {
@@ -3937,7 +3925,7 @@
     "nan": {
       "version": "2.9.2",
       "resolved": "https://registry.npmjs.org/nan/-/nan-2.9.2.tgz",
-      "integrity": "sha512-ltW65co7f3PQWBDbqVvaU1WtFJUsNW7sWWm4HINhbMQIyVyzIeyZ8toX5TC5eeooE6piZoaEh4cZkueSKG3KYw==",
+      "integrity": "sha1-9WTXX1+PNqbZRWzKemxP5IireGY=",
       "dev": true,
       "optional": true
     },
@@ -5027,17 +5015,6 @@
       "resolved": "https://registry.npmjs.org/q/-/q-1.5.0.tgz",
       "integrity": "sha1-3QG6ydBtMObyGa7LglPunr3DCPE=",
       "dev": true
-    },
-    "query-string": {
-      "version": "5.1.0",
-      "resolved": "https://registry.npmjs.org/query-string/-/query-string-5.1.0.tgz",
-      "integrity": "sha512-F3DkxxlY0AqD/rwe4YAwjRE2HjOkKW7TxsuteyrS/Jbwrxw887PqYBL4sWUJ9D/V1hmFns0SCD6FDyvlwo9RCQ==",
-      "dev": true,
-      "requires": {
-        "decode-uri-component": "0.2.0",
-        "object-assign": "4.1.1",
-        "strict-uri-encode": "1.1.0"
-      }
     },
     "querystring": {
       "version": "0.2.0",
