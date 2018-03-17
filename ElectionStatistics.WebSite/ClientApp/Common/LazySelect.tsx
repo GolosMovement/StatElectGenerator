@@ -35,7 +35,7 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
         this.loadData();
     }
 
-    public componentWillReceiveProps() {
+    public componentDidUpdate() {
         if (this.isLoading()) {
             this.loadData();
         }

@@ -38,7 +38,7 @@ export class LazyTreeSelect<TItem, TValue extends React.Key> extends React.Compo
         this.loadData();
     }
 
-    public componentWillReceiveProps() {
+    public componentDidUpdate() {
         if (this.isLoading()) {
             this.loadData();
         }
