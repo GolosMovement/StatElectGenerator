@@ -5,17 +5,50 @@ export interface LayoutProps {
 	children?: React.ReactNode;
 }
 
-export class Layout extends React.Component<LayoutProps, {}> {
+export interface LayoutState {
+	isInIframe: boolean;
+}
+	
+function isInIframe() {
+	try {
+		return window.self !== window.top;
+	} catch (e) {
+		return true;
+	}
+}
+
+export class Layout extends React.Component<LayoutProps, LayoutState> {
+	constructor(props: LayoutProps) {
+        super(props);
+
+        this.state = {
+			isInIframe: isInIframe() 
+		}
+	}
+
 	public render() {
-		return <div className='container-fluid'>
-			<div className='row'>
-				<div className='col-sm-3'>
-					<NavigationMenuComponent />
+		if (this.state.isInIframe) {		
+			return (
+				<div className='container-fluid'>
+					<div className='row'>
+						{ this.props.children }
+					</div>
 				</div>
-				<div className='col-sm-9'>
-					{ this.props.children }
+			);
+		}
+		else {			
+			return (
+				<div className='container-fluid'>
+					<div className='row'>
+						<div className='col-sm-3'>
+							<NavigationMenuComponent />
+						</div>
+						<div className='col-sm-9'>
+							{ this.props.children }
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>;
+			);
+		}
 	}
 }
