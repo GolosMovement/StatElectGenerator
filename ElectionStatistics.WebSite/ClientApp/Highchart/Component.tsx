@@ -1,6 +1,8 @@
-import * as Highcharts from 'highcharts';
 import * as React from 'react';
 
+import * as Highcharts from 'highcharts';
+import * as HighchartsExporting from 'highcharts/modules/exporting';
+(HighchartsExporting as any)(Highcharts);
 
 export class HighchartComponent extends React.Component<{options: Highcharts.Options}, {}> {
     private chartRef?: HTMLElement;
@@ -20,6 +22,28 @@ export class HighchartComponent extends React.Component<{options: Highcharts.Opt
     private renderChart() {
         Highcharts.chart({
             ...this.props.options,
+            exporting: {
+                sourceWidth: 1920,
+                sourceHeight: 1080,
+                width: 1920,
+                menuItemDefinitions: {
+                    printChart: {
+                        text: "Распечатать"
+                    },
+                    downloadPNG: {
+                        text: "Скачать PNG"
+                    },
+                    downloadJPEG: {
+                        text: "Скачать JPEG"
+                    },
+                    downloadPDF: {
+                        text: "Скачать PDF"
+                    },
+                    downloadSVG: {
+                        text: "Скачать SVG"
+                    }
+                }
+            },
             chart: {
                 ...this.props.options.chart,
                 height: '50%',

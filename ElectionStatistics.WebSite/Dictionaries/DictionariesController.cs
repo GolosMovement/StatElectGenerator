@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ElectionStatistics.WebSite
 {
 	[Route("api")]
+	[AllowAnyOriginCorsRequest]
 	public class DictionariesController : Controller
 	{
 		private readonly ModelContext modelContext;

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 namespace ElectionStatistics.WebSite
 {
 	[Route("api/charts")]
+	[AllowAnyOriginCorsRequest]
 	public class ChartsController : Controller
 	{
 		private readonly ModelContext modelContext;

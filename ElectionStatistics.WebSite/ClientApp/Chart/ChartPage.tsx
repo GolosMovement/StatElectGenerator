@@ -103,7 +103,10 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
             getText={election => election.name}
             onChange={electionId => this.setState({
                 ...this.state,
-                electionId: electionId
+                electionId: electionId,
+                districtId: null,
+                x: null,
+                y: null
             })}/>
     }
 
@@ -210,11 +213,11 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
                     x: this.state.x,
                     y: this.state.y,
                 })
-                .then(series => {
+                .then(chartOptions => {
                     this.setState({
                         ...this.state,
                         isLoading: false,
-                        chartOptions: series
+                        chartOptions: chartOptions
                     });
                 });
         }
