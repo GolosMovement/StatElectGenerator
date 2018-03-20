@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 namespace ElectionStatistics.WebSite
 {
 	[Route("api/charts")]
-	[AllowAnyOriginCorsRequest]
 	public class ChartsController : Controller
 	{
 		private readonly ModelContext modelContext;
@@ -88,25 +87,31 @@ namespace ElectionStatistics.WebSite
 
 			var data = parameters.X.GetParameters(modelContext)
 				.Join(
-					results,
-					x => x.ElectionResultId,
-					result => result.Id,
-					(x, result) => x)
-				.Join(
 					parameters.Y.GetParameters(modelContext),
 					x => x.ElectionResultId,
 					y => y.ElectionResultId,
-					(x, y) => new []
+					(x, y) => new
 					{
-						x.Value,
-						y.Value
+						x.ElectionResultId,
+						X = x.Value,
+						Y = y.Value
+					})
+				.Join(
+					results,
+					x => x.ElectionResultId,
+					result => result.Id,
+					(arg, result) => new Point
+					{
+						Name = result.ElectoralDistrict.HigherDistrict.Name + " - " + result.ElectoralDistrict.Name,
+						X = arg.X,
+						Y = arg.Y
 					})
 				.ToArray();
 
 			var xName = parameters.X.GetName(modelContext);
 			var yName = parameters.Y.GetName(modelContext);
 
-			return new HighchartsOptions
+			var highchartsOptions = new HighchartsOptions
 			{
 				XAxis = new AxisOptions
 				{
@@ -121,20 +126,37 @@ namespace ElectionStatistics.WebSite
 					{
 						Text = yName
 					}
-				},
-				Series = new ChartSeries[]
-				{
-					new FastScatterplotChartSeries
-					{
-						Name = xName,
-						Tooltip = new SeriesTooltipOptions
-						{
-							PointFormat = $"{xName}: {{point.x:.1f}}<br/>{yName}: {{point.y:.1f}}"
-						},
-						Data = data
-					}
 				}
 			};
+
+			var series = new FullScatterplotChartSeries
+			{
+				Name = xName,
+				Tooltip = new SeriesTooltipOptions
+				{
+					PointFormat = $"{{point.name}}<br />{xName}: {{point.x:.1f}}<br/>{yName}: {{point.y:.1f}}"
+				},
+				Data = data
+			};
+
+
+			if (data.Length >= 10000)
+			{
+				highchartsOptions.Legend = new LegendOptions { Enabled = false };
+
+				highchartsOptions.Series = new []
+				{
+					series.ConvertToFastSeries($"{xName}: {{point.x:.1f}}<br/>{yName}: {{point.y:.1f}}")
+				};
+			}
+			else
+			{
+				highchartsOptions.Series = new[]
+				{
+					series
+				};
+			}
+			return highchartsOptions;
 		}
 
 		[HttpGet, Route("location-scatterplot"), ResponseCache(CacheProfileName = "Default")]
@@ -220,52 +242,38 @@ namespace ElectionStatistics.WebSite
 					}
 				}
 			};
-			if (sourceData.Length >= 10000)
-			{
-				highchartsOptions.Legend = new LegendOptions { Enabled = false };
 
-				highchartsOptions.Series = seriesGrouping
-					.Select(grouping => new FastScatterplotChartSeries
+			var series = seriesGrouping
+				.Select(grouping => new FullScatterplotChartSeries
+				{
+					Name = grouping.Key.Name,
+					Tooltip = new SeriesTooltipOptions
 					{
-						Name = grouping.Key.Name,
-						Tooltip = new SeriesTooltipOptions
-						{
-							PointFormat = "{point.y:.1f}%"
-						},
-						Data = grouping
-							.Select(arg => new[]
-							{
-								arg.Index,
-								arg.Y
-							})
-							.ToArray()
-					})
-					.Cast<ChartSeries>()
-					.ToArray();
-			}
-			else
-			{
-				highchartsOptions.Series = seriesGrouping
-					.Select(grouping => new FullScatterplotChartSeries
-					{
-						Name = grouping.Key.Name,
-						Tooltip = new SeriesTooltipOptions
-						{
-							PointFormat = "{point.name}<br />{point.y:.1f}%"
-						},
-						Data = grouping
-							.Select(arg => new Point
+						PointFormat = "{point.name}<br />{point.y:.1f}%"
+					},
+					Data = grouping
+						.Select(
+							arg => new Point
 							{
 								Name = arg.DistrictName,
 								X = arg.Index,
 								Y = arg.Y
 							})
-							.ToArray()
-					})
-					.Cast<ChartSeries>()
+						.ToArray()
+				});
+
+			if (sourceData.Length >= 10000)
+			{
+				highchartsOptions.Legend = new LegendOptions { Enabled = false };
+
+				highchartsOptions.Series = series
+					.Select(s => s.ConvertToFastSeries("{point.y:.1f}%"))
 					.ToArray();
 			}
-				
+			else
+			{
+				highchartsOptions.Series = series.ToArray();
+			}
 
 			return highchartsOptions;
 		}

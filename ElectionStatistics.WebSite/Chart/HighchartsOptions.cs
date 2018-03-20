@@ -1,4 +1,6 @@
-﻿namespace ElectionStatistics.WebSite
+﻿using System.Linq;
+
+namespace ElectionStatistics.WebSite
 {
 	public class HighchartsOptions
 	{
@@ -50,6 +52,19 @@
 	public class FullScatterplotChartSeries : ScatterplotChartSeries
 	{
 		public Point[] Data { get; set; }
+
+		public FastScatterplotChartSeries ConvertToFastSeries(string fastPointFormat)
+		{
+			return new FastScatterplotChartSeries
+			{
+				Name = Name,
+				Data = Data.Select(point => new[] { point.X, point.Y }).ToArray(),
+				Tooltip = new SeriesTooltipOptions
+				{
+					PointFormat = fastPointFormat
+				}
+			};
+		}
 	}
 
 	public class FastScatterplotChartSeries : ScatterplotChartSeries
