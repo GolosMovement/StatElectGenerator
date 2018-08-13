@@ -14,17 +14,17 @@ namespace ElectionStatistics.Model
             ElectionCandidatesVotes = new ElectionCandidatesVotesRepository(this);
         }
 
-	    protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			modelBuilder.Entity<ElectionCandidate>()
-				.HasKey(c => new { c.ElectionId, c.CandidateId });
-			modelBuilder.Entity<ElectionCandidateVote>()
-				.HasKey(c => new { c.ElectionResultId, c.CandidateId });
-			modelBuilder.Entity<ElectoralDistrictElection>()
-				.HasKey(c => new { c.ElectionId, c.ElectoralDistrictId });
-		}
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ElectionCandidate>()
+                .HasKey(c => new { c.ElectionId, c.CandidateId });
+            modelBuilder.Entity<ElectionCandidateVote>()
+                .HasKey(c => new { c.ElectionResultId, c.CandidateId });
+            modelBuilder.Entity<ElectoralDistrictElection>()
+                .HasKey(c => new { c.ElectionId, c.ElectoralDistrictId });
+        }
 
-	    public CandidatesRepository Candidates { get; private set; }
+        public CandidatesRepository Candidates { get; private set; }
         public ElectionsRepository Elections { get; private set; }
         public ElectoralDistrictsRepository ElectoralDistricts { get; private set; }
         public ElectoralDistrictElectionsRepository ElectoralDistrictElection { get; private set; }
@@ -61,6 +61,14 @@ namespace ElectionStatistics.Model
         {
             get { return Set<ElectionCandidateVote>(); }
         }
+
+        private DbSet<LineDescription> LineDescriptions { get; set; }
+        private DbSet<LineNumber> LineNumbers { get; set; }
+        private DbSet<LineString> LineStrings { get; set; }
+        private DbSet<Mapping> Mappings { get; set; }
+        private DbSet<MappingLine> MappingLines { get; set; }
+        private DbSet<Protocol> Protocols { get; set; }
+        private DbSet<ProtocolSet> ProtocolSets { get; set; }
         #endregion
     }
 }
