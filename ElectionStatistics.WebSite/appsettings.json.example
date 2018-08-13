@@ -1,0 +1,10 @@
+{
+  "ConnectionStrings": {
+    "ElectionStatisticsDatabase": "Server=tcp:localhost,1433;Initial Catalog=ElectionStatistics;Persist Security Info=False;User ID=SA;Password=_PASSWORD_;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=True;Connection Timeout=30;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  }
+}
