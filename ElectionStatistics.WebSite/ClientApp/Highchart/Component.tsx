@@ -1,16 +1,16 @@
 import * as React from 'react';
 
 import * as Highcharts from 'highcharts';
-import * as HighchartsExporting from 'highcharts/modules/exporting';
+import HighchartsExporting from 'highcharts/modules/exporting';
 (HighchartsExporting as any)(Highcharts);
 
 export class HighchartComponent extends React.Component<{options: Highcharts.Options}, {}> {
     private chartRef?: HTMLElement;
-   
+
     public componentDidMount() {
         this.renderChart();
     }
-    
+
     public render() {
         return <div ref={this.setChartRef.bind(this)} />;
     }
