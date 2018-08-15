@@ -4,6 +4,10 @@
     <ProjectReference Include="..\ElectionStatistics.Model\ElectionStatistics.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ExcelDataReader" Version="3.4.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
