@@ -8,8 +8,8 @@ import { DictionariesController, ElectoralDistrictDto, NamedChartParameter } fro
 
 export class HistogramPage extends ChartPage {
     protected renderAdditionalParameterSelectors(): JSX.Element[] {
-        return [        
-        (<div className="row">
+        return [
+        (<div key={1} className="row">
             <div className="col-md-3">
                 {this.renderParametersSelect(
                     "Выберите параметр для оси X",
@@ -19,7 +19,7 @@ export class HistogramPage extends ChartPage {
                 )}
             </div>
         </div>),
-        (<div className="row">
+        (<div key={2} className="row">
             <div className="col-md-3">
                 {this.renderParametersSelect(
                     "Выберите параметр для оси Y",

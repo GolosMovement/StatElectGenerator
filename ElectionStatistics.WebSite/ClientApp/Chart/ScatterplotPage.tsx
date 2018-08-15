@@ -8,8 +8,8 @@ import { ElectoralDistrictDto, DictionariesController, NamedChartParameter } fro
 
 export class ScatterplotPage extends ChartPage {
     protected renderAdditionalParameterSelectors(): JSX.Element[] {
-        return [        
-        (<div className="row">
+        return [
+        (<div key={1} className="row">
             <div className="col-md-3">
                 {this.renderParametersSelect(
                     "Выберите параметр для оси X",
@@ -19,7 +19,7 @@ export class ScatterplotPage extends ChartPage {
                 )}
             </div>
         </div>),
-        (<div className="row">
+        (<div key={2} className="row">
             <div className="col-md-3">
                 {this.renderParametersSelect(
                     "Выберите параметр для оси Y",
@@ -31,12 +31,12 @@ export class ScatterplotPage extends ChartPage {
         </div>)
         ];
     }
-    
+
     protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getScatterplotData(parameters);
     }
 
-    protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {    
+    protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {
         const options = {
             ...optionsFromBackend,
             title: { text: '' },

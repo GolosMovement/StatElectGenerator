@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ElectionStatistics.Core\ElectionStatistics.Core.csproj" />
+    <ProjectReference Include="..\ElectionStatistics.WebSite\ElectionStatistics.WebSite.csproj" />
   </ItemGroup>
 
 </Project>

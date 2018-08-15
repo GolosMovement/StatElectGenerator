@@ -23,7 +23,7 @@ export class LocationScatterplotPage extends ChartPage {
         </div>
         ];
     }
-    
+
     protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getLocationScatterplotData(parameters);
     }
@@ -39,10 +39,10 @@ export class LocationScatterplotPage extends ChartPage {
                 districtId: this.state.districtId || undefined,
                 y: this.toQueryStringParameter(this.state.y)
             }
-    
+
             return (
-                <Link 
-                    className="btn btn-primary"               
+                <Link
+                    className="btn btn-primary"
                     to={{ search: QueryString.stringify(queryParams)}}>
                     Построить
                 </Link>
@@ -57,7 +57,7 @@ export class LocationScatterplotPage extends ChartPage {
                 ...this.state,
                 isLoading: true
             });
-            
+
             this.getChartData({
                     electionId: this.state.electionId,
                     districtId: this.state.districtId,
@@ -73,7 +73,7 @@ export class LocationScatterplotPage extends ChartPage {
         }
     }
 
-    protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {    
+    protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {
         const options = {
             ...optionsFromBackend,
             title: { text: '' },

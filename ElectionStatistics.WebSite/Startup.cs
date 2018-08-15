@@ -48,14 +48,21 @@ namespace ElectionStatistics.WebSite
 
 	        services.AddDbContext<ModelContext>(options =>
 		        options.UseSqlServer(Configuration.GetConnectionString("ElectionStatisticsDatabase")));
-		}
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+            });
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-		{
-			app.UseResponseCaching();
+        {
+            app.UseResponseCaching();
 
-			if (env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
@@ -66,12 +73,14 @@ namespace ElectionStatistics.WebSite
             }
             else
             {
-				app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
-			app.UseStaticFiles();
+            app.UseStaticFiles();
 
-			app.UseMvc(routes =>
+            app.UseSession();
+
+            app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",

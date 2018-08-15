@@ -6,5 +6,9 @@
     "LogLevel": {
       "Default": "Warning"
     }
+  },
+  "admin": {
+    "user": "user",
+    "password": "password"
   }
 }

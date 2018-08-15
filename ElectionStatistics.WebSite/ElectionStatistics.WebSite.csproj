@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ElectionStatistics.Core\ElectionStatistics.Core.csproj" />
     <ProjectReference Include="..\ElectionStatistics.Model\ElectionStatistics.Model.csproj" />
   </ItemGroup>
 
