@@ -12,5 +12,8 @@ namespace ElectionStatistics.Model
         
         [Required]
         public string Name { get; set; }
+        // One-based index
+        [Required]
+        public int DataLineNumber { get; set; }
     }
 }

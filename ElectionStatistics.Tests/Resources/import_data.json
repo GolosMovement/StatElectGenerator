@@ -1,0 +1,1423 @@
+{
+  "ElectionStatistics.Model.ProtocolSet": [
+    {
+      "Id": 1,
+      "TitleRus": "Hello",
+      "TitleEng": null,
+      "DescriptionRus": "P",
+      "DescriptionEng": null,
+      "Protocols": null
+    }
+  ],
+  "ElectionStatistics.Model.LineDescription": [
+    {
+      "Id": 2,
+      "TitleRus": "link",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 3,
+      "TitleRus": "1",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 4,
+      "TitleRus": "20",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 5,
+      "TitleRus": "uik",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 6,
+      "TitleRus": "kom1",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 7,
+      "TitleRus": "kom2",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 8,
+      "TitleRus": "kom3",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 9,
+      "TitleRus": "kom1nmb",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null
+    }
+  ],
+  "ElectionStatistics.Model.Protocol": [
+    {
+      "Id": 10,
+      "TitleRus": "Тульская область",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": null,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 11,
+      "TitleRus": "Куркинская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 10,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 12,
+      "TitleRus": "УИК №1410",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1410,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 11,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 16,
+      "TitleRus": "УИК №1411",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1411,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 11,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 20,
+      "TitleRus": "УИК №1412",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1412,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 11,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 24,
+      "TitleRus": "УИК №1413",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1413,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 11,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 28,
+      "TitleRus": "УИК №1414",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1414,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 11,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 32,
+      "TitleRus": "Ленинская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 10,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 33,
+      "TitleRus": "УИК №1501",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1501,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 32,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 37,
+      "TitleRus": "УИК №1502",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1502,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 32,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 41,
+      "TitleRus": "Новомосковская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 10,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 42,
+      "TitleRus": "УИК №1601",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1601,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 41,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 46,
+      "TitleRus": "УИК №1602",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1602,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 41,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 50,
+      "TitleRus": "УИК №1603",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1603,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 41,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 54,
+      "TitleRus": "Тюменская область",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 22,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": null,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 55,
+      "TitleRus": "Абатская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 54,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 56,
+      "TitleRus": "УИК №101",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 101,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 55,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 60,
+      "TitleRus": "УИК №102",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 102,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 55,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 64,
+      "TitleRus": "УИК №103",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 103,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 55,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 68,
+      "TitleRus": "УИК №104",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 104,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 55,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 72,
+      "TitleRus": "Бердюжская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 54,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 73,
+      "TitleRus": "УИК №401",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 401,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 72,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 77,
+      "TitleRus": "УИК №402",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 402,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 72,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 81,
+      "TitleRus": "Удмуртская Республика",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 3,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": null,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 82,
+      "TitleRus": "Балезинская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 81,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 83,
+      "TitleRus": "УИК №1139",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1139,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 82,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 87,
+      "TitleRus": "Вавожская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 81,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 88,
+      "TitleRus": "УИК №1212",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1212,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 87,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 92,
+      "TitleRus": "УИК №1140",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1140,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 81,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 96,
+      "TitleRus": "УИК №1141",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1141,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 82,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 100,
+      "TitleRus": "УИК №1213",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1213,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 87,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 104,
+      "TitleRus": "УИК №1142",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1142,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 81,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 108,
+      "TitleRus": "Астраханская область",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 9,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": null,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 109,
+      "TitleRus": "Лиманская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 108,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 110,
+      "TitleRus": "УИК №1204",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1204,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 109,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 113,
+      "TitleRus": "Белгородская область",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 5,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": null,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 114,
+      "TitleRus": "Белгородская городская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 113,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 115,
+      "TitleRus": "УИК №63",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 63,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 114,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 119,
+      "TitleRus": "УИК №1206",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1206,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 109,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 123,
+      "TitleRus": "Архангельская область",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 8,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": null,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 124,
+      "TitleRus": "Холмогорская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 123,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 125,
+      "TitleRus": "УИК №918",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 918,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 124,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 129,
+      "TitleRus": "УИК №1208",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1208,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 109,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 132,
+      "TitleRus": "УИК №1207",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1207,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 109,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    }
+  ],
+  "ElectionStatistics.Model.LineString": [
+    {
+      "Id": 13,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714014010&tvd=4714014146698&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714014146698",
+      "ProtocolId": 12,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 17,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714014011&tvd=4714014146699&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714014146699",
+      "ProtocolId": 16,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 21,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714014012&tvd=4714014146700&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714014146700",
+      "ProtocolId": 20,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 25,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714014013&tvd=4714014146701&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714014146701",
+      "ProtocolId": 24,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 29,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714014014&tvd=4714014146702&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714014146702",
+      "ProtocolId": 28,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 34,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714015001&tvd=4714015210490&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714015210490",
+      "ProtocolId": 33,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 38,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714015002&tvd=4714015210491&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714015210491",
+      "ProtocolId": 37,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 43,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714016001&tvd=4714016254741&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714016254741",
+      "ProtocolId": 42,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 47,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714016002&tvd=4714016254742&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714016254742",
+      "ProtocolId": 46,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 51,
+      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714016003&tvd=4714016254743&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714016254743",
+      "ProtocolId": 50,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 57,
+      "Value": "http://www.tyumen.vybory.izbirkom.ru/region/tyumen?action=show&global=true&root=724001001&tvd=4724001161249&vrn=100100084849062&prver=0&pronetvd=null&region=72&sub_region=72&type=226&vibid=4724001161249",
+      "ProtocolId": 56,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 61,
+      "Value": "http://www.tyumen.vybory.izbirkom.ru/region/tyumen?action=show&global=true&root=724001002&tvd=4724001161250&vrn=100100084849062&prver=0&pronetvd=null&region=72&sub_region=72&type=226&vibid=4724001161250",
+      "ProtocolId": 60,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 65,
+      "Value": "http://www.tyumen.vybory.izbirkom.ru/region/tyumen?action=show&global=true&root=724001003&tvd=4724001161251&vrn=100100084849062&prver=0&pronetvd=null&region=72&sub_region=72&type=226&vibid=4724001161251",
+      "ProtocolId": 64,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 69,
+      "Value": "http://www.tyumen.vybory.izbirkom.ru/region/tyumen?action=show&global=true&root=724001004&tvd=4724001161252&vrn=100100084849062&prver=0&pronetvd=null&region=72&sub_region=72&type=226&vibid=4724001161252",
+      "ProtocolId": 68,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 74,
+      "Value": "http://www.tyumen.vybory.izbirkom.ru/region/tyumen?action=show&global=true&root=724004001&tvd=4724004139357&vrn=100100084849062&prver=0&pronetvd=null&region=72&sub_region=72&type=226&vibid=4724004139357",
+      "ProtocolId": 73,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 78,
+      "Value": "http://www.tyumen.vybory.izbirkom.ru/region/tyumen?action=show&global=true&root=724004002&tvd=4724004139358&vrn=100100084849062&prver=0&pronetvd=null&region=72&sub_region=72&type=226&vibid=4724004139358",
+      "ProtocolId": 77,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 84,
+      "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184002039&tvd=4184002259111&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184002259111",
+      "ProtocolId": 83,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 89,
+      "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184003012&tvd=4184003201784&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184003201784",
+      "ProtocolId": 88,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 93,
+      "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184002040&tvd=4184002259112&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184002259112",
+      "ProtocolId": 92,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 97,
+      "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184002041&tvd=4184002259113&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184002259113",
+      "ProtocolId": 96,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 101,
+      "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184003013&tvd=4184003201785&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184003201785",
+      "ProtocolId": 100,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 105,
+      "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184002042&tvd=4184002259114&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184002259114",
+      "ProtocolId": 104,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 111,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012004&tvd=4304012258584&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258584",
+      "ProtocolId": 110,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 116,
+      "Value": "http://www.belgorod.vybory.izbirkom.ru/region/belgorod?action=show&global=true&root=314002009&tvd=4314002452910&vrn=100100084849062&prver=0&pronetvd=null&region=31&sub_region=31&type=226&vibid=4314002452910",
+      "ProtocolId": 115,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 120,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012006&tvd=4304012258586&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258586",
+      "ProtocolId": 119,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 126,
+      "Value": "http://www.arkhangelsk.vybory.izbirkom.ru/region/arkhangelsk?action=show&global=true&root=294031001&tvd=4294031218192&vrn=100100084849062&prver=0&pronetvd=null&region=29&sub_region=29&type=226&vibid=4294031218192",
+      "ProtocolId": 125,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 130,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
+      "ProtocolId": 129,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 133,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
+      "ProtocolId": 132,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 136,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
+      "ProtocolId": 109,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    }
+  ],
+  "ElectionStatistics.Model.LineNumber": [
+    {
+      "Id": 14,
+      "Value": 426,
+      "ProtocolId": 12,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 15,
+      "Value": 1,
+      "ProtocolId": 12,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 18,
+      "Value": 313,
+      "ProtocolId": 16,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 19,
+      "Value": 2,
+      "ProtocolId": 16,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 22,
+      "Value": 551,
+      "ProtocolId": 20,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 23,
+      "Value": 1,
+      "ProtocolId": 20,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 26,
+      "Value": 302,
+      "ProtocolId": 24,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 27,
+      "Value": 1,
+      "ProtocolId": 24,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 30,
+      "Value": 297,
+      "ProtocolId": 28,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 31,
+      "Value": 3,
+      "ProtocolId": 28,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 35,
+      "Value": 1158,
+      "ProtocolId": 33,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 36,
+      "Value": 3,
+      "ProtocolId": 33,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 39,
+      "Value": 1181,
+      "ProtocolId": 37,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 40,
+      "Value": 5,
+      "ProtocolId": 37,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 44,
+      "Value": 1619,
+      "ProtocolId": 42,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 45,
+      "Value": 9,
+      "ProtocolId": 42,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 48,
+      "Value": 906,
+      "ProtocolId": 46,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 49,
+      "Value": 9,
+      "ProtocolId": 46,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 52,
+      "Value": 2054,
+      "ProtocolId": 50,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 53,
+      "Value": 11,
+      "ProtocolId": 50,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 58,
+      "Value": 2011,
+      "ProtocolId": 56,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 59,
+      "Value": 5,
+      "ProtocolId": 56,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 62,
+      "Value": 1968,
+      "ProtocolId": 60,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 63,
+      "Value": 1,
+      "ProtocolId": 60,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 66,
+      "Value": 1401,
+      "ProtocolId": 64,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 67,
+      "Value": 4,
+      "ProtocolId": 64,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 70,
+      "Value": 997,
+      "ProtocolId": 68,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 71,
+      "Value": 0,
+      "ProtocolId": 68,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 75,
+      "Value": 460,
+      "ProtocolId": 73,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 76,
+      "Value": 0,
+      "ProtocolId": 73,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 79,
+      "Value": 396,
+      "ProtocolId": 77,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 80,
+      "Value": 0,
+      "ProtocolId": 77,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 85,
+      "Value": 400,
+      "ProtocolId": 83,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 86,
+      "Value": 0,
+      "ProtocolId": 83,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 90,
+      "Value": 91,
+      "ProtocolId": 88,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 91,
+      "Value": 1,
+      "ProtocolId": 88,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 94,
+      "Value": 321,
+      "ProtocolId": 92,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 95,
+      "Value": 0,
+      "ProtocolId": 92,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 98,
+      "Value": 742,
+      "ProtocolId": 96,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 99,
+      "Value": 7,
+      "ProtocolId": 96,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 102,
+      "Value": 152,
+      "ProtocolId": 100,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 103,
+      "Value": 0,
+      "ProtocolId": 100,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 106,
+      "Value": 576,
+      "ProtocolId": 104,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 107,
+      "Value": 0,
+      "ProtocolId": 104,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 112,
+      "Value": 1482,
+      "ProtocolId": 110,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 117,
+      "Value": 1398,
+      "ProtocolId": 115,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 118,
+      "Value": 9,
+      "ProtocolId": 115,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 121,
+      "Value": 1377,
+      "ProtocolId": 119,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 122,
+      "Value": 1,
+      "ProtocolId": 119,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 127,
+      "Value": 495,
+      "ProtocolId": 125,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 128,
+      "Value": 0,
+      "ProtocolId": 125,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 131,
+      "Value": 0,
+      "ProtocolId": 129,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 134,
+      "Value": 1071,
+      "ProtocolId": 132,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 135,
+      "Value": 2,
+      "ProtocolId": 132,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 137,
+      "Value": 1071,
+      "ProtocolId": 109,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 138,
+      "Value": 2,
+      "ProtocolId": 109,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    }
+  ],
+  "System.String": [
+    "AfterImport"
+  ]
+}
