@@ -20,8 +20,6 @@ namespace ElectionStatistics.Core.Import
             this.errorLogger = errorLogger;
         }
 
-        // TODO: add public check method - evaluate mappings (types) and
-        // real data
         public void Execute(string xlsxFile, ProtocolSet protocolSet,
             Mapping mapping, List<MappingLine> mappingLines)
         {

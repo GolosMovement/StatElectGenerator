@@ -12,6 +12,7 @@ using ElectionStatistics.Core.Import;
 
 namespace ElectionStatistics.Tests.Core.Import
 {
+    // TODO: more test xlsx use cases
     public class ServiceTest
     {
         private class Serializer : ISerializer
