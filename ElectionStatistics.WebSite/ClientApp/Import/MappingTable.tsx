@@ -11,10 +11,10 @@ export interface IMappingColumn {
     isNumber: boolean;
     isVoteResult: boolean;
     isCalcResult: boolean;
-    hierarchy: boolean;
+    isHierarchy: boolean;
     hierarchyType: string;
     hierarchyLang: string;
-    hierarchyLevel: number | null;
+    hierarchyLevel: number;
     [index: string]: any;
 }
 
@@ -86,7 +86,7 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
                     </tr>
                     <tr>
                         <td>Hierarchy level</td>
-                        {this.rowElements('hierarchyLevel')}
+                        {this.hierarchyLevelRows()}
                     </tr>
                     <tr>
                         <td>Hierarchy lang</td>
@@ -134,6 +134,16 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
 
         this.state.dataset.forEach((column: IMappingColumn, i: number) => {
             elements.push(<td key={i}>{column.hierarchyType == 'name' ? column.hierarchyLang : ''}</td>);
+        });
+
+        return elements;
+    }
+
+    private hierarchyLevelRows(): React.ReactNode {
+        const elements: React.ReactNode[] = [];
+
+        this.state.dataset.forEach((column: IMappingColumn, i: number) => {
+            elements.push(<td key={i}>{column.isHierarchy ? column.hierarchyLevel : ''}</td>);
         });
 
         return elements;

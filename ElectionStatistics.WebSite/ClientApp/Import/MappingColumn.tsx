@@ -157,7 +157,7 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
     private initialMapping(props: IColumnProps): IMappingColumn {
         return {
             columnNumber: props.index, descriptionEng: '', descriptionNative: '', descriptionRus: '',
-            hierarchy: false, hierarchyLang: langs[0], hierarchyLevel: null, hierarchyType: '',
+            isHierarchy: false, hierarchyLang: langs[0], hierarchyLevel: 0, hierarchyType: '',
             isCalcResult: false, isNumber: false, isVoteResult: false, titleEng: '', titleRus: '', type: types[0]
         };
     }
@@ -186,7 +186,7 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
 
         const options = levels.map((level, i) => <Select.Option key={i} value={level.key}>{level.name}</Select.Option>);
         let selectedVal: string;
-        if (this.state.mapping.hierarchy) {
+        if (this.state.mapping.isHierarchy) {
             const prefix = this.state.mapping.hierarchyType == 'number' ? 'number' : 'name';
             selectedVal = `${prefix}_${this.state.mapping.hierarchyLevel}`;
         } else {
@@ -201,7 +201,7 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
     }
 
     private hierarchyLangSelect(): React.ReactNode {
-        if (!this.state.mapping.hierarchy || (this.state.mapping.hierarchyType == 'number')) {
+        if (!this.state.mapping.isHierarchy || (this.state.mapping.hierarchyType == 'number')) {
             return;
         }
 
@@ -260,7 +260,7 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
         this.setState({
             ...this.state,
             mapping: {
-                ...this.state.mapping, hierarchy: !!val, hierarchyLevel: level ? parseInt(level[0], 10) : null,
+                ...this.state.mapping, isHierarchy: !!val, hierarchyLevel: level ? parseInt(level[0], 10) : 0,
                 hierarchyType: val.toString().search('name_') == -1 ? 'number' : 'name'
             }
         });
