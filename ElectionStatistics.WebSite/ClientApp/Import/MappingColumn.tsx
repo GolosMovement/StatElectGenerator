@@ -178,10 +178,13 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
     }
 
     private hierarchyLevelSelect(): React.ReactNode {
-        const levels: IHierarchyLevel[] = [];
-        for (let i = 1; i <= 4; ++i) {
-            levels.push({ level: i, type: 'number', key: `number_${i}`, name: `Committee number ${i}` });
-            levels.push({ level: i, type: 'name', key: `name_${i}`, name: `Committee name ${i}` });
+        const levels: IHierarchyLevel[] = [
+            { level: 1, type: 'number', key: 'number_1', name: 'Committee number (lowest) level 1' },
+            { level: 1, type: 'name', key: 'name_1', name: 'Committee name (lowest) level 1' }
+        ];
+        for (let i = 2; i <= 4; ++i) {
+            levels.push({ level: i, type: 'number', key: `number_${i}`, name: `Committee number level ${i}` });
+            levels.push({ level: i, type: 'name', key: `name_${i}`, name: `Committee name level ${i}` });
         }
 
         const options = levels.map((level, i) => <Select.Option key={i} value={level.key}>{level.name}</Select.Option>);
