@@ -143,19 +143,19 @@ namespace ElectionStatistics.Tests.Core.Import
 
                 // Hierarchy:
                 new MappingLine() { ColumnNumber = ColumnLine.FromLetters("B"),
-                    IsNumber = true, IsHierarchy = true, HierarchyLevel = 3,
+                    IsNumber = true, IsHierarchy = true, HierarchyLevel = 1,
                     TitleRus = "uik" },
                 new MappingLine() { ColumnNumber = ColumnLine.FromLetters("C"),
-                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 1,
+                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 3,
                     TitleRus = "kom1" },
                 new MappingLine() { ColumnNumber = ColumnLine.FromLetters("D"),
                     IsNumber = false, IsHierarchy = true, HierarchyLevel = 2,
                     TitleRus = "kom2" },
                 new MappingLine() { ColumnNumber = ColumnLine.FromLetters("E"),
-                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 3,
+                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 1,
                     TitleRus = "kom3" },
                 new MappingLine() { ColumnNumber = ColumnLine.FromLetters("F"),
-                    IsNumber = true, IsHierarchy = true, HierarchyLevel = 1,
+                    IsNumber = true, IsHierarchy = true, HierarchyLevel = 3,
                     TitleRus = "kom1nmb" }
             };
 

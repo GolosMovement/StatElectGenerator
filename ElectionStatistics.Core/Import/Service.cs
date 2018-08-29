@@ -155,7 +155,7 @@ namespace ElectionStatistics.Core.Import
             var groups = allMappings
                 .Where(x => x.MappingLine.IsHierarchy)
                 .GroupBy(x => x.MappingLine.HierarchyLevel)
-                .OrderBy(x => x.Key);
+                .OrderByDescending(x => x.Key);
 
             List<HirarchyEnvelope> list = new List<HirarchyEnvelope>();
 
