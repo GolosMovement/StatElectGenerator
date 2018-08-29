@@ -372,12 +372,16 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         e.preventDefault();
 
         if (this.state.mappings != undefined && this.state.mappingToLoad != undefined) {
+            if (!confirm('Are you sure?')) { return; }
+
             this.state.mappings.forEach((mapping) => {
                 if (mapping.entry.id == this.state.mappingToLoad) {
                     this.setState({ ...this.state, mappingTable: { dataset: mapping.lines } });
                     return;
                 }
             });
+        } else {
+            alert('Select mapping first');
         }
     }
 
