@@ -1,5 +1,6 @@
 @import url("./auth.css");
 @import url("./import.css");
+@import url("./methods.css");
 
 .main-nav li .glyphicon {
     margin-right: 10px;
@@ -24,6 +25,14 @@
 
 .row {
     margin-bottom: 10px;
+}
+
+.fixed-width-select {
+    width: 400px
+}
+
+.fixed-width-select-sm {
+    width: 300px;
 }
 
 @media (max-width: 767px) {

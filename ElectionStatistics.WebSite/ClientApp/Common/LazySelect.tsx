@@ -4,15 +4,18 @@ import { deepEqual } from '.';
 import { Select, Spin } from 'antd';
 import { SelectValue, OptionProps } from 'antd/lib/select';
 
-export interface LazySelectProps<TItem, TValue> 
+export interface LazySelectProps<TItem, TValue>
 {
-    selectedValue: TValue | null;
+    selectedValue: TValue | TValue[] | null;
     itemsPromise: Promise<TItem[]>;
     getValue: (value: TItem) => TValue;
     getText: (value: TItem) => string;
     onChange: (newSelectedValue: TValue | null) => void;
+    onChangeMultiple?: (values: TValue[] | null) => void;
     placeholder?: string;
     allowClear?: boolean;
+    className?: string;
+    mode?: 'default' | 'multiple' | 'tags' | 'combobox';
 }
 
 interface LazySelectState<TItem>
@@ -50,7 +53,7 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
         });
     }
 
-    public render(): JSX.Element {   
+    public render(): JSX.Element {
         if (this.isLoading()) {
             return <Spin />;
         }
@@ -60,12 +63,13 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
                     const text = this.props.getText(item);
                     return <Select.Option key={index} value={text}>{text}</Select.Option>
                 });
-    
+
             return (
                 <Select
                     showSearch
+                    mode={this.mode()}
                     allowClear={this.props.allowClear}
-                    style={{ width: 400 }}
+                    className={this.className()}
                     placeholder={this.props.placeholder}
                     optionFilterProp="children"
                     filterOption={this.filterOption}
@@ -82,11 +86,16 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
     }
 
     private getSelectedText() {
-        if (this.props.selectedValue == null) {
+        if (!this.props.selectedValue ||
+            (Array.isArray(this.props.selectedValue) && this.props.selectedValue.length == 0)) {
             return undefined;
-        }
-        else {
-            const selectedItem = this.state.items.filter(item => deepEqual(this.props.getValue(item), this.props.selectedValue))[0];
+        } else if (this.props.mode == 'multiple' && Array.isArray(this.props.selectedValue)) {
+            const selectedItems = this.state.items.filter((item) =>
+                (this.props.selectedValue as TValue[]).indexOf(this.props.getValue(item)) != -1);
+            return selectedItems.map((item) => this.props.getText(item));
+        } else {
+            const selectedItem = this.state.items.filter((item) =>
+                deepEqual(this.props.getValue(item), this.props.selectedValue))[0];
             return this.props.getText(selectedItem);
         }
     }
@@ -98,11 +107,31 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
     private onChange = (value: SelectValue, option: React.ReactElement<any> | React.ReactElement<any>[]) => {
         if (option == null) {
             this.props.onChange(null);
-        }
-        else {
+        } else if (this.props.mode == 'multiple') {
+            const selected = option as React.ReactElement<any>[];
+            // const selectedKey = selected[selected.length - 1].key as number;
+            // const selectedItem = this.state.items[selectedKey];
+            // console.log(`MULTIPLE option: ${(option as React.ReactElement<any>[]).map((item) => item.key).toString()}`);
+            // console.log(`selectedKey: ${selectedKey}`);
+            // console.log(`selectedItem: ${selectedItem}`);
+            // console.log(`getValue(): ${this.props.getValue(selectedItem)}`);
+            // this.props.onChange(this.props.getValue(selectedItem));
+            if (this.props.onChangeMultiple) {
+                this.props.onChangeMultiple(selected.map((opt) =>
+                    this.props.getValue(this.state.items[opt.key as number])));
+            }
+        } else {
             const selectedKey = (option as React.ReactElement<any>).key as number;
             const selectedItem = this.state.items[selectedKey];
             this.props.onChange(this.props.getValue(selectedItem));
         }
+    }
+
+    private mode(): 'default' | 'multiple' | 'tags' | 'combobox' {
+        return this.props.mode ? this.props.mode : 'default';
+    }
+
+    private className(): string {
+        return this.props.className ? this.props.className : 'fixed-width-select';
     }
 }

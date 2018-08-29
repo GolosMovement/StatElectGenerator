@@ -89,12 +89,6 @@ namespace ElectionStatistics.WebSite
             return JsonConvert.SerializeObject(new ApiResponse { status = "ok" });
         }
 
-        [HttpGet, Route("api/import/protocolSets")]
-        public DbSet<ProtocolSet> ProtocolSets()
-        {
-            return modelContext.Set<ProtocolSet>();
-        }
-
         [HttpGet, Route("api/import/protocolSets/{id}")]
         public ProtocolSet ProtocolSet(int id)
         {

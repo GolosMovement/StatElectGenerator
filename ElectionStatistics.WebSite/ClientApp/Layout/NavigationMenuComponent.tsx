@@ -36,6 +36,11 @@ export class NavigationMenuComponent extends React.Component {
                                     <span className='glyphicon glyphicon-th'></span> Диаграмма Габдулвалеева
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink to={ '/last-digit-analyzer' } activeClassName='active'>
+                                    <span className='glyphicon glyphicon-th'></span> Метод последней цифры
+                                </NavLink>
+                            </li>
 
                             <li>
                                 <a href='/import'>

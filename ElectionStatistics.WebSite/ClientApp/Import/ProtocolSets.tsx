@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { ImportController } from './ImportController';
+import { DictionariesController } from '../Chart/DictionariesController';
 import { IProtocolSet } from './ProtocolSetForm';
 
 interface IProtocolSetState {
@@ -55,7 +55,7 @@ export class ProtocolSets extends React.Component<{}, IProtocolSetState> {
     }
 
     private fetchList(): void {
-        ImportController.Instance.protocolSets()
+        DictionariesController.Instance.getProtocolSets()
             .then((result) => this.setState({ ...this.state, list: result }));
     }
 }

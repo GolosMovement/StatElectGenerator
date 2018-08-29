@@ -53,17 +53,6 @@ export class ImportController {
         return reqPromise.then((response) => response.json());
     }
 
-    public protocolSets(): Promise<IProtocolSet[]> {
-        const reqPromise = fetch('/api/import/protocolSets', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-
-        return reqPromise.then((response) => response.json());
-    }
-
     public protocolSet(id: number): Promise<IProtocolSet> {
         const reqPromise = fetch(`/api/import/protocolSets/${id}`, {
             headers: {

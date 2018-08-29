@@ -12,6 +12,7 @@ export const routes = <Layout>
     <Route exact path='/histogram' component={ Chart.HistogramPage } />
     <Route exact path='/location-scatterplot' component={ Chart.LocationScatterplotPage } />
     <Route exact path='/scatterplot' component={ Chart.ScatterplotPage } />
+    <Route exact path='/last-digit-analyzer' component={ Chart.LastDigitAnalyzer } />
 
     <Route exact path='/signIn' component={ Import.AuthPage } />
 

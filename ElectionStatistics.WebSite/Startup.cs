@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using ElectionStatistics.Model;
@@ -16,6 +17,11 @@ using Newtonsoft.Json.Serialization;
 
 namespace ElectionStatistics.WebSite
 {
+    public class AppSettings
+    {
+        public string AdminPassword { get; set; }
+    }
+
     public class Startup
     {
 		public Startup(IConfiguration configuration)
@@ -55,6 +61,8 @@ namespace ElectionStatistics.WebSite
             {
                 options.Cookie.HttpOnly = true;
             });
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
