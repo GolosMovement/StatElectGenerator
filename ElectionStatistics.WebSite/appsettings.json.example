@@ -7,5 +7,7 @@
       "Default": "Warning"
     }
   },
-  "AdminPassword": "password"
+  "AppSettings": {
+    "AdminPassword": "admin"
+  }
 }
