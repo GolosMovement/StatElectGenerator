@@ -69,6 +69,7 @@ namespace ElectionStatistics.Model
         private DbSet<MappingLine> MappingLines { get; set; }
         private DbSet<Protocol> Protocols { get; set; }
         private DbSet<ProtocolSet> ProtocolSets { get; set; }
+        private DbSet<Preset> Presets { get; set; }
         #endregion
     }
 }
