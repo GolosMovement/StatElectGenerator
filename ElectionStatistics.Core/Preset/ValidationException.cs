@@ -1,20 +1,21 @@
 using System;
+using ElectionStatistics.Core.Exceptions;
 
 namespace ElectionStatistics.Core.Preset
 {
-    // TODO: derive this exception from one custom base class
-    public class ValidationException : Exception
+    public class ValidationException : BaseException
     {
         public ValidationException()
         {
         }
 
-        public ValidationException(string message) : base(message)
+        public ValidationException(string message)
+            : base(message)
         {
         }
 
-        public ValidationException(string message, Exception inner) :
-            base(message, inner)
+        public ValidationException(string message, Exception inner)
+            : base(message, inner)
         {
         }
     }

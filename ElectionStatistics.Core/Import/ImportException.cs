@@ -1,19 +1,21 @@
 using System;
+using ElectionStatistics.Core.Exceptions;
 
 namespace ElectionStatistics.Core.Import
 {
-    // TODO: derive this exception from one custom base class
-    public class ImportException : Exception
+    public class ImportException : BaseException
     {
         public ImportException()
         {
         }
 
-        public ImportException(string message) : base(message)
+        public ImportException(string message)
+            : base(message)
         {
         }
 
-        public ImportException(string message, Exception inner) : base(message, inner)
+        public ImportException(string message, Exception inner)
+            : base(message, inner)
         {
         }
     }
