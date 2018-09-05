@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using log4net;
 using Newtonsoft.Json;
 
 using ElectionStatistics.Core;
@@ -62,9 +61,8 @@ namespace ElectionStatistics.WebSite
 
             var optionsBuilder = new DbContextOptionsBuilder<ModelContext>();
             var dbSerializer = new Core.Import.DbSerializer(modelContext);
-            ILog logger = log4net.LogManager.GetLogger(
-                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            var errorLogger = new Core.Import.ErrorLogger(logger);
+
+            var errorLogger = new Core.Import.ErrorLogger();
             var service = new Core.Import.Service(dbSerializer, errorLogger);
 
             var filePath = Path.GetTempFileName();
@@ -78,6 +76,8 @@ namespace ElectionStatistics.WebSite
             var mappingLines = new List<MappingLine>();
             var mappingTableJson = JsonConvert.DeserializeObject<List<MappingLine>>(mappingTable);
             var protocolSetJson = JsonConvert.DeserializeObject<ProtocolSet>(protocolSet);
+
+            protocolSetJson.ImportFileErrorLog = errorLogger.FileName;
 
             try {
                 service.Execute(filePath, protocolSetJson, mapping, mappingTableJson);

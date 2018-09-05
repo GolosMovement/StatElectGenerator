@@ -9,7 +9,7 @@ namespace ElectionStatistics.Model
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+
         [Required]
         public string TitleRus { get; set; }
         public string TitleEng { get; set; }
@@ -17,6 +17,8 @@ namespace ElectionStatistics.Model
         [Required]
         public string DescriptionRus { get; set; }
         public string DescriptionEng { get; set; }
+
+        public string ImportFileErrorLog { get; set; }
 
         public virtual ICollection<Protocol> Protocols { get; set; }
     }

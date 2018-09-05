@@ -1,22 +1,32 @@
-using log4net;
+using System;
+using System.IO;
 
 namespace ElectionStatistics.Core.Import
 {
-    // TODO: create and configure log4net logger especially for import errors
     public class ErrorLogger : IErrorLogger
     {
-        private ILog log;
+        private string fileName;
 
-        public ErrorLogger(ILog log)
+        public string FileName
         {
-            this.log = log;
+            get
+            {
+                return fileName;
+            }
+        }
+
+        public ErrorLogger()
+        {
+            // TODO: use special log storage for import logs
+            this.fileName = Path.GetTempFileName();
         }
 
         public void Error(int line, int column, string humanColumn,
             string message)
         {
-            log.ErrorFormat("{0}:{1} ({2}): {3}", line, column, humanColumn,
-                message);
+            File.AppendAllText(fileName,
+                string.Format("{0}:{1} ({2}): {3}",
+                    line, column, humanColumn, message) + Environment.NewLine);
         }
     }
 }
