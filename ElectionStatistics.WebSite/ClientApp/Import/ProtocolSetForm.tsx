@@ -16,7 +16,7 @@ export interface IProtocolSet {
 }
 
 export interface IMappingList {
-    entry: { id: number; name: string };
+    entry: { id: number; name: string, dataLineNumber: number };
     lines: IMappingColumn[];
 }
 
@@ -38,7 +38,7 @@ interface IDataset {
 interface IDatasetProps extends IDataset, RouteComponentProps<any> {}
 
 export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDataset> {
-    private static DEFAULT_NEW_COLUMN_INDEX = 2;
+    private static DEFAULT_NEW_COLUMN_INDEX = 1;
     private static DEFAULT_START_LINE = 2;
 
     constructor(props: IDatasetProps) {
@@ -202,8 +202,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
             ImportController.Instance.protocolSet(this.props.match.params.id)
                 .then((result) => this.setState({ ...this.state, protocol: result }));
         } else {
-            ImportController.Instance.mappings()
-                .then((result) => this.setState({ ...this.state, mappings: result }));
+            this.fetchMappings();
         }
     }
 
@@ -376,7 +375,10 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
 
             this.state.mappings.forEach((mapping) => {
                 if (mapping.entry.id == this.state.mappingToLoad) {
-                    this.setState({ ...this.state, mappingTable: { dataset: mapping.lines } });
+                    this.setState({
+                        ...this.state, mappingTable: { dataset: mapping.lines },
+                        startLine: mapping.entry.dataLineNumber
+                    });
                     return;
                 }
             });
@@ -390,14 +392,20 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
 
         const name = prompt('Enter new mapping name');
         if (name != null && name != '') {
-            ImportController.Instance.createMapping(name, this.state.mappingTable.dataset)
+            ImportController.Instance.createMapping(name, this.state.startLine, this.state.mappingTable.dataset)
                 .then((result) => {
                     if (result.status == 'ok') {
+                        this.fetchMappings();
                         alert('Mapping saved');
                     } else {
                         alert('Failed mapping save');
                     }
                 });
         }
+    }
+
+    private fetchMappings(): void {
+        ImportController.Instance.mappings()
+            .then((result) => this.setState({ ...this.state, mappings: result }));
     }
 }

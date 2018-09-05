@@ -75,9 +75,10 @@ export class ImportController {
         return reqPromise.then((response) => response.json());
     }
 
-    public createMapping(name: string, mappingTable: IMappingColumn[]): Promise<IApiResponse> {
+    public createMapping(name: string, dataLineNumber: number, mappingTable: IMappingColumn[]): Promise<IApiResponse> {
         const data = new FormData();
         data.append('name', name);
+        data.append('dataLineNumber', dataLineNumber.toString());
         data.append('mappingTable', JSON.stringify(mappingTable));
 
         const reqPromise = fetch('/api/import/mappings', {

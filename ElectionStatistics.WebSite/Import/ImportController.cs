@@ -131,9 +131,9 @@ namespace ElectionStatistics.WebSite
         }
 
         [HttpPost, Route("api/import/mappings")]
-        public ApiResponse CreateMapping(string name, string mappingTable)
+        public ApiResponse CreateMapping(string name, int dataLineNumber, string mappingTable)
         {
-            var mapping = new Mapping() { Name = name };
+            var mapping = new Mapping() { Name = name, DataLineNumber = dataLineNumber };
             modelContext.Add(mapping);
             modelContext.SaveChanges();
 

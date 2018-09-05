@@ -124,7 +124,7 @@ namespace ElectionStatistics.WebSite
                 .ToArray();
         }
 
-        [HttpGet, Route("protocolSets"), ResponseCache(CacheProfileName = "Default")]
+        [HttpGet, Route("protocolSets")]
         public IEnumerable<ProtocolSet> ProtocolSets()
         {
             return modelContext.Set<ProtocolSet>();
@@ -138,7 +138,7 @@ namespace ElectionStatistics.WebSite
             public string TitleNative { get; set; }
         }
 
-        [HttpGet, Route("protocols"), ResponseCache(CacheProfileName = "Default")]
+        [HttpGet, Route("protocols")]
         public IEnumerable<ProtocolDto> GetProtocols(int protocolSetId, int? parentId)
         {
             return modelContext.Set<Protocol>()
@@ -161,7 +161,7 @@ namespace ElectionStatistics.WebSite
             public string TitleNative { get; set; }
         }
 
-        [HttpGet, Route("lineDescriptions"), ResponseCache(CacheProfileName = "Default")]
+        [HttpGet, Route("lineDescriptions")]
         public IEnumerable<LineDescriptionDto> GetLineDescriptions(int protocolSetId)
         {
             return modelContext.Set<LineDescription>()
