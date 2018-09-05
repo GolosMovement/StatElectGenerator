@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,7 +63,6 @@ namespace ElectionStatistics.Tests.Core.Preset
 
             Service().Execute(string.Join('+', lineDescriptions.Select(lineDes => lineDes.Id)),
                 protocolSet);
-
         }
 
         private Validator Service()
