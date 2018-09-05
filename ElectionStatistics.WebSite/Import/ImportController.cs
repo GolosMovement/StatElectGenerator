@@ -68,10 +68,12 @@ namespace ElectionStatistics.WebSite
             var service = new Core.Import.Service(dbSerializer, errorLogger);
 
             var filePath = Path.GetTempFileName();
-            Console.WriteLine($"tempfile: {filePath}");
-            var stream = new FileStream(filePath, FileMode.Create);
-            file.CopyTo(stream);
-            stream.Close();
+
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
             var mapping = new Mapping() { DataLineNumber = startLine };
             var mappingLines = new List<MappingLine>();
             var mappingTableJson = JsonConvert.DeserializeObject<List<MappingLine>>(mappingTable);

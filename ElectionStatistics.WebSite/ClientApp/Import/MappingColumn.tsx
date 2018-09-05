@@ -51,7 +51,7 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
             <form onSubmit={this.submitColumn} >
                 <div className='row'>
                     <div className='form-group'>
-                        <label htmlFor='index' className='control-label col-sm-3'>Column insert index</label>
+                        <label htmlFor='index' className='control-label col-sm-3'>Column number</label>
                         <div className='col-sm-9'>
                             <input id='index' type='number' value={this.state.mapping.columnNumber}
                                 onChange={this.changeColumnNumber} className='form-control' />
