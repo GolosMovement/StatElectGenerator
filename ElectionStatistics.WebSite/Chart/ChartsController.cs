@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ElectionStatistics.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using Newtonsoft.Json;
 
@@ -298,37 +299,40 @@ namespace ElectionStatistics.WebSite
                 .Where(line => lineDescriptions.Select(lineDescr => lineDescr.Id)
                     .Contains(line.LineDescriptionId));
 
+            int? topParentProtocolId = 0;
             if (parameters.ProtocolTopId != null)
             {
                 if (parameters.ProtocolMidId != null)
                 {
                     if (parameters.ProtocolBotId != null)
                     {
-                        lineNumbers =
-                            lineNumbers.Where(line => line.ProtocolId == parameters.ProtocolBotId);
+                        topParentProtocolId = parameters.ProtocolBotId;
                     }
                     else
                     {
-                        lineNumbers =
-                            from line in lineNumbers
-                            join p1 in modelContext.Set<Protocol>()
-                                on line.ProtocolId equals p1.Id
-                            join p2 in modelContext.Set<Protocol>()
-                                on p1.ParentId equals p2.Id
-                            where p2.Id == parameters.ProtocolMidId
-                            select new LineNumber() { Value = line.Value };
+                        topParentProtocolId = parameters.ProtocolMidId;
                     }
                 }
                 else
                 {
-                    lineNumbers =
-                        from line in lineNumbers
-                        join p1 in modelContext.Set<Protocol>() on line.ProtocolId equals p1.Id
-                        join p2 in modelContext.Set<Protocol>() on p1.ParentId equals p2.Id
-                        join p3 in modelContext.Set<Protocol>() on p2.ParentId equals p3.Id
-                        where p3.Id == parameters.ProtocolTopId
-                        select new LineNumber() { Value = line.Value };
+                    topParentProtocolId = parameters.ProtocolTopId;
                 }
+            }
+            if (topParentProtocolId != 0)
+            {
+                var sql = @"WITH query AS
+                (SELECT *
+                   FROM protocols p1
+                  WHERE p1.parentid = @p0
+                 UNION ALL
+                 SELECT p2.*
+                   FROM protocols p2
+                   JOIN query ON p2.ParentId = query.Id)
+                SELECT * FROM query";
+                var protocols =
+                    modelContext.Set<Protocol>()
+                        .FromSql(sql, topParentProtocolId).Select(p => p.Id).ToList();
+                lineNumbers = lineNumbers.Where(line => protocols.Contains((int)line.ProtocolId));
             }
 
             var results = new Core.Methods.LastDigitAnalyzer()

@@ -106,7 +106,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
             getText={(protocolSet) => protocolSet ? protocolSet.titleRus : ''}
             onChange={(protocolSet) => this.setState({
                 ...this.state,
-                protocolSetId: protocolSet,
+                protocolSetId: protocolSet, protocolTopId: null, protocolMidId: null, protocolBotId: null
             })} />;
     }
 
@@ -132,7 +132,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
                 getText={(protocol) => protocol ? protocol.titleRus : ''}
                 onChange={(protocolId) => this.setState({
                     ...this.state,
-                    protocolTopId: protocolId
+                    protocolTopId: protocolId, protocolMidId: null, protocolBotId: null
                 })} className='fixed-width-select-sm' />;
         } else {
             return;
@@ -152,7 +152,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
                 getText={(protocol) => protocol ? protocol.titleRus : ''}
                 onChange={(protocolId) => this.setState({
                     ...this.state,
-                    protocolMidId: protocolId
+                    protocolMidId: protocolId, protocolBotId: null
                 })} className='fixed-width-select-sm' />;
         } else {
             return;
