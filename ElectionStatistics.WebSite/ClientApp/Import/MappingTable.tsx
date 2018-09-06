@@ -2,7 +2,7 @@ import React from 'react';
 
 export interface IMappingColumn {
     columnNumber: number;
-    type: string;
+    type: number;
     titleRus: string;
     descriptionRus: string;
     titleEng: string;
@@ -50,7 +50,7 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
                 <tbody>
                     <tr>
                         <td>Data type</td>
-                        {this.rowElements('type')}
+                        {this.typeRows()}
                     </tr>
                     <tr>
                         <td>TitleRU</td>
@@ -106,23 +106,21 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
     }
 
     private rowElements(name: string): React.ReactNode {
-        const elements: React.ReactNode[] = [];
+        return this.state.dataset.map((column: IMappingColumn, i: number) =>
+            <td key={i}>{column[name]}</td>
+        );
+    }
 
-        this.state.dataset.forEach((column: IMappingColumn, i: number) => {
-            elements.push(<td key={i}>{column[name]}</td>);
-        });
-
-        return elements;
+    private typeRows(): React.ReactNode {
+        return this.state.dataset.map((column: IMappingColumn, i: number) =>
+            <td key={i}>{column.isNumber ? 'number' : 'string'}</td>
+        );
     }
 
     private boolFieldRows(name: string): React.ReactNode {
-        const elements: React.ReactNode[] = [];
-
-        this.state.dataset.forEach((column: IMappingColumn, i: number) => {
-            elements.push(<td key={i}>{this.boolCell(column[name])}</td>);
-        });
-
-        return elements;
+        return this.state.dataset.map((column: IMappingColumn, i: number) =>
+            <td key={i}>{this.boolCell(column[name])}</td>
+        );
     }
 
     private boolCell(condition: boolean): React.ReactNode {
@@ -130,23 +128,15 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
     }
 
     private hierarchyLangRows(): React.ReactNode {
-        const elements: React.ReactNode[] = [];
-
-        this.state.dataset.forEach((column: IMappingColumn, i: number) => {
-            elements.push(<td key={i}>{column.hierarchyType == 'name' ? column.hierarchyLang : ''}</td>);
-        });
-
-        return elements;
+        return this.state.dataset.map((column: IMappingColumn, i: number) =>
+            <td key={i}>{column.hierarchyType == 'name' ? column.hierarchyLang : ''}</td>
+        );
     }
 
     private hierarchyLevelRows(): React.ReactNode {
-        const elements: React.ReactNode[] = [];
-
-        this.state.dataset.forEach((column: IMappingColumn, i: number) => {
-            elements.push(<td key={i}>{column.isHierarchy ? column.hierarchyLevel : ''}</td>);
-        });
-
-        return elements;
+        return this.state.dataset.map((column: IMappingColumn, i: number) =>
+            <td key={i}>{column.isHierarchy ? column.hierarchyLevel : ''}</td>
+        );
     }
 
     private columnButtonsRow(): React.ReactNode {

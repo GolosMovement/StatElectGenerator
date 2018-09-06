@@ -158,18 +158,18 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
         return {
             columnNumber: props.index, descriptionEng: '', descriptionNative: '', descriptionRus: '',
             isHierarchy: false, hierarchyLang: langs[0], hierarchyLevel: 0, hierarchyType: '',
-            isCalcResult: false, isNumber: false, isVoteResult: false, titleEng: '', titleRus: '', type: types[0]
+            isCalcResult: false, isNumber: false, isVoteResult: false, titleEng: '', titleRus: '', type: 0
         };
     }
 
     private typeSelect(): React.ReactNode {
-        const options = types.map((type, i) => <Select.Option key={i} value={type}>{type}</Select.Option>);
+        const options = types.map((type, i) => <Select.Option key={i} value={i}>{type}</Select.Option>);
 
         return (
             <div className='form-group'>
                 <label htmlFor='type' className='control-label col-sm-3'>Column type</label>
                 <div className='col-sm-9'>
-                    <Select value={this.state.mapping.type} onChange={this.changeType}>
+                    <Select value={types[Number(this.state.mapping.isNumber)]} onChange={this.changeType}>
                         {options}
                     </Select>
                 </div>
@@ -226,7 +226,7 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
     private changeType(val: SelectValue): void {
         this.setState({
             ...this.state,
-            mapping: { ...this.state.mapping, type: val.toString(), isNumber: val.toString() == 'number' }
+            mapping: { ...this.state.mapping, type: parseInt(val.toString(), 10), isNumber: val.toString() == '1' }
         });
     }
 
