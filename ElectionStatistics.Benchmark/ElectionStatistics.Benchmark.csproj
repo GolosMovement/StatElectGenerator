@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ElectionStatistics.Core\ElectionStatistics.Core.csproj" />
+    <ProjectReference Include="..\ElectionStatistics.Model\ElectionStatistics.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.1" />
+    <PackageReference Include="CoreCLR-NCalc" Version="2.2.40" />
+    <PackageReference Include="Dangl.Calculator" Version="1.0.6" />
+  </ItemGroup>
+
+</Project>

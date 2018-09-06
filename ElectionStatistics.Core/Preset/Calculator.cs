@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 using ElectionStatistics.Model;
 
 namespace ElectionStatistics.Core.Preset
@@ -12,6 +13,8 @@ namespace ElectionStatistics.Core.Preset
 
         private List<int> lineDescriptionIds;
         private string expression;
+        // DataTable is for expression evaluation
+        private DataTable dataTable = new DataTable();
 
         public Calculator(ModelContext modelContext, Parser parser, string expression)
         {
@@ -37,7 +40,7 @@ namespace ElectionStatistics.Core.Preset
             }
             exprBuilder.Append(expression.Substring(lastIndex, expression.Length - lastIndex));
 
-            return Dangl.Calculator.Calculator.Calculate(exprBuilder.ToString()).Result;
+            return (double) dataTable.Compute(exprBuilder.ToString(), null);
         }
 
         private List<LineNumber> GetMatchedLineNumbers(int protocolId)

@@ -36,15 +36,15 @@ namespace ElectionStatistics.Tests.Core.Preset
             {
                 new LineNumber()
                 {
-                    LineDescriptionId = lineDescriptions[1].Id, Value = 3, ProtocolId = protocol.Id
+                    LineDescriptionId = lineDescriptions[1].Id, Value = 12, ProtocolId = protocol.Id
                 },
                 new LineNumber()
                 {
-                    LineDescriptionId = lineDescriptions[0].Id, Value = 5, ProtocolId = protocol.Id
+                    LineDescriptionId = lineDescriptions[0].Id, Value = 50, ProtocolId = protocol.Id
                 },
                 new LineNumber()
                 {
-                    LineDescriptionId = lineDescriptions[2].Id, Value = 4, ProtocolId = protocol.Id
+                    LineDescriptionId = lineDescriptions[2].Id, Value = 40, ProtocolId = protocol.Id
                 }
             };
             lineNumbers.ForEach(lineNum => modelContext.Add(lineNum));
@@ -55,10 +55,15 @@ namespace ElectionStatistics.Tests.Core.Preset
             modelContext.Add(preset);
             modelContext.SaveChanges();
 
-            var service = new Calculator(modelContext, new Parser(), preset.Expression);
-            var result = service.Execute(protocol.Id);
+            var parser = new Parser();
 
-            Assert.Equal(2, result);
+            var service = new Calculator(modelContext, parser, preset.Expression);
+            var result = service.Execute(protocol.Id);
+            Assert.Equal(1.55, result);
+
+            // Check internal DataTable reuse
+            result = service.Execute(protocol.Id);
+            Assert.Equal(1.55, result);
         }
     }
 }
