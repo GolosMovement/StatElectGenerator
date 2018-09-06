@@ -329,10 +329,15 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
             minValue: this.state.minValue
         } as ILDAChartBuildParameters;
         ChartsController.Instance.getLastDigitAnalyzerData(buildParams)
-            .then((result) =>
+            .then((result) => {
                 this.setState({
                     ...this.state, isLoading: false, chartOptions: result.chartOptions,
                     chiSquared: result.chiSquared
-                }));
+                });
+
+                if (result.chiSquared == undefined || result.chartOptions == undefined) {
+                    alert('Выборка пустая');
+                }
+            });
     }
 }

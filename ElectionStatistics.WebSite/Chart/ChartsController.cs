@@ -335,8 +335,17 @@ namespace ElectionStatistics.WebSite
                 lineNumbers = lineNumbers.Where(line => protocols.Contains((int)line.ProtocolId));
             }
 
-            var results = new Core.Methods.LastDigitAnalyzer()
-                .GetData(lineNumbers.ToList(), parameters.MinValue);
+            Core.Methods.LDAResult results;
+            try
+            {
+                results = new Core.Methods.LastDigitAnalyzer()
+                    .GetData(lineNumbers.ToList(), parameters.MinValue);
+            }
+            catch (ArgumentException)
+            {
+                return new LastDigitAnalyzerData();
+            }
+
             var highchartsOptions = new HighchartsOptions
             {
                 YAxis = new AxisOptions
@@ -442,7 +451,7 @@ namespace ElectionStatistics.WebSite
         public class LastDigitAnalyzerData
         {
             public HighchartsOptions ChartOptions { get; set; }
-            public double ChiSquared { get; set; }
+            public double? ChiSquared { get; set; }
         }
     }
 }
