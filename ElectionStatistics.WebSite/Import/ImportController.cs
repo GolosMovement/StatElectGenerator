@@ -21,6 +21,7 @@ namespace ElectionStatistics.WebSite
         {
             public string status;
             public string message;
+            public object data;
         }
 
         public struct MappingsResponse
@@ -88,7 +89,22 @@ namespace ElectionStatistics.WebSite
                 System.IO.File.Delete(filePath);
             }
 
-            return JsonConvert.SerializeObject(new ApiResponse { status = "ok" });
+            var errorLogFile = protocolSetJson.ImportFileErrorLog;
+            return JsonConvert.SerializeObject(
+                new ApiResponse { status = "ok", data = protocolSetJson.Id });
+        }
+
+        [HttpGet, Route("api/import/protocolSets/{id}/log")]
+        public IActionResult ImportErrorLog(int id)
+        {
+            var protocol = modelContext.Find<ProtocolSet>(id);
+            if (protocol == null || !System.IO.File.Exists(protocol.ImportFileErrorLog))
+            {
+                return NotFound();
+            }
+
+            var file = System.IO.File.ReadAllBytes(protocol.ImportFileErrorLog);
+            return File(file, "text/plain", $"import-protocolSet-{id}.log");
         }
 
         [HttpGet, Route("api/import/protocolSets/{id}")]

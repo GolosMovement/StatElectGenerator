@@ -28,16 +28,19 @@ interface IDataset {
     columnNumber: number;
     file: File;
     mappingTable: IMappingTableState;
-    protocol: IProtocolSet;
+    protocolSet: IProtocolSet;
     initialColumn?: IMappingColumn;
     initialIndexColumn?: number;
+}
+
+interface IDatasetState extends IDataset {
     mappings?: IMappingList[];
     mappingToLoad?: number;
 }
 
 interface IDatasetProps extends IDataset, RouteComponentProps<any> {}
 
-export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDataset> {
+export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDatasetState> {
     private static DEFAULT_NEW_COLUMN_INDEX = 1;
     private static DEFAULT_START_LINE = 2;
 
@@ -47,7 +50,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         this.state = {
             columnForm: 'new', columnNumber: ProtocolSetForm.DEFAULT_NEW_COLUMN_INDEX, file: new File([], ''),
             index: ProtocolSetForm.DEFAULT_NEW_COLUMN_INDEX, mappingTable: { dataset: [] }, position: 'end',
-            protocol: {
+            protocolSet: {
                 titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '',
                 id: props.match.params.id
             }, startLine: ProtocolSetForm.DEFAULT_START_LINE
@@ -81,28 +84,28 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
                             <div className='col-sm-4'>
                                 <div className='form-group'>
                                     <label htmlFor='titleRus'>TitleRus</label>
-                                    <input id='titleRus' value={this.state.protocol.titleRus}
+                                    <input id='titleRus' value={this.state.protocolSet.titleRus}
                                         onChange={this.changeTitleRu} className='form-control' />
                                 </div>
                             </div>
                             <div className='col-sm-7'>
                                 <div className='form-group'>
                                     <label htmlFor='descriptionRus'>DescriptionRus</label>
-                                    <textarea id='descriptionRus' value={this.state.protocol.descriptionRus}
+                                    <textarea id='descriptionRus' value={this.state.protocolSet.descriptionRus}
                                         onChange={this.changeDescrRu} className='form-control' ></textarea>
                                 </div>
                             </div>
                             <div className='col-sm-4'>
                                 <div className='form-group'>
                                     <label htmlFor='titleEng'>TitleEng</label>
-                                    <input id='titleEng' value={this.state.protocol.titleEng}
+                                    <input id='titleEng' value={this.state.protocolSet.titleEng}
                                         onChange={this.changeTitle} className='form-control' />
                                 </div>
                             </div>
                             <div className='col-sm-7'>
                                 <div className='form-group'>
                                     <label htmlFor='descriptionEng'>DescriptionEng</label>
-                                    <textarea id='descriptionEng' value={this.state.protocol.descriptionEng}
+                                    <textarea id='descriptionEng' value={this.state.protocolSet.descriptionEng}
                                         onChange={this.changeDescr} className='form-control' />
                                 </div>
                             </div>
@@ -117,6 +120,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
                                     onChange={this.changeStartLine} className='form-control'
                                     disabled={this.disabledEdit()} />
                             </div>
+                            <div className='col-sm-1'>{this.errorLogFileDownload()}</div>
                         </div>
                     </div>
 
@@ -200,7 +204,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
     public componentWillMount(): void {
         if (this.disabledEdit()) {
             ImportController.Instance.protocolSet(this.props.match.params.id)
-                .then((result) => this.setState({ ...this.state, protocol: result }));
+                .then((result) => this.setState({ ...this.state, protocolSet: result }));
         } else {
             this.fetchMappings();
         }
@@ -251,7 +255,14 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
     }
 
     protected abstract headerText(): string;
-    protected abstract submitForm(e: React.FormEvent<HTMLFormElement>): void
+    protected abstract submitForm(e: React.FormEvent<HTMLFormElement>): void;
+
+    private errorLogFileDownload(): React.ReactNode {
+        if (this.state.protocolSet.id) {
+            const href = `/api/import/protocolSets/${this.state.protocolSet.id}/log`;
+            return <a href={href} className='btn btn-default'>Download error logfile</a>;
+        }
+    }
 
     private toggleColumnModal(): void {
         // TODO: rewrite to more _react_ way
@@ -345,19 +356,27 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
 
     // TODO: DRY
     private changeTitleRu(e: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({ ...this.state, protocol: { ...this.state.protocol, titleRus: e.currentTarget.value } });
+        this.setState({ ...this.state, protocolSet: { ...this.state.protocolSet, titleRus: e.currentTarget.value } });
     }
 
     private changeDescrRu(e: React.ChangeEvent<HTMLTextAreaElement>): void {
-        this.setState({ ...this.state, protocol: { ...this.state.protocol, descriptionRus: e.currentTarget.value } });
+        this.setState({
+            ...this.state, protocolSet: {
+                ...this.state.protocolSet,
+                descriptionRus: e.currentTarget.value
+            }
+        });
     }
 
     private changeTitle(e: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({ ...this.state, protocol: { ...this.state.protocol, titleEng: e.currentTarget.value } });
+        this.setState({ ...this.state, protocolSet: { ...this.state.protocolSet, titleEng: e.currentTarget.value } });
     }
 
     private changeDescr(e: React.ChangeEvent<HTMLTextAreaElement>): void {
-        this.setState({ ...this.state, protocol: { ...this.state.protocol, descriptionEng: e.currentTarget.value } });
+        this.setState({
+            ...this.state,
+            protocolSet: { ...this.state.protocolSet, descriptionEng: e.currentTarget.value }
+        });
     }
 
     private changeSelectedMapping(val: SelectValue): void {

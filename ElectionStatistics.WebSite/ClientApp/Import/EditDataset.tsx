@@ -9,7 +9,7 @@ export class EditDataset extends ProtocolSetForm {
     protected submitForm(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
 
-        ImportController.Instance.updateDataset(this.props.match.params.id, this.state.protocol)
+        ImportController.Instance.updateDataset(this.props.match.params.id, this.state.protocolSet)
             .then((result) => {
                 if (result.status == 'ok') {
                     alert('Success!');
