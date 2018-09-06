@@ -61,6 +61,11 @@ namespace ElectionStatistics.Tests.Core.Import
                 AddItem("AfterImport");
             }
 
+            public void Reset()
+            {
+                data.Clear();
+            }
+
             private int GetId()
             {
                 return id++;
@@ -97,6 +102,11 @@ namespace ElectionStatistics.Tests.Core.Import
                 errors.Add(String.Format("{0}:{1} ({2}): {3}", line, column,
                     humanColumn, message));
             }
+
+            public void Reset()
+            {
+                errors.Clear();
+            }
         }
 
         private static Serializer serializer = new Serializer();
@@ -106,6 +116,9 @@ namespace ElectionStatistics.Tests.Core.Import
         private string testFile =
             Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory +
                 "../../../Resources/import_data.xlsx");
+        private string noUikNumberTestFile =
+            Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory +
+                "../../../Resources/dag_no_uik_nmbr.xlsx");
 
         [Fact]
         public void InputFileNotFound()
@@ -129,6 +142,8 @@ namespace ElectionStatistics.Tests.Core.Import
         [Fact]
         public void SomeActualWork()
         {
+            Reset();
+
             var mapping = new Mapping();
             mapping.DataLineNumber = 2;
 
@@ -161,8 +176,7 @@ namespace ElectionStatistics.Tests.Core.Import
 
             service.Execute(testFile,
                 new ProtocolSet() { TitleRus = "Hello", DescriptionRus = "P" },
-                new Mapping() { DataLineNumber = 2 },
-                mappingList);
+                mapping, mappingList);
 
             var actualResultFile = "test-import_data.json";
             System.IO.File.WriteAllText(actualResultFile,
@@ -185,6 +199,65 @@ namespace ElectionStatistics.Tests.Core.Import
             Assert.Equal(MD5Hash(expectErrors), MD5Hash(actualErrors));
         }
 
+        [Fact]
+        public void NoUikNumber()
+        {
+            Reset();
+
+            var mapping = new Mapping();
+            mapping.DataLineNumber = 6;
+
+            var mappingList = new List<MappingLine>()
+            {
+                // Hierarchy:
+                new MappingLine() { ColumnNumber = ColumnLine.FromLetters("A"),
+                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 4,
+                    TitleRus = "reg" },
+                new MappingLine() { ColumnNumber = ColumnLine.FromLetters("B"),
+                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 3,
+                    TitleRus = "sub" },
+                new MappingLine() { ColumnNumber = ColumnLine.FromLetters("C"),
+                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 2,
+                    TitleRus = "foo" },
+                new MappingLine() { ColumnNumber = ColumnLine.FromLetters("D"),
+                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 1,
+                    TitleRus = "UIK" },
+
+                // Url:
+                new MappingLine() { ColumnNumber = ColumnLine.FromLetters("AK"),
+                    IsNumber = false,
+                    TitleRus = "url" }
+            };
+
+            // Columns with number type:
+            for (int i = 5; i < 37; i++)
+            {
+                mappingList.Add(
+                    new MappingLine()
+                    {
+                        ColumnNumber = i,
+                        IsNumber = true,
+                        TitleRus = string.Format("{0}", i)
+                    }
+                );
+            }
+
+            service.Execute(noUikNumberTestFile,
+                new ProtocolSet() { TitleRus = "No UIK", DescriptionRus = "P" },
+                mapping, mappingList);
+
+            var actualResultFile = "test-dag_no_uik_nmbr.json";
+            System.IO.File.WriteAllText(actualResultFile,
+                ToJson(serializer.Data));
+
+            var expectResultFile =
+                Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory +
+                    "../../../Resources/dag_no_uik_nmbr.json");
+
+            Assert.Equal(MD5Hash(expectResultFile), MD5Hash(actualResultFile));
+            Assert.Empty(errorLogger.Errors);
+        }
+
         private static string ToJson(object obj)
         {
             return JsonConvert.SerializeObject(obj, Formatting.Indented);
@@ -200,6 +273,12 @@ namespace ElectionStatistics.Tests.Core.Import
                         .Replace("-", "").ToLower();
                 }
             }
+        }
+
+        private void Reset()
+        {
+            serializer.Reset();
+            errorLogger.Reset();
         }
     }
 }

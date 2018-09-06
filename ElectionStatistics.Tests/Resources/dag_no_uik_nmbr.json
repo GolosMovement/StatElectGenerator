@@ -1,0 +1,1937 @@
+{
+  "ElectionStatistics.Model.ProtocolSet": [
+    {
+      "Id": 139,
+      "TitleRus": "No UIK",
+      "TitleEng": null,
+      "DescriptionRus": "P",
+      "DescriptionEng": null,
+      "ImportFileErrorLog": null,
+      "Protocols": null
+    }
+  ],
+  "ElectionStatistics.Model.LineDescription": [
+    {
+      "Id": 140,
+      "TitleRus": "reg",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 141,
+      "TitleRus": "sub",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 142,
+      "TitleRus": "foo",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 143,
+      "TitleRus": "UIK",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 144,
+      "TitleRus": "url",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 145,
+      "TitleRus": "5",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 146,
+      "TitleRus": "6",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 147,
+      "TitleRus": "7",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 148,
+      "TitleRus": "8",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 149,
+      "TitleRus": "9",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 150,
+      "TitleRus": "10",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 151,
+      "TitleRus": "11",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 152,
+      "TitleRus": "12",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 153,
+      "TitleRus": "13",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 154,
+      "TitleRus": "14",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 155,
+      "TitleRus": "15",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 156,
+      "TitleRus": "16",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 157,
+      "TitleRus": "17",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 158,
+      "TitleRus": "18",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 159,
+      "TitleRus": "19",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 160,
+      "TitleRus": "20",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 161,
+      "TitleRus": "21",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 162,
+      "TitleRus": "22",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 163,
+      "TitleRus": "23",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 164,
+      "TitleRus": "24",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 165,
+      "TitleRus": "25",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 166,
+      "TitleRus": "26",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 167,
+      "TitleRus": "27",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 168,
+      "TitleRus": "28",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 169,
+      "TitleRus": "29",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 170,
+      "TitleRus": "30",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 171,
+      "TitleRus": "31",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 172,
+      "TitleRus": "32",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 173,
+      "TitleRus": "33",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 174,
+      "TitleRus": "34",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 175,
+      "TitleRus": "35",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    },
+    {
+      "Id": 176,
+      "TitleRus": "36",
+      "TitleEng": null,
+      "TitleNative": null,
+      "DescriptionRus": null,
+      "DescriptionEng": null,
+      "DescriptionNative": null,
+      "IsVoteResult": false,
+      "IsCalcResult": false,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null
+    }
+  ],
+  "ElectionStatistics.Model.Protocol": [
+    {
+      "Id": 177,
+      "TitleRus": "Республика Дагестан",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null,
+      "ParentId": null,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 178,
+      "TitleRus": "10 Республика Дагестан - Северный",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null,
+      "ParentId": 177,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 179,
+      "TitleRus": "5 Бабаюртовская",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null,
+      "ParentId": 178,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 180,
+      "TitleRus": "УИК №137",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null,
+      "ParentId": 179,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 214,
+      "TitleRus": "УИК №138",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null,
+      "ParentId": 179,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 248,
+      "TitleRus": "УИК №139",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null,
+      "ParentId": 179,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 282,
+      "TitleRus": "УИК №140",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null,
+      "ParentId": 179,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 316,
+      "TitleRus": "УИК №141",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 139,
+      "ProtocolSet": null,
+      "ParentId": 179,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    }
+  ],
+  "ElectionStatistics.Model.LineNumber": [
+    {
+      "Id": 181,
+      "Value": 2125,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 145,
+      "LineDescription": null
+    },
+    {
+      "Id": 182,
+      "Value": 2125,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 146,
+      "LineDescription": null
+    },
+    {
+      "Id": 183,
+      "Value": 0,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 147,
+      "LineDescription": null
+    },
+    {
+      "Id": 184,
+      "Value": 1920,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 148,
+      "LineDescription": null
+    },
+    {
+      "Id": 185,
+      "Value": 81,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 149,
+      "LineDescription": null
+    },
+    {
+      "Id": 186,
+      "Value": 124,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 150,
+      "LineDescription": null
+    },
+    {
+      "Id": 187,
+      "Value": 81,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 151,
+      "LineDescription": null
+    },
+    {
+      "Id": 188,
+      "Value": 1920,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 152,
+      "LineDescription": null
+    },
+    {
+      "Id": 189,
+      "Value": 19,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 153,
+      "LineDescription": null
+    },
+    {
+      "Id": 190,
+      "Value": 1982,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 154,
+      "LineDescription": null
+    },
+    {
+      "Id": 191,
+      "Value": 10,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 155,
+      "LineDescription": null
+    },
+    {
+      "Id": 192,
+      "Value": 0,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 156,
+      "LineDescription": null
+    },
+    {
+      "Id": 193,
+      "Value": 0,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 157,
+      "LineDescription": null
+    },
+    {
+      "Id": 194,
+      "Value": 10,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 158,
+      "LineDescription": null
+    },
+    {
+      "Id": 195,
+      "Value": 0,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 159,
+      "LineDescription": null
+    },
+    {
+      "Id": 196,
+      "Value": 0,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 160,
+      "LineDescription": null
+    },
+    {
+      "Id": 197,
+      "Value": 0,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 161,
+      "LineDescription": null
+    },
+    {
+      "Id": 198,
+      "Value": 0,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 162,
+      "LineDescription": null
+    },
+    {
+      "Id": 199,
+      "Value": 12,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 163,
+      "LineDescription": null
+    },
+    {
+      "Id": 200,
+      "Value": 10,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 164,
+      "LineDescription": null
+    },
+    {
+      "Id": 201,
+      "Value": 14,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 165,
+      "LineDescription": null
+    },
+    {
+      "Id": 202,
+      "Value": 1831,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 166,
+      "LineDescription": null
+    },
+    {
+      "Id": 203,
+      "Value": 9,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 167,
+      "LineDescription": null
+    },
+    {
+      "Id": 204,
+      "Value": 8,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 168,
+      "LineDescription": null
+    },
+    {
+      "Id": 205,
+      "Value": 15,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 169,
+      "LineDescription": null
+    },
+    {
+      "Id": 206,
+      "Value": 15,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 170,
+      "LineDescription": null
+    },
+    {
+      "Id": 207,
+      "Value": 9,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 171,
+      "LineDescription": null
+    },
+    {
+      "Id": 208,
+      "Value": 7,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 172,
+      "LineDescription": null
+    },
+    {
+      "Id": 209,
+      "Value": 10,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 173,
+      "LineDescription": null
+    },
+    {
+      "Id": 210,
+      "Value": 11,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 174,
+      "LineDescription": null
+    },
+    {
+      "Id": 211,
+      "Value": 18,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 175,
+      "LineDescription": null
+    },
+    {
+      "Id": 212,
+      "Value": 13,
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 176,
+      "LineDescription": null
+    },
+    {
+      "Id": 215,
+      "Value": 1617,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 145,
+      "LineDescription": null
+    },
+    {
+      "Id": 216,
+      "Value": 1617,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 146,
+      "LineDescription": null
+    },
+    {
+      "Id": 217,
+      "Value": 0,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 147,
+      "LineDescription": null
+    },
+    {
+      "Id": 218,
+      "Value": 1471,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 148,
+      "LineDescription": null
+    },
+    {
+      "Id": 219,
+      "Value": 42,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 149,
+      "LineDescription": null
+    },
+    {
+      "Id": 220,
+      "Value": 104,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 150,
+      "LineDescription": null
+    },
+    {
+      "Id": 221,
+      "Value": 42,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 151,
+      "LineDescription": null
+    },
+    {
+      "Id": 222,
+      "Value": 1471,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 152,
+      "LineDescription": null
+    },
+    {
+      "Id": 223,
+      "Value": 14,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 153,
+      "LineDescription": null
+    },
+    {
+      "Id": 224,
+      "Value": 1499,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 154,
+      "LineDescription": null
+    },
+    {
+      "Id": 225,
+      "Value": 5,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 155,
+      "LineDescription": null
+    },
+    {
+      "Id": 226,
+      "Value": 0,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 156,
+      "LineDescription": null
+    },
+    {
+      "Id": 227,
+      "Value": 0,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 157,
+      "LineDescription": null
+    },
+    {
+      "Id": 228,
+      "Value": 5,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 158,
+      "LineDescription": null
+    },
+    {
+      "Id": 229,
+      "Value": 0,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 159,
+      "LineDescription": null
+    },
+    {
+      "Id": 230,
+      "Value": 0,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 160,
+      "LineDescription": null
+    },
+    {
+      "Id": 231,
+      "Value": 0,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 161,
+      "LineDescription": null
+    },
+    {
+      "Id": 232,
+      "Value": 0,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 162,
+      "LineDescription": null
+    },
+    {
+      "Id": 233,
+      "Value": 9,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 163,
+      "LineDescription": null
+    },
+    {
+      "Id": 234,
+      "Value": 14,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 164,
+      "LineDescription": null
+    },
+    {
+      "Id": 235,
+      "Value": 11,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 165,
+      "LineDescription": null
+    },
+    {
+      "Id": 236,
+      "Value": 1349,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 166,
+      "LineDescription": null
+    },
+    {
+      "Id": 237,
+      "Value": 12,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 167,
+      "LineDescription": null
+    },
+    {
+      "Id": 238,
+      "Value": 9,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 168,
+      "LineDescription": null
+    },
+    {
+      "Id": 239,
+      "Value": 11,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 169,
+      "LineDescription": null
+    },
+    {
+      "Id": 240,
+      "Value": 12,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 170,
+      "LineDescription": null
+    },
+    {
+      "Id": 241,
+      "Value": 8,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 171,
+      "LineDescription": null
+    },
+    {
+      "Id": 242,
+      "Value": 14,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 172,
+      "LineDescription": null
+    },
+    {
+      "Id": 243,
+      "Value": 12,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 173,
+      "LineDescription": null
+    },
+    {
+      "Id": 244,
+      "Value": 14,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 174,
+      "LineDescription": null
+    },
+    {
+      "Id": 245,
+      "Value": 7,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 175,
+      "LineDescription": null
+    },
+    {
+      "Id": 246,
+      "Value": 17,
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 176,
+      "LineDescription": null
+    },
+    {
+      "Id": 249,
+      "Value": 1548,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 145,
+      "LineDescription": null
+    },
+    {
+      "Id": 250,
+      "Value": 1548,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 146,
+      "LineDescription": null
+    },
+    {
+      "Id": 251,
+      "Value": 0,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 147,
+      "LineDescription": null
+    },
+    {
+      "Id": 252,
+      "Value": 1363,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 148,
+      "LineDescription": null
+    },
+    {
+      "Id": 253,
+      "Value": 40,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 149,
+      "LineDescription": null
+    },
+    {
+      "Id": 254,
+      "Value": 145,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 150,
+      "LineDescription": null
+    },
+    {
+      "Id": 255,
+      "Value": 40,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 151,
+      "LineDescription": null
+    },
+    {
+      "Id": 256,
+      "Value": 1363,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 152,
+      "LineDescription": null
+    },
+    {
+      "Id": 257,
+      "Value": 14,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 153,
+      "LineDescription": null
+    },
+    {
+      "Id": 258,
+      "Value": 1389,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 154,
+      "LineDescription": null
+    },
+    {
+      "Id": 259,
+      "Value": 5,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 155,
+      "LineDescription": null
+    },
+    {
+      "Id": 260,
+      "Value": 0,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 156,
+      "LineDescription": null
+    },
+    {
+      "Id": 261,
+      "Value": 0,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 157,
+      "LineDescription": null
+    },
+    {
+      "Id": 262,
+      "Value": 5,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 158,
+      "LineDescription": null
+    },
+    {
+      "Id": 263,
+      "Value": 0,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 159,
+      "LineDescription": null
+    },
+    {
+      "Id": 264,
+      "Value": 0,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 160,
+      "LineDescription": null
+    },
+    {
+      "Id": 265,
+      "Value": 0,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 161,
+      "LineDescription": null
+    },
+    {
+      "Id": 266,
+      "Value": 0,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 162,
+      "LineDescription": null
+    },
+    {
+      "Id": 267,
+      "Value": 12,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 163,
+      "LineDescription": null
+    },
+    {
+      "Id": 268,
+      "Value": 10,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 164,
+      "LineDescription": null
+    },
+    {
+      "Id": 269,
+      "Value": 13,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 165,
+      "LineDescription": null
+    },
+    {
+      "Id": 270,
+      "Value": 1236,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 166,
+      "LineDescription": null
+    },
+    {
+      "Id": 271,
+      "Value": 6,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 167,
+      "LineDescription": null
+    },
+    {
+      "Id": 272,
+      "Value": 11,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 168,
+      "LineDescription": null
+    },
+    {
+      "Id": 273,
+      "Value": 8,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 169,
+      "LineDescription": null
+    },
+    {
+      "Id": 274,
+      "Value": 9,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 170,
+      "LineDescription": null
+    },
+    {
+      "Id": 275,
+      "Value": 13,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 171,
+      "LineDescription": null
+    },
+    {
+      "Id": 276,
+      "Value": 14,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 172,
+      "LineDescription": null
+    },
+    {
+      "Id": 277,
+      "Value": 12,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 173,
+      "LineDescription": null
+    },
+    {
+      "Id": 278,
+      "Value": 10,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 174,
+      "LineDescription": null
+    },
+    {
+      "Id": 279,
+      "Value": 18,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 175,
+      "LineDescription": null
+    },
+    {
+      "Id": 280,
+      "Value": 17,
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 176,
+      "LineDescription": null
+    },
+    {
+      "Id": 283,
+      "Value": 182,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 145,
+      "LineDescription": null
+    },
+    {
+      "Id": 284,
+      "Value": 182,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 146,
+      "LineDescription": null
+    },
+    {
+      "Id": 285,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 147,
+      "LineDescription": null
+    },
+    {
+      "Id": 286,
+      "Value": 159,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 148,
+      "LineDescription": null
+    },
+    {
+      "Id": 287,
+      "Value": 9,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 149,
+      "LineDescription": null
+    },
+    {
+      "Id": 288,
+      "Value": 14,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 150,
+      "LineDescription": null
+    },
+    {
+      "Id": 289,
+      "Value": 9,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 151,
+      "LineDescription": null
+    },
+    {
+      "Id": 290,
+      "Value": 159,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 152,
+      "LineDescription": null
+    },
+    {
+      "Id": 291,
+      "Value": 2,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 153,
+      "LineDescription": null
+    },
+    {
+      "Id": 292,
+      "Value": 166,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 154,
+      "LineDescription": null
+    },
+    {
+      "Id": 293,
+      "Value": 3,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 155,
+      "LineDescription": null
+    },
+    {
+      "Id": 294,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 156,
+      "LineDescription": null
+    },
+    {
+      "Id": 295,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 157,
+      "LineDescription": null
+    },
+    {
+      "Id": 296,
+      "Value": 3,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 158,
+      "LineDescription": null
+    },
+    {
+      "Id": 297,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 159,
+      "LineDescription": null
+    },
+    {
+      "Id": 298,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 160,
+      "LineDescription": null
+    },
+    {
+      "Id": 299,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 161,
+      "LineDescription": null
+    },
+    {
+      "Id": 300,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 162,
+      "LineDescription": null
+    },
+    {
+      "Id": 301,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 163,
+      "LineDescription": null
+    },
+    {
+      "Id": 302,
+      "Value": 1,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 164,
+      "LineDescription": null
+    },
+    {
+      "Id": 303,
+      "Value": 1,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 165,
+      "LineDescription": null
+    },
+    {
+      "Id": 304,
+      "Value": 151,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 166,
+      "LineDescription": null
+    },
+    {
+      "Id": 305,
+      "Value": 2,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 167,
+      "LineDescription": null
+    },
+    {
+      "Id": 306,
+      "Value": 1,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 168,
+      "LineDescription": null
+    },
+    {
+      "Id": 307,
+      "Value": 1,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 169,
+      "LineDescription": null
+    },
+    {
+      "Id": 308,
+      "Value": 0,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 170,
+      "LineDescription": null
+    },
+    {
+      "Id": 309,
+      "Value": 2,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 171,
+      "LineDescription": null
+    },
+    {
+      "Id": 310,
+      "Value": 2,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 172,
+      "LineDescription": null
+    },
+    {
+      "Id": 311,
+      "Value": 1,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 173,
+      "LineDescription": null
+    },
+    {
+      "Id": 312,
+      "Value": 2,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 174,
+      "LineDescription": null
+    },
+    {
+      "Id": 313,
+      "Value": 1,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 175,
+      "LineDescription": null
+    },
+    {
+      "Id": 314,
+      "Value": 1,
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 176,
+      "LineDescription": null
+    },
+    {
+      "Id": 317,
+      "Value": 2351,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 145,
+      "LineDescription": null
+    },
+    {
+      "Id": 318,
+      "Value": 2351,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 146,
+      "LineDescription": null
+    },
+    {
+      "Id": 319,
+      "Value": 0,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 147,
+      "LineDescription": null
+    },
+    {
+      "Id": 320,
+      "Value": 1921,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 148,
+      "LineDescription": null
+    },
+    {
+      "Id": 321,
+      "Value": 87,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 149,
+      "LineDescription": null
+    },
+    {
+      "Id": 322,
+      "Value": 343,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 150,
+      "LineDescription": null
+    },
+    {
+      "Id": 323,
+      "Value": 87,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 151,
+      "LineDescription": null
+    },
+    {
+      "Id": 324,
+      "Value": 1921,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 152,
+      "LineDescription": null
+    },
+    {
+      "Id": 325,
+      "Value": 23,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 153,
+      "LineDescription": null
+    },
+    {
+      "Id": 326,
+      "Value": 1985,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 154,
+      "LineDescription": null
+    },
+    {
+      "Id": 327,
+      "Value": 10,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 155,
+      "LineDescription": null
+    },
+    {
+      "Id": 328,
+      "Value": 0,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 156,
+      "LineDescription": null
+    },
+    {
+      "Id": 329,
+      "Value": 0,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 157,
+      "LineDescription": null
+    },
+    {
+      "Id": 330,
+      "Value": 10,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 158,
+      "LineDescription": null
+    },
+    {
+      "Id": 331,
+      "Value": 0,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 159,
+      "LineDescription": null
+    },
+    {
+      "Id": 332,
+      "Value": 0,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 160,
+      "LineDescription": null
+    },
+    {
+      "Id": 333,
+      "Value": 0,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 161,
+      "LineDescription": null
+    },
+    {
+      "Id": 334,
+      "Value": 0,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 162,
+      "LineDescription": null
+    },
+    {
+      "Id": 335,
+      "Value": 10,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 163,
+      "LineDescription": null
+    },
+    {
+      "Id": 336,
+      "Value": 11,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 164,
+      "LineDescription": null
+    },
+    {
+      "Id": 337,
+      "Value": 8,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 165,
+      "LineDescription": null
+    },
+    {
+      "Id": 338,
+      "Value": 1846,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 166,
+      "LineDescription": null
+    },
+    {
+      "Id": 339,
+      "Value": 15,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 167,
+      "LineDescription": null
+    },
+    {
+      "Id": 340,
+      "Value": 13,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 168,
+      "LineDescription": null
+    },
+    {
+      "Id": 341,
+      "Value": 17,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 169,
+      "LineDescription": null
+    },
+    {
+      "Id": 342,
+      "Value": 5,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 170,
+      "LineDescription": null
+    },
+    {
+      "Id": 343,
+      "Value": 17,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 171,
+      "LineDescription": null
+    },
+    {
+      "Id": 344,
+      "Value": 8,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 172,
+      "LineDescription": null
+    },
+    {
+      "Id": 345,
+      "Value": 11,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 173,
+      "LineDescription": null
+    },
+    {
+      "Id": 346,
+      "Value": 4,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 174,
+      "LineDescription": null
+    },
+    {
+      "Id": 347,
+      "Value": 10,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 175,
+      "LineDescription": null
+    },
+    {
+      "Id": 348,
+      "Value": 10,
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 176,
+      "LineDescription": null
+    }
+  ],
+  "ElectionStatistics.Model.LineString": [
+    {
+      "Id": 213,
+      "Value": "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=true&root=52000009&tvd=2052000895876&vrn=100100067795849&prver=0&pronetvd=0&region=0&sub_region=99&type=233&vibid=2052000895876",
+      "ProtocolId": 180,
+      "Protocol": null,
+      "LineDescriptionId": 144,
+      "LineDescription": null
+    },
+    {
+      "Id": 247,
+      "Value": "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=true&root=52000009&tvd=2052000895876&vrn=100100067795849&prver=0&pronetvd=0&region=0&sub_region=99&type=233&vibid=2052000895876",
+      "ProtocolId": 214,
+      "Protocol": null,
+      "LineDescriptionId": 144,
+      "LineDescription": null
+    },
+    {
+      "Id": 281,
+      "Value": "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=true&root=52000009&tvd=2052000895876&vrn=100100067795849&prver=0&pronetvd=0&region=0&sub_region=99&type=233&vibid=2052000895876",
+      "ProtocolId": 248,
+      "Protocol": null,
+      "LineDescriptionId": 144,
+      "LineDescription": null
+    },
+    {
+      "Id": 315,
+      "Value": "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=true&root=52000009&tvd=2052000895876&vrn=100100067795849&prver=0&pronetvd=0&region=0&sub_region=99&type=233&vibid=2052000895876",
+      "ProtocolId": 282,
+      "Protocol": null,
+      "LineDescriptionId": 144,
+      "LineDescription": null
+    },
+    {
+      "Id": 349,
+      "Value": "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=true&root=52000009&tvd=2052000895876&vrn=100100067795849&prver=0&pronetvd=0&region=0&sub_region=99&type=233&vibid=2052000895876",
+      "ProtocolId": 316,
+      "Protocol": null,
+      "LineDescriptionId": 144,
+      "LineDescription": null
+    }
+  ],
+  "System.String": [
+    "AfterImport"
+  ]
+}
