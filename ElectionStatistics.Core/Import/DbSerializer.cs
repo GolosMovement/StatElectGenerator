@@ -71,13 +71,13 @@ namespace ElectionStatistics.Core.Import
         public void CreateProtocolSet(ProtocolSet protocolSet)
         {
             context.Set<ProtocolSet>().Add(protocolSet);
-            BulkSave();
+            context.SaveChanges();
         }
 
         public void CreateLineDescription(LineDescription lineDescription)
         {
             context.Set<LineDescription>().Add(lineDescription);
-            BulkSave();
+            context.SaveChanges();
         }
 
         public void CreateProtocol(Protocol protocol)
