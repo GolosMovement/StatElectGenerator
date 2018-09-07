@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { ImportController } from './ImportController';
+import { ImportController } from '../Import/ImportController';
 
 interface IAuthProps {
     isAuthenticated: boolean;
@@ -28,7 +28,7 @@ export class AuthPage extends React.Component<IAuthProps> {
 
     public render(): React.ReactNode {
         if (this.state.isAuthenticated) {
-            return <Redirect to='/import' />;
+            return <Redirect to='/admin' />;
         } else {
             return (
                 <div className='sign-in col-sm-6 col-sm-offset-3'>

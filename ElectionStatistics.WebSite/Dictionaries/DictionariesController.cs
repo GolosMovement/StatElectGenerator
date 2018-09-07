@@ -186,6 +186,9 @@ namespace ElectionStatistics.WebSite
             public string TitleRus { get; set; }
             public string TitleEng { get; set; }
             public string TitleNative { get; set; }
+            public string DescriptionRus { get; set; }
+            public string DescriptionEng { get; set; }
+            public string DescriptionNative { get; set; }
         }
 
         [HttpGet, Route("lineDescriptions")]
@@ -199,8 +202,35 @@ namespace ElectionStatistics.WebSite
                     Id = line.Id,
                     TitleRus = line.TitleRus,
                     TitleEng = line.TitleEng,
-                    TitleNative = line.TitleNative
+                    TitleNative = line.TitleNative,
+                    DescriptionRus = line.DescriptionRus,
+                    DescriptionEng = line.DescriptionEng,
+                    DescriptionNative = line.DescriptionNative
                 }).ToArray();
+        }
+
+        public struct PresetDto
+        {
+            public int Id { get; set; }
+            public string TitleRus { get; set; }
+            public string TitleEng { get; set; }
+            public string DescriptionRus { get; set; }
+            public string DescriptionEng { get; set; }
+        }
+
+        [HttpGet, Route("presets")]
+        public IEnumerable<PresetDto> GetPresets(int protocolSetId)
+        {
+            return modelContext.Set<Preset>().ToArray()
+                .Where(preset => preset.ProtocolSetId == protocolSetId)
+                .Select(preset => new PresetDto()
+                {
+                    Id = preset.Id,
+                    TitleRus = preset.TitleRus,
+                    TitleEng = preset.TitleEng,
+                    DescriptionRus = preset.DescriptionRus,
+                    DescriptionEng = preset.DescriptionEng
+                });
         }
     }
 }

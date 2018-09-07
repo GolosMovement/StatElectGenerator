@@ -1,6 +1,6 @@
-import * as Highcharts from 'highcharts';
+import Highcharts from 'highcharts';
 
-import { IStringDictionary } from '../Common'
+import { IStringDictionary } from '../Common';
 import { ChartParameter } from './DictionariesController';
 import { ILDAChartBuildParameters, ILDAData } from './LastDigitAnalyzer';
 
@@ -18,19 +18,16 @@ export interface HistogramBuildParameters extends ChartBuildParameters {
 export class ChartsController {
     private static instance: ChartsController;
 
+    public static get Instance() {
+        return this.instance || (this.instance = new this());
+    }
+
     private readonly histogramDataPromises: IStringDictionary<Promise<Highcharts.Options>> = {};
     private readonly scatterplotDataPromises: IStringDictionary<Promise<Highcharts.Options>> = {};
     private readonly locationScatterplotDataPromises: IStringDictionary<Promise<Highcharts.Options>> = {};
     private readonly lastDigitAnalyzerDataPromises: IStringDictionary<Promise<ILDAData>> = {};
 
-    private constructor()
-    {
-    }
-
-    public static get Instance()
-    {
-        return this.instance || (this.instance = new this());
-    }
+    private constructor() {}
 
     public getHistogramData(parameters: HistogramBuildParameters): Promise<Highcharts.Options> {
         const parametersString = JSON.stringify(parameters);

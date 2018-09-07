@@ -1,7 +1,7 @@
 import { IMappingColumn } from './MappingTable';
 import { IProtocolSet, IMappingList } from './NewProtocolSet';
 
-interface IApiResponse {
+export interface IApiResponse {
     status: string;
     message: string;
     data?: any;

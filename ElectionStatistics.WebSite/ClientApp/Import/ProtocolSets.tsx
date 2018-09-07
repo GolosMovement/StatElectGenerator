@@ -63,7 +63,7 @@ export class ProtocolSets extends React.Component<{}, IProtocolSetState> {
                 </td>
                 <td className='text-center'>{protocolSet.importErrorCount}</td>
                 <td>
-                    <Link to={`/import/protocolSets/edit/${protocolSet.id}`} className='btn btn-xs btn-primary'
+                    <Link to={`/import/protocolSets/${protocolSet.id}/edit`} className='btn btn-xs btn-primary'
                         children='Edit' />
                 </td>
             </tr>

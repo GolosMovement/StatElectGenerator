@@ -17,20 +17,20 @@ namespace ElectionStatistics.WebSite
     // TODO: tests
     public class ImportController : Controller
     {
-        public struct ApiResponse
+        public class ApiResponse
         {
             public string status;
             public string message;
             public object data;
         }
 
-        public struct MappingsResponse
+        public class MappingsResponse
         {
             public Mapping entry;
             public MappingLine[] lines;
         }
 
-        public struct ImportProgressData
+        public class ImportProgressData
         {
             public int progress;
             public bool? success;
@@ -55,7 +55,7 @@ namespace ElectionStatistics.WebSite
             }
             else
             {
-                return Redirect("/signIn");
+                return NotFound();
             }
         }
 

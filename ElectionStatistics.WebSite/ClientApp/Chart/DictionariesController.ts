@@ -1,5 +1,7 @@
-import { INumberDictionary } from '../Common';
+import { INumberDictionary, IStringDictionary } from '../Common';
 import { IProtocolSet } from '../Import/NewProtocolSet';
+import { IPreset } from '../Presets';
+import { ILineDescription } from '../Presets/PresetForm';
 import { IModel, IProtocol } from './LastDigitAnalyzer';
 
 export interface NamedChartParameter {
@@ -23,21 +25,32 @@ export interface ElectoralDistrictDto {
 }
 
 export class DictionariesController {
+    public static reset(): void {
+        this.initInstance();
+    }
+
     private static instance: DictionariesController;
+
+    public static get Instance() {
+        if (!this.instance) { this.initInstance(); }
+
+        return this.instance;
+    }
+
+    private static initInstance(): void {
+        this.instance = new this();
+    }
 
     private elections?: Promise<ElectionDto[]>;
     private districtsByElection: INumberDictionary<Promise<ElectoralDistrictDto[]>> = {};
     private parametersByElection: INumberDictionary<Promise<NamedChartParameter[]>> = {};
-    private lineDescriptionsByProtocolSet: INumberDictionary<Promise<IModel[]>> = {};
+    private lineDescriptionsByProtocolSet: INumberDictionary<Promise<ILineDescription[]>> = {};
     private protocols: INumberDictionary<Promise<IProtocol[]>> = {};
+    private presetsByProtocolSet: INumberDictionary<Promise<IPreset[]>> = {};
     private summaryParameters?: Promise<NamedChartParameter[]>;
     private protocolSets?: Promise<IProtocolSet[]>;
 
     private constructor() {}
-
-    public static get Instance() {
-        return this.instance || (this.instance = new this());
-    }
 
     public getElections(): Promise<ElectionDto[]> {
         if (!this.elections) {
@@ -86,12 +99,20 @@ export class DictionariesController {
         return this.protocols[protocolSetId];
     }
 
-    public getLineDescriptions(protocolSetId: number): Promise<IModel[]> {
+    public getLineDescriptions(protocolSetId: number): Promise<ILineDescription[]> {
         if (!this.lineDescriptionsByProtocolSet[protocolSetId]) {
             this.lineDescriptionsByProtocolSet[protocolSetId] =
                 fetch(`/api/lineDescriptions?protocolSetId=${protocolSetId}`)
                     .then((response) => response.json());
         }
         return this.lineDescriptionsByProtocolSet[protocolSetId];
+    }
+
+    public getPresets(protocolSetId: number): Promise<IPreset[]> {
+        if (!this.presetsByProtocolSet[protocolSetId]) {
+            this.presetsByProtocolSet[protocolSetId] = fetch(`/api/presets?protocolSetId=${protocolSetId}`)
+                .then((response) => response.json());
+        }
+        return this.presetsByProtocolSet[protocolSetId];
     }
 }

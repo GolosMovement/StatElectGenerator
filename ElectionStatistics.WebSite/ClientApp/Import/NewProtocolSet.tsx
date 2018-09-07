@@ -8,7 +8,7 @@ import { IMappingColumn, IMappingTableState, MappingTable } from './MappingTable
 import { ProgressBar } from './ProgressBar';
 
 export interface IProtocolSet {
-    id?: number;
+    id: number;
     titleEng: string;
     titleRus: string;
     descriptionEng: string;
@@ -60,7 +60,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
             columnForm: 'new', columnNumber: NewProtocolSet.DEFAULT_NEW_COLUMN_INDEX, file: new File([], ''),
             index: NewProtocolSet.DEFAULT_NEW_COLUMN_INDEX, mappingTable: { dataset: [] }, position: 'end',
             protocolSet: {
-                titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '', hidden: false
+                titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '', hidden: false, id: 0
             }, startLine: NewProtocolSet.DEFAULT_START_LINE, isLoading: false
         };
 

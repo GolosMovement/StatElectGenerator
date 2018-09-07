@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { deepEqual } from '.';
 
 import { Select, Spin } from 'antd';
@@ -24,8 +24,7 @@ interface LazySelectState<TItem>
     itemsPromise: Promise<TItem[]> | null;
 }
 
-export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<TItem, TValue>, LazySelectState<TItem>>
-{
+export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<TItem, TValue>, LazySelectState<TItem>> {
     constructor(props: LazySelectProps<TItem, TValue>) {
         super(props);
         this.state = {
@@ -34,30 +33,10 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
         };
     }
 
-    public componentWillMount() {
-        this.loadData();
-    }
-
-    public componentDidUpdate() {
-        if (this.isLoading()) {
-            this.loadData();
-        }
-    }
-
-    private loadData() {
-        this.props.itemsPromise.then(items => {
-            this.setState({
-                    items: items,
-                    itemsPromise: this.props.itemsPromise
-                });
-        });
-    }
-
     public render(): JSX.Element {
         if (this.isLoading()) {
             return <Spin />;
-        }
-        else {
+        } else {
             const options = this.state.items
                 .map((item, index) => {
                     const text = this.props.getText(item);
@@ -71,7 +50,7 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
                     allowClear={this.props.allowClear}
                     className={this.className()}
                     placeholder={this.props.placeholder}
-                    optionFilterProp="children"
+                    optionFilterProp='children'
                     filterOption={this.filterOption}
                     value={this.getSelectedText()}
                     onChange={this.onChange}>
@@ -81,12 +60,31 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
         }
     }
 
+    public componentWillMount() {
+        this.loadData();
+    }
+
+    public componentDidUpdate() {
+        if (this.isLoading()) {
+            this.loadData();
+        }
+    }
+
+    private loadData() {
+        this.props.itemsPromise.then((items) => {
+            this.setState({
+                    items: items,
+                    itemsPromise: this.props.itemsPromise
+                });
+        });
+    }
+
     private filterOption(input: string, option: React.ReactElement<OptionProps>) {
         return option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     }
 
     private getSelectedText() {
-        if (!this.props.selectedValue ||
+        if (this.props.selectedValue == null ||
             (Array.isArray(this.props.selectedValue) && this.props.selectedValue.length == 0)) {
             return undefined;
         } else if (this.props.mode == 'multiple' && Array.isArray(this.props.selectedValue)) {
@@ -109,13 +107,7 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
             this.props.onChange(null);
         } else if (this.props.mode == 'multiple') {
             const selected = option as React.ReactElement<any>[];
-            // const selectedKey = selected[selected.length - 1].key as number;
-            // const selectedItem = this.state.items[selectedKey];
-            // console.log(`MULTIPLE option: ${(option as React.ReactElement<any>[]).map((item) => item.key).toString()}`);
-            // console.log(`selectedKey: ${selectedKey}`);
-            // console.log(`selectedItem: ${selectedItem}`);
-            // console.log(`getValue(): ${this.props.getValue(selectedItem)}`);
-            // this.props.onChange(this.props.getValue(selectedItem));
+
             if (this.props.onChangeMultiple) {
                 this.props.onChangeMultiple(selected.map((opt) =>
                     this.props.getValue(this.state.items[opt.key as number])));

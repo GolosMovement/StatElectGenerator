@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 
 namespace ElectionStatistics.WebSite {
 
-    [Route("api")]
     public class AuthController : Controller
     {
         private AppSettings AppSettings;
@@ -30,8 +29,21 @@ namespace ElectionStatistics.WebSite {
             public Admin admin;
         }
 
+        [HttpGet, Route("admin")]
+        public IActionResult Index()
+        {
+            if (HttpContext.Session.GetString("admin") != null)
+            {
+                return View();
+            }
+            else
+            {
+                return Redirect("/signIn");
+            }
+        }
+
         // TODO: migrate to normal db auth
-        [HttpPost, Route("signIn")]
+        [HttpPost, Route("api/signIn")]
         public bool SignIn([FromBody] Settings.Admin admin)
         {
             var result = admin.user == "admin" && admin.password == AppSettings.AdminPassword;

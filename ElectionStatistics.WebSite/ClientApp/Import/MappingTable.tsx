@@ -147,7 +147,7 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
 
     private columnButtons(index: number): React.ReactNode {
         return (
-            <div className='column-actions'>
+            <div className='btn-grouphtml'>
                 <button type='button' value={index} onClick={this.editColumn} className='btn btn-xs btn-success'>
                     Edit
                 </button>
