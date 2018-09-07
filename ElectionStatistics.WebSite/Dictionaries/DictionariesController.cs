@@ -166,6 +166,7 @@ namespace ElectionStatistics.WebSite
         {
             return modelContext.Set<LineDescription>()
                 .Where(line => line.ProtocolSetId == protocolSetId && line.IsCalcResult)
+                .OrderBy(line => line.DescriptionRus)
                 .Select(line => new LineDescriptionDto()
                 {
                     Id = line.Id,

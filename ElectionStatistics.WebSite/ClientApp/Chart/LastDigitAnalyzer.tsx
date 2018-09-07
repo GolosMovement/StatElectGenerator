@@ -184,7 +184,6 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
 
             return <LSelect
                 mode='multiple'
-                placeholder='Select LineDescriptions (multiple)'
                 itemsPromise={DictionariesController.Instance.getLineDescriptions(this.state.protocolSetId)}
                 selectedValue={this.state.lineDescriptionIds}
                 getValue={(line) => line.id}
