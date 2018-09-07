@@ -41,12 +41,6 @@ export class NavigationMenuComponent extends React.Component {
                                     <span className='glyphicon glyphicon-th'></span> Метод последней цифры
                                 </NavLink>
                             </li>
-
-                            <li>
-                                <a href='/import'>
-                                    <span className='glyphicon glyphicon-import'></span> DatabaseManager
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </div>
