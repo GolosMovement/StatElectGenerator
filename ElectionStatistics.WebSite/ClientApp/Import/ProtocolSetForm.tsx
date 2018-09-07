@@ -1,6 +1,6 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { Select } from 'antd';
+import { Select, Spin } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 
 import { ImportController } from './ImportController';
@@ -36,6 +36,7 @@ interface IDataset {
 interface IDatasetState extends IDataset {
     mappings?: IMappingList[];
     mappingToLoad?: number;
+    isLoading: boolean;
 }
 
 interface IDatasetProps extends IDataset, RouteComponentProps<any> {}
@@ -53,7 +54,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
             protocolSet: {
                 titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '',
                 id: props.match.params.id
-            }, startLine: ProtocolSetForm.DEFAULT_START_LINE
+            }, startLine: ProtocolSetForm.DEFAULT_START_LINE, isLoading: false
         };
 
         this.disabledEdit = this.disabledEdit.bind(this);
@@ -66,7 +67,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         this.changeDescrRu = this.changeDescrRu.bind(this);
         this.changeDescr = this.changeDescr.bind(this);
         this.changePosition = this.changePosition.bind(this);
-        this.submitForm = this.submitForm.bind(this);
+        this.onSubmitForm = this.onSubmitForm.bind(this);
 
         this.changeSelectedMapping = this.changeSelectedMapping.bind(this);
         this.loadMapping = this.loadMapping.bind(this);
@@ -78,7 +79,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         return (
             <div>
                 <h1>{this.headerText()}</h1>
-                <form onSubmit={this.submitForm}>
+                <form onSubmit={this.onSubmitForm}>
                     <div className='row'>
                         <div className='col-sm-6'>
                             <div className='col-sm-4'>
@@ -192,7 +193,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
                     </div>
 
                     <div className='row'>
-                        <input type='submit' className='btn btn-primary' />
+                        {this.submitButton()}
                     </div>
                 </form>
 
@@ -255,7 +256,15 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
     }
 
     protected abstract headerText(): string;
-    protected abstract submitForm(e: React.FormEvent<HTMLFormElement>): void;
+    protected abstract submitForm(): void;
+
+    private onSubmitForm(e: React.FormEvent<HTMLFormElement>): void {
+        e.preventDefault();
+
+        this.setState({ ...this.state, isLoading: true });
+
+        this.submitForm();
+    }
 
     private errorLogFileDownload(): React.ReactNode {
         if (this.state.protocolSet.id) {
@@ -275,6 +284,14 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
             <button type='button' id='open-column-form' className='btn btn-default'
                 onClick={this.openColumnForm} disabled={this.disabledEdit()}>Add column</button>
         );
+    }
+
+    private submitButton(): React.ReactNode {
+        if (this.state.isLoading) {
+            return <Spin/>;
+        } else {
+            return <input type='submit' className='btn btn-primary' />;
+        }
     }
 
     private mappingColumnForm(): React.ReactNode {
