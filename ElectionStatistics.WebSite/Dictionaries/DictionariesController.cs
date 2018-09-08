@@ -127,7 +127,9 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("protocolSets")]
         public IEnumerable<ProtocolSet> ProtocolSets()
         {
-            return modelContext.Set<ProtocolSet>();
+            return modelContext.Set<ProtocolSet>()
+                .Where(protocolSet => !protocolSet.Hidden)
+                .OrderBy(protocolSet => protocolSet.TitleRus);
         }
 
         public struct ProtocolDto

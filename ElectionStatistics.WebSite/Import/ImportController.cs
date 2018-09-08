@@ -94,6 +94,13 @@ namespace ElectionStatistics.WebSite
                 new ApiResponse { status = "ok", data = protocolSetJson.Id });
         }
 
+        [HttpGet, Route("api/import/protocolSets")]
+        public IEnumerable<ProtocolSet> ProtocolSets()
+        {
+            return modelContext.Set<ProtocolSet>()
+                .OrderBy(protocolSet => protocolSet.TitleRus);
+        }
+
         [HttpGet, Route("api/import/protocolSets/{id}/log")]
         public IActionResult ImportErrorLog(int id)
         {

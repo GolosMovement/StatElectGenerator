@@ -88,4 +88,9 @@ export class ImportController {
 
         return reqPromise.then((response) => response.json());
     }
+
+    public protocolSets(): Promise<IProtocolSet[]> {
+        return fetch('/api/import/protocolSets')
+            .then((response) => response.json());
+    }
 }

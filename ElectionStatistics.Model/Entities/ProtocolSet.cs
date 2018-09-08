@@ -21,5 +21,7 @@ namespace ElectionStatistics.Model
         public string ImportFileErrorLog { get; set; }
 
         public virtual ICollection<Protocol> Protocols { get; set; }
+
+        public bool Hidden { get; set; }
     }
 }

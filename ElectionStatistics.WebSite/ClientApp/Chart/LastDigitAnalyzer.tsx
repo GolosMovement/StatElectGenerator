@@ -300,6 +300,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
                 },
                 series: {
                     turboThreshold: 100000,
+                    showInLegend: false,
                 }
             },
             xAxis: [{ categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], title: { text: 'Последняя цифра' } }]
