@@ -275,15 +275,28 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
                 if (7 - warnLevel == i) {
                     calcValue = (this.state.chiSquared as number).toFixed(2);
                 }
-                return <tr key={i}>
-                    <td className={`warn-level-${7 - i - 1}`}>
-                        {stats[0]}%
-                        <br />
-                        <small>{stats[1] > 0 ? `(χ2>${stats[1]})` : ''}</small>
-                    </td>
-                    <td className={`warn-level-${warnLevel - 1}`}>{calcValue}</td>
-                    <td className={`warn-level-${7 - i - 1}`}>{stats[2]}</td>
-                </tr>;
+
+                if (7 - warnLevel <= i) {
+                    return <tr key={i}>
+                        <td className={`warn-level-${7 - i - 1}`}>
+                            {stats[0]}%
+                            <br />
+                            <small>{stats[1] > 0 ? `(χ2>${stats[1]})` : ''}</small>
+                        </td>
+                        <td className={`warn-level-${warnLevel - 1}`}>{calcValue}</td>
+                        <td className={`warn-level-${7 - i - 1}`}>{stats[2]}</td>
+                    </tr>;
+                } else {
+                    return <tr key={i}>
+                        <td>
+                            {stats[0]}%
+                            <br />
+                            <small>{stats[1] > 0 ? `(χ2>${stats[1]})` : ''}</small>
+                        </td>
+                        <td></td>
+                        <td>{stats[2]}</td>
+                    </tr>;
+                }
             });
         }
     }
