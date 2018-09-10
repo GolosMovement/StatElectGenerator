@@ -1,5 +1,5 @@
 import { IMappingColumn } from './MappingTable';
-import { IProtocolSet, IMappingList } from './ProtocolSetForm';
+import { IProtocolSet, IMappingList } from './NewProtocolSet';
 
 interface IApiResponse {
     status: string;

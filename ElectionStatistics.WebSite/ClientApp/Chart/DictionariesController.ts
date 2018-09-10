@@ -1,5 +1,5 @@
 import { INumberDictionary, IStringDictionary } from '../Common';
-import { IProtocolSet } from '../Import/ProtocolSetForm';
+import { IProtocolSet } from '../Import/NewProtocolSet';
 import { IModel } from './LastDigitAnalyzer';
 
 export interface NamedChartParameter {

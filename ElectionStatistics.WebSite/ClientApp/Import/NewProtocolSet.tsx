@@ -1,5 +1,4 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
 import { Select, Spin } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 
@@ -13,6 +12,7 @@ export interface IProtocolSet {
     descriptionEng: string;
     titleRus: string;
     descriptionRus: string;
+    hidden: boolean;
 }
 
 export interface IMappingList {
@@ -39,25 +39,21 @@ interface IDatasetState extends IDataset {
     isLoading: boolean;
 }
 
-interface IDatasetProps extends IDataset, RouteComponentProps<any> {}
-
-export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDatasetState> {
+export class NewProtocolSet extends React.Component<{}, IDatasetState> {
     private static DEFAULT_NEW_COLUMN_INDEX = 1;
     private static DEFAULT_START_LINE = 2;
 
-    constructor(props: IDatasetProps) {
+    constructor(props: {}) {
         super(props);
 
         this.state = {
-            columnForm: 'new', columnNumber: ProtocolSetForm.DEFAULT_NEW_COLUMN_INDEX, file: new File([], ''),
-            index: ProtocolSetForm.DEFAULT_NEW_COLUMN_INDEX, mappingTable: { dataset: [] }, position: 'end',
+            columnForm: 'new', columnNumber: NewProtocolSet.DEFAULT_NEW_COLUMN_INDEX, file: new File([], ''),
+            index: NewProtocolSet.DEFAULT_NEW_COLUMN_INDEX, mappingTable: { dataset: [] }, position: 'end',
             protocolSet: {
-                titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '',
-                id: props.match.params.id
-            }, startLine: ProtocolSetForm.DEFAULT_START_LINE, isLoading: false
+                titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '', hidden: false
+            }, startLine: NewProtocolSet.DEFAULT_START_LINE, isLoading: false
         };
 
-        this.disabledEdit = this.disabledEdit.bind(this);
         this.openColumnForm = this.openColumnForm.bind(this);
         this.pickFile = this.pickFile.bind(this);
 
@@ -66,6 +62,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         this.changeTitle = this.changeTitle.bind(this);
         this.changeDescrRu = this.changeDescrRu.bind(this);
         this.changeDescr = this.changeDescr.bind(this);
+        this.changeHidden = this.changeHidden.bind(this);
         this.changePosition = this.changePosition.bind(this);
         this.onSubmitForm = this.onSubmitForm.bind(this);
 
@@ -78,37 +75,48 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         // TODO: CSRF protection
         return (
             <div>
-                <h1>{this.headerText()}</h1>
+                <h1>{'Import new ProtocolSet'}</h1>
                 <form onSubmit={this.onSubmitForm}>
                     <div className='row'>
-                        <div className='col-sm-6'>
-                            <div className='col-sm-4'>
-                                <div className='form-group'>
-                                    <label htmlFor='titleRus'>TitleRus</label>
-                                    <input id='titleRus' value={this.state.protocolSet.titleRus}
-                                        onChange={this.changeTitleRu} className='form-control' />
-                                </div>
+                        <div className='col-sm-3'>
+                            <div className='form-group'>
+                                <label htmlFor='titleRus'>TitleRus</label>
+                                <input id='titleRus' value={this.state.protocolSet.titleRus}
+                                    onChange={this.changeTitleRu} className='form-control' />
                             </div>
-                            <div className='col-sm-7'>
-                                <div className='form-group'>
-                                    <label htmlFor='descriptionRus'>DescriptionRus</label>
-                                    <textarea id='descriptionRus' value={this.state.protocolSet.descriptionRus}
-                                        onChange={this.changeDescrRu} className='form-control' ></textarea>
-                                </div>
+                        </div>
+                        <div className='col-sm-4'>
+                            <div className='form-group'>
+                                <label htmlFor='descriptionRus'>DescriptionRus</label>
+                                <textarea id='descriptionRus' value={this.state.protocolSet.descriptionRus}
+                                    onChange={this.changeDescrRu} className='form-control' ></textarea>
                             </div>
-                            <div className='col-sm-4'>
-                                <div className='form-group'>
-                                    <label htmlFor='titleEng'>TitleEng</label>
-                                    <input id='titleEng' value={this.state.protocolSet.titleEng}
-                                        onChange={this.changeTitle} className='form-control' />
-                                </div>
+                        </div>
+
+                        <div className='col-sm-5'>
+                            <div className='checkbox'>
+                                <label className='control-label'>
+                                    <input type='checkbox' id='hidden' checked={this.state.protocolSet.hidden}
+                                        onChange={this.changeHidden} />
+                                    Hidden
+                                </label>
                             </div>
-                            <div className='col-sm-7'>
-                                <div className='form-group'>
-                                    <label htmlFor='descriptionEng'>DescriptionEng</label>
-                                    <textarea id='descriptionEng' value={this.state.protocolSet.descriptionEng}
-                                        onChange={this.changeDescr} className='form-control' />
-                                </div>
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='col-sm-3'>
+                            <div className='form-group'>
+                                <label htmlFor='titleEng'>TitleEng</label>
+                                <input id='titleEng' value={this.state.protocolSet.titleEng}
+                                    onChange={this.changeTitle} className='form-control' />
+                            </div>
+                        </div>
+                        <div className='col-sm-4'>
+                            <div className='form-group'>
+                                <label htmlFor='descriptionEng'>DescriptionEng</label>
+                                <textarea id='descriptionEng' value={this.state.protocolSet.descriptionEng}
+                                    onChange={this.changeDescr} className='form-control' />
                             </div>
                         </div>
                     </div>
@@ -118,8 +126,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
                             <label htmlFor='start-line' className='col-sm-3'>Start line:</label>
                             <div className='col-sm-3'>
                                 <input id='start-line' type='number' value={this.state.startLine}
-                                    onChange={this.changeStartLine} className='form-control'
-                                    disabled={this.disabledEdit()} />
+                                    onChange={this.changeStartLine} className='form-control' />
                             </div>
                             <div className='col-sm-1'>{this.errorLogFileDownload()}</div>
                         </div>
@@ -138,18 +145,17 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
                             <div className='radio'>
                                 <label className='radio-inline'>
                                     <input type='radio' name='add-column-position' id='end' defaultChecked={true}
-                                        value='end' onChange={this.changePosition} disabled={this.disabledEdit()}/>
+                                        value='end' onChange={this.changePosition} />
                                     End
                                 </label>
                                 <label className='radio-inline'>
                                     <input type='radio' name='add-column-position' id='begin'
-                                        value='begin' onChange={this.changePosition} disabled={this.disabledEdit()} />
+                                        value='begin' onChange={this.changePosition}  />
                                     Begin
                                 </label>
                                 <label className='radio-inline'>
                                     <input type='radio' name='add-column-position' id='index'
-                                            value='index' onChange={this.changePosition}
-                                            disabled={this.disabledEdit()} />
+                                            value='index' onChange={this.changePosition} />
                                     Index:
                                 </label>
                             </div>
@@ -157,8 +163,8 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
 
                         <div className='col-sm-3'>
                             <input type='number' id='add-column-index' className='form-control'
-                                defaultValue={ProtocolSetForm.DEFAULT_NEW_COLUMN_INDEX.toString()}
-                                onChange={this.changePosition} disabled={this.disabledEdit()} />
+                                defaultValue={NewProtocolSet.DEFAULT_NEW_COLUMN_INDEX.toString()}
+                                onChange={this.changePosition} />
                         </div>
                     </div>
 
@@ -175,8 +181,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
                         </div>
 
                         <div className='col-sm-3'>
-                            <button type='button' id='save-mapping' onClick={this.saveMapping}
-                                disabled={this.disabledEdit()} >
+                            <button type='button' id='save-mapping' onClick={this.saveMapping} >
                                 Save mapping
                             </button>
                         </div>
@@ -187,8 +192,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
                             <label htmlFor='file'>Choose file: </label>
                         </div>
                         <div className='col-sm-3'>
-                            <input type='file' name='file' id='file' onChange={this.pickFile} accept='.xlsx'
-                                disabled={this.disabledEdit()} />
+                            <input type='file' name='file' id='file' onChange={this.pickFile} accept='.xlsx' />
                         </div>
                     </div>
 
@@ -203,12 +207,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
     }
 
     public componentWillMount(): void {
-        if (this.disabledEdit()) {
-            ImportController.Instance.protocolSet(this.props.match.params.id)
-                .then((result) => this.setState({ ...this.state, protocolSet: result }));
-        } else {
-            this.fetchMappings();
-        }
+        this.fetchMappings();
     }
 
     public updateMappingTableCallback = (nextTable: IMappingTableState) => {
@@ -255,8 +254,23 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         }
     }
 
-    protected abstract headerText(): string;
-    protected abstract submitForm(): void;
+    private submitForm(): void {
+        ImportController.Instance.createDataset(this.state.mappingTable.dataset, this.state.file,
+            this.state.protocolSet, this.state.startLine)
+            .then((result) => {
+                this.setState({ ...this.state, isLoading: false });
+
+                if (result.status == 'ok') {
+                    this.setState({ ...this.state, protocolSet: { ...this.state.protocolSet, id: result.data } });
+                    alert('Success!');
+                } else {
+                    alert(`Fail! ${result.message}`);
+                }
+            }).catch((err) => {
+                this.setState({ ...this.state, isLoading: false });
+                alert('Server error!');
+            });
+    }
 
     private onSubmitForm(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
@@ -282,7 +296,7 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
     private newColumnLink(): React.ReactNode {
         return (
             <button type='button' id='open-column-form' className='btn btn-default'
-                onClick={this.openColumnForm} disabled={this.disabledEdit()}>Add column</button>
+                onClick={this.openColumnForm}>Add column</button>
         );
     }
 
@@ -327,10 +341,6 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         } else {
             return <Select></Select>;
         }
-    }
-
-    private disabledEdit(): boolean {
-        return this.props.match.params.id != undefined;
     }
 
     private openColumnForm(): void {
@@ -396,6 +406,10 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
         });
     }
 
+    private changeHidden(e: React.ChangeEvent<HTMLInputElement>): void {
+        this.setState({ ...this.state, protocolSet: { ...this.state.protocolSet, hidden: e.currentTarget.checked } });
+    }
+
     private changeSelectedMapping(val: SelectValue): void {
         this.setState({
             ...this.state,
@@ -436,7 +450,8 @@ export abstract class ProtocolSetForm extends React.Component<IDatasetProps, IDa
                     } else {
                         alert('Failed mapping save');
                     }
-                });
+                })
+                .catch(() => alert('Server error'));
         }
     }
 

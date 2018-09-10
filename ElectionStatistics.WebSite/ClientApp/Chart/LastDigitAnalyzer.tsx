@@ -4,7 +4,7 @@ import { SelectValue } from 'antd/lib/select';
 
 import { LazySelect, LazySelectProps } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
-import { IProtocolSet } from '../Import/ProtocolSetForm';
+import { IProtocolSet } from '../Import/NewProtocolSet';
 import { ChartsController } from './ChartsController';
 import { DictionariesController } from './DictionariesController';
 import { AxisOptions, PlotOptions } from 'highcharts';

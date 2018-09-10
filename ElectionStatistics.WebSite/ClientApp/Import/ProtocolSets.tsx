@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { DictionariesController } from '../Chart/DictionariesController';
-import { IProtocolSet } from './ProtocolSetForm';
+import { IProtocolSet } from './NewProtocolSet';
 import { ImportController } from './ImportController';
 
 interface IProtocolSetState {
@@ -29,6 +28,7 @@ export class ProtocolSets extends React.Component<{}, IProtocolSetState> {
                         <tr>
                             <th>NameRus</th>
                             <th>NameEng</th>
+                            <th>Hidden</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -45,6 +45,7 @@ export class ProtocolSets extends React.Component<{}, IProtocolSetState> {
             <tr key={i}>
                 <td>{protocolSet.titleRus}</td>
                 <td>{protocolSet.titleEng}</td>
+                <td>{protocolSet.hidden ? <span>&#10003;</span> : <span>&times;</span>}</td>
                 <td>
                     <Link to={`/import/protocolSets/edit/${protocolSet.id}`} className='btn btn-xs btn-primary'
                         children='Edit' />
