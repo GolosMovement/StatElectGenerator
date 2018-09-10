@@ -19,3 +19,11 @@
 .warn-level-6 {
     background-color: #e85636;
 }
+
+.lda-result-table {
+    height: 390px;
+}
+
+.chart-wrap {
+    border: 1px solid #dddddd;
+}

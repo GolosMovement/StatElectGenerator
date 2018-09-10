@@ -229,14 +229,27 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
             return <Spin size='large' />;
         } else if (this.state.chartOptions != null) {
             return (
-                <div>
-                    <div className='col-sm-3'>
-                        <h4 className='text-center'>По выборам в целом</h4>
-                        {this.renderChiSquaredTable()}
+                <div className='lda-result'>
+                    <div className='row'>
+                        <div className='col-sm-4'>
+                            <h4 className='text-center'>По выборам в целом</h4>
+                            <h5 className='text-center'>Уровень тревоги по выборке</h5>
+                        </div>
+                        <div className='col-sm-8'>
+                            <h4 className='text-center'>По каждой отдельной цифре</h4>
+                        </div>
                     </div>
-                    <div className='col-sm-9'>
-                        <h4 className='text-center'>По каждой отдельной цифре</h4>
-                        {this.renderChart()}
+                    <div className='row'>
+                        <div className='col-sm-4 lda-result-col'>
+                            <div>
+                                {this.renderChiSquaredTable()}
+                            </div>
+                        </div>
+                        <div className='col-sm-8 lda-result-col'>
+                            <div className='chart-wrap'>
+                                {this.renderChart()}
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
@@ -245,7 +258,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
 
     private renderChiSquaredTable(): React.ReactNode {
         return (
-            <table className='table table-bordered table-condensed text-center'>
+            <table className='table table-bordered table-condensed text-center lda-result-table'>
                 <thead>
                     <tr>
                         <th>Стат. значимость</th>
@@ -304,7 +317,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
     private renderChart(): React.ReactNode {
         const options = {
             ...this.state.chartOptions,
-            chart: { type: 'column' },
+            chart: { type: 'column', height: '390px' },
             title: { text: 'Частота последних цифр в выборке' },
             plotOptions: {
                 column: {
