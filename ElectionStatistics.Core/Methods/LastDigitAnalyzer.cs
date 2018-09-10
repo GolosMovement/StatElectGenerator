@@ -15,54 +15,54 @@ namespace ElectionStatistics.Core.Methods
 
     public class LastDigitAnalyzer
     {
-        public LDAResult GetData(List<LineNumber> lineNumbers, int? minValue)
+        public LDAResult GetData(List<int> numbers, int? minValue)
         {
             if (minValue != null)
             {
-                lineNumbers = lineNumbers.Where((x) => x.Value >= minValue).ToList();
+                numbers = numbers.Where((n) => n >= minValue).ToList();
             }
 
-            if (lineNumbers.Count == 0)
+            if (numbers.Count == 0)
             {
                 throw new ArgumentException("lineNumbers should not be empty");
             }
 
             var result = new LDAResult();
-            var calcFreqs = Frequencies(lineNumbers);
-            result.ChiSquared = ChiSquared(calcFreqs, lineNumbers);
-            result.Sigma = Sigma(lineNumbers);
+            var calcFreqs = Frequencies(numbers);
+            result.ChiSquared = ChiSquared(calcFreqs, numbers);
+            result.Sigma = Sigma(numbers);
 
-            result.Frequency = calcFreqs.Select(freq => freq / lineNumbers.Count).ToList();
+            result.Frequency = calcFreqs.Select(freq => freq / numbers.Count).ToList();
 
             return result;
         }
 
-        private double ChiSquared(List<double> frequencies, List<LineNumber> lineNumbers)
+        private double ChiSquared(List<double> frequencies, List<int> lineNumbers)
         {
             var expectedFrequency = lineNumbers.Count / 10.0;
             return frequencies.Aggregate(0.0, (sum, num) =>
                 sum + Math.Pow(num - expectedFrequency, 2) / expectedFrequency);
         }
 
-        private double Sigma(List<LineNumber> lineNumbers)
+        private double Sigma(List<int> numbers)
         {
-            return Math.Sqrt(0.1 * 0.9 / lineNumbers.Count);
+            return Math.Sqrt(0.1 * 0.9 / numbers.Count);
         }
 
-        private List<double> Frequencies(List<LineNumber> lineNumbers)
+        private List<double> Frequencies(List<int> numbers)
         {
             var freqs = new List<double>(new double[10]);
-            foreach (LineNumber lineNumber in lineNumbers)
+            foreach (int number in numbers)
             {
-                ++freqs[LastDigit(lineNumber)];
+                ++freqs[LastDigit(number)];
             }
 
             return freqs;
         }
 
-        private int LastDigit(LineNumber lineNumber)
+        private int LastDigit(int number)
         {
-            return lineNumber.Value % 10;
+            return number % 10;
         }
     }
 }

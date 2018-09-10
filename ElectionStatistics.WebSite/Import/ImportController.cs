@@ -97,7 +97,7 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("api/import/protocolSets")]
         public IEnumerable<ProtocolSet> ProtocolSets()
         {
-            return modelContext.Set<ProtocolSet>()
+            return modelContext.Set<ProtocolSet>().AsNoTracking()
                 .OrderBy(protocolSet => protocolSet.TitleRus);
         }
 
@@ -138,7 +138,7 @@ namespace ElectionStatistics.WebSite
         public List<MappingsResponse> Mappings()
         {
             var result = new List<MappingsResponse>();
-            var mappings = modelContext.Set<Mapping>();
+            var mappings = modelContext.Set<Mapping>().OrderBy(mapping => mapping.Id);
             foreach (Mapping mapping in mappings)
             {
                 var element = new MappingsResponse()

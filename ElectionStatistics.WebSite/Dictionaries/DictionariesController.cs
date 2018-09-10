@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ElectionStatistics.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using ElectionStatistics.Model;
 
 namespace ElectionStatistics.WebSite
 {
@@ -127,7 +129,7 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("protocolSets")]
         public IEnumerable<ProtocolSet> ProtocolSets()
         {
-            return modelContext.Set<ProtocolSet>()
+            return modelContext.Set<ProtocolSet>().AsNoTracking()
                 .Where(protocolSet => !protocolSet.Hidden)
                 .OrderBy(protocolSet => protocolSet.TitleRus);
         }
@@ -143,7 +145,7 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("protocols")]
         public IEnumerable<ProtocolDto> GetProtocols(int protocolSetId, int? parentId)
         {
-            return modelContext.Set<Protocol>()
+            return modelContext.Set<Protocol>().AsNoTracking()
                 .Where(protocol =>
                     protocol.ProtocolSetId == protocolSetId && protocol.ParentId == parentId)
                 .Select(protocol => new ProtocolDto()
@@ -166,7 +168,7 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("lineDescriptions")]
         public IEnumerable<LineDescriptionDto> GetLineDescriptions(int protocolSetId)
         {
-            return modelContext.Set<LineDescription>()
+            return modelContext.Set<LineDescription>().AsNoTracking()
                 .Where(line => line.ProtocolSetId == protocolSetId && line.IsCalcResult)
                 .OrderBy(line => line.DescriptionRus)
                 .Select(line => new LineDescriptionDto()

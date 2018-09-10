@@ -351,6 +351,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
                 if (result.chiSquared == undefined || result.chartOptions == undefined) {
                     alert('Выборка пустая');
                 }
-            });
+            })
+            .catch(() => alert('Ошибка'));
     }
 }

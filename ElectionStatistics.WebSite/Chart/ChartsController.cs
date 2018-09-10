@@ -294,10 +294,9 @@ namespace ElectionStatistics.WebSite
                         parameters.LineDescriptionIds.Contains(lineDescr.Id));
             }
 
+            var lds = lineDescriptions.Select(lineDescr => lineDescr.Id).ToList();
             var lineNumbers =
-                modelContext.Set<LineNumber>()
-                .Where(line => lineDescriptions.Select(lineDescr => lineDescr.Id)
-                    .Contains(line.LineDescriptionId));
+                modelContext.Set<LineNumber>().Where(line => lds.Contains(line.LineDescriptionId));
 
             int? topParentProtocolId = 0;
             if (parameters.ProtocolTopId != null)
@@ -338,8 +337,9 @@ namespace ElectionStatistics.WebSite
             Core.Methods.LDAResult results;
             try
             {
+                var numbers = lineNumbers.Select(lineNumber => lineNumber.Value);
                 results = new Core.Methods.LastDigitAnalyzer()
-                    .GetData(lineNumbers.ToList(), parameters.MinValue);
+                    .GetData(numbers.ToList(), parameters.MinValue);
             }
             catch (ArgumentException)
             {
