@@ -7,7 +7,8 @@
       "DescriptionRus": "P",
       "DescriptionEng": null,
       "ImportFileErrorLog": null,
-      "Protocols": null
+      "Protocols": null,
+      "Hidden": false
     }
   ],
   "ElectionStatistics.Model.LineDescription": [
