@@ -12,23 +12,106 @@ namespace ElectionStatistics.Core.Import
     {
         private ISerializer serializer;
         private IErrorLogger errorLogger;
+        private string xlsxFile;
+        private ProtocolSet protocolSet;
+        private Mapping mapping;
+        private List<MappingLine> mappingLines;
+        private bool initialized = false;
+        private IProgressNotifier notifier;
+        private readonly DummyNotifier dummyNotifier = new DummyNotifier();
+        // FIXME: see https://github.com/GolosMovement/StatElectGenerator/issues/49
+        private const int maxXlsxRowsError = 1048576;
+        private const int maxEmptyLinesSeq = 100;
 
-        // TODO: create special default builder class (pattern)
+        private class DummyNotifier : IProgressNotifier
+        {
+            public void Start(int totalLines)
+            {
+            }
+
+            public void Progress(int currentLine, int errorCount)
+            {
+            }
+
+            public void Finish(int currentLine, bool success, int errorCount)
+            {
+            }
+        }
+
         public Service(ISerializer serializer, IErrorLogger errorLogger)
         {
             this.serializer = serializer;
             this.errorLogger = errorLogger;
+
+            // TODO: move this line to Startup.cs, see:
+            // https://github.com/ExcelDataReader/ExcelDataReader#important-note-on-net-core
+            System.Text.Encoding.RegisterProvider(
+                System.Text.CodePagesEncodingProvider.Instance);
         }
 
-        public void Execute(string xlsxFile, ProtocolSet protocolSet,
+        public Service Configure(string xlsxFile, ProtocolSet protocolSet,
             Mapping mapping, List<MappingLine> mappingLines)
         {
+            this.xlsxFile = xlsxFile;
+            this.protocolSet = protocolSet;
+            this.mapping = mapping;
+            this.mappingLines = mappingLines;
+
             CheckFileExists(xlsxFile);
             CheckProtocolSet(protocolSet);
             CheckMappings(mapping, mappingLines);
 
+            return this;
+        }
+
+        public Service Initialize()
+        {
+            protocolSet.ImportFileErrorLog = errorLogger.GetFileName();
+            serializer.CreateProtocolSet(protocolSet);
+            initialized = true;
+
+            return this;
+        }
+
+        public void Execute()
+        {
+            Execute(null, null);
+        }
+
+        public void Execute(IProgressNotifier notifier = null)
+        {
+            Execute(null, notifier);
+        }
+
+        public void Execute(ISerializer serializer = null,
+            IProgressNotifier notifier = null)
+        {
+            ReinitializeSerialiser(serializer);
+            InitializeNotifier(notifier);
+
+            // TODO: use fields instead of arguments
             ImportXlsx(xlsxFile, mapping, protocolSet,
                 WrapMappings(mappingLines));
+        }
+
+        private void ReinitializeSerialiser(ISerializer serializer)
+        {
+            if (serializer != null)
+            {
+                this.serializer = serializer;
+            }
+        }
+
+        private void InitializeNotifier(IProgressNotifier notifier)
+        {
+            if (notifier != null)
+            {
+                this.notifier = notifier;
+            }
+            else
+            {
+                this.notifier = dummyNotifier;
+            }
         }
 
         private void CheckFileExists(string xlsxFile)
@@ -76,50 +159,110 @@ namespace ElectionStatistics.Core.Import
             ProtocolSet protocolSet,
             List<MappingEnvelope> allMappings)
         {
-            // TODO: move this line to Startup.cs, see:
-            // https://github.com/ExcelDataReader/ExcelDataReader#important-note-on-net-core
-            System.Text.Encoding.RegisterProvider(
-                System.Text.CodePagesEncodingProvider.Instance);
+            bool success = true;
+            int line = 0;
 
+            try
+            {
+                if (!initialized)
+                {
+                    Initialize();
+                }
+
+                int totalLines = GetTotalLines();
+                notifier.Start(totalLines);
+
+                using (var stream = File.Open(xlsxFile, FileMode.Open,
+                    FileAccess.Read))
+                {
+                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    {
+                        Dictionary<string, Protocol> createdProtocols =
+                            new Dictionary<string, Protocol>();
+
+                        // TODO: check reader.FieldCount >=
+                        // MaxBy(MappingLine.ColumnNumber)
+                        CreateLineDescriptions(protocolSet, allMappings);
+                        var hierarchy = WrapHierarchy(allMappings);
+                        var mappings = MappingsWithoutHierarchy(allMappings);
+
+                        int emptyLinesSeq = 0;
+
+                        do
+                        {
+                            while (reader.Read())
+                            {
+                                if (totalLines == maxXlsxRowsError &&
+                                    emptyLinesSeq == maxEmptyLinesSeq)
+                                {
+                                    // Stop if we encountered the issue #49
+                                    line = totalLines;
+                                    Error(line, 0, "Stop due to the issue #49");
+                                    break;
+                                }
+
+                                // Skip header lines
+                                if (++line < mapping.DataLineNumber)
+                                {
+                                    continue;
+                                }
+
+                                var protocol = UpdateHierarchy(line,
+                                    protocolSet, createdProtocols, hierarchy,
+                                    reader);
+
+                                if (protocol == null)
+                                {
+                                    emptyLinesSeq++;
+                                    continue;
+                                }
+
+                                if (emptyLinesSeq > 0)
+                                {
+                                    emptyLinesSeq = 0;
+                                }
+
+                                CreateLines(line, protocol, mappings, reader);
+
+                                notifier.Progress(line,
+                                    errorLogger.GetErrorsCount());
+                            }
+                        }
+                        while (reader.NextResult());
+
+                        serializer.AfterImport();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                success = false;
+                throw;
+            }
+            finally
+            {
+                notifier.Finish(line, success, errorLogger.GetErrorsCount());
+            }
+        }
+
+        private int GetTotalLines()
+        {
             using (var stream = File.Open(xlsxFile, FileMode.Open,
                 FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
-                    Dictionary<string, Protocol> createdProtocols =
-                        new Dictionary<string, Protocol>();
-
-                    // TODO: check reader.FieldCount >=
-                    // MaxBy(MappingLine.ColumnNumber)
-                    serializer.CreateProtocolSet(protocolSet);
-                    CreateLineDescriptions(protocolSet, allMappings);
-                    var hierarchy = WrapHierarchy(allMappings);
-                    var mappings = MappingsWithoutHierarchy(allMappings);
-
+                    int totalLines = 0;
                     do
                     {
-                        int line = 0;
                         while (reader.Read())
                         {
-                            // Skip header lines
-                            if (++line < mapping.DataLineNumber)
-                            {
-                                continue;
-                            }
-
-                            var protocol = UpdateHierarchy(line, protocolSet,
-                                createdProtocols, hierarchy, reader);
-
-                            if (protocol == null)
-                            {
-                                continue;
-                            }
-
-                            CreateLines(line, protocol, mappings, reader);
+                            totalLines++;
                         }
-                    } while (reader.NextResult());
+                    }
+                    while (reader.NextResult());
 
-                    serializer.AfterImport();
+                    return totalLines;
                 }
             }
         }

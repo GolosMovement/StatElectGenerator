@@ -9,7 +9,7 @@ namespace ElectionStatistics.Model
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+
         // One-based index
         [Required]
         public int ColumnNumber { get; set; }
@@ -23,14 +23,13 @@ namespace ElectionStatistics.Model
         public string DescriptionNative { get; set; }
 
         public bool IsHierarchy { get; set; }
-        // 1 - is the root, 2 - the second level, and so on
         public int HierarchyLevel { get; set; }
 
         public bool IsNumber { get; set; }
-        
+
         // "Описывает ли строка результаты волеизъявления"
         public bool IsVoteResult { get; set; }
-        
+
         // "Описывает ли строка результаты используемые в расчётах"
         public bool IsCalcResult { get; set; }
 

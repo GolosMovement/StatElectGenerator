@@ -31,10 +31,13 @@ namespace ElectionStatistics.WebSite
         }
 
         private readonly ModelContext modelContext;
+        private readonly Core.Import.IBackgroundQueue importQueue;
 
-        public ImportController(ModelContext modelContext)
+        public ImportController(ModelContext modelContext,
+            Core.Import.IBackgroundQueue importQueue)
         {
             this.modelContext = modelContext;
+            this.importQueue = importQueue;
         }
 
         [HttpGet]
@@ -60,10 +63,9 @@ namespace ElectionStatistics.WebSite
                     message = "no file provided" });
             }
 
-            var optionsBuilder = new DbContextOptionsBuilder<ModelContext>();
             var dbSerializer = new Core.Import.DbSerializer(modelContext);
-
             var errorLogger = new Core.Import.ErrorLogger();
+
             var service = new Core.Import.Service(dbSerializer, errorLogger);
 
             var filePath = Path.GetTempFileName();
@@ -78,18 +80,39 @@ namespace ElectionStatistics.WebSite
             var mappingTableJson = JsonConvert.DeserializeObject<List<MappingLine>>(mappingTable);
             var protocolSetJson = JsonConvert.DeserializeObject<ProtocolSet>(protocolSet);
 
-            protocolSetJson.ImportFileErrorLog = errorLogger.FileName;
-
             try {
-                service.Execute(filePath, protocolSetJson, mapping, mappingTableJson);
+                service.Configure(filePath, protocolSetJson, mapping,
+                    mappingTableJson).Initialize();
+
+                importQueue.Enqueue(async (token, dbc) => {
+                    try
+                    {
+                        await Task.Run(() => {
+                            // Reinitialize db serializer due to
+                            // System.ObjectDisposedException:
+                            // Cannot access a disposed object.
+                            var serializer = new Core.Import.DbSerializer(dbc);
+                            var notifier =
+                                new Core.Import.DbProgressNotifier(serializer,
+                                    protocolSetJson);
+
+                            service.Execute(serializer, notifier);
+                        });
+                    }
+                    finally
+                    {
+                        // TODO: DRY
+                        System.IO.File.Delete(filePath);
+                    }
+                });
             } catch(Core.Import.ImportException err) {
+                // TODO: DRY
+                System.IO.File.Delete(filePath);
+
                 return JsonConvert.SerializeObject(
                     new ApiResponse { status = "fail", message = err.ToString() });
-            } finally {
-                System.IO.File.Delete(filePath);
             }
 
-            var errorLogFile = protocolSetJson.ImportFileErrorLog;
             return JsonConvert.SerializeObject(
                 new ApiResponse { status = "ok", data = protocolSetJson.Id });
         }

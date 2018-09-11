@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
+using ElectionStatistics.Core;
+
 namespace ElectionStatistics.WebSite
 {
     public class AppSettings
@@ -35,6 +37,7 @@ namespace ElectionStatistics.WebSite
         public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddResponseCaching();
+
 			services
 				.AddMvc(options =>
 				{
@@ -63,6 +66,9 @@ namespace ElectionStatistics.WebSite
             });
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            services.AddHostedService<Core.Import.QueueService>();
+            services.AddSingleton<Core.Import.IBackgroundQueue, Core.Import.BackgroundQueue>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

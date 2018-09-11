@@ -8,7 +8,13 @@
       "DescriptionEng": null,
       "ImportFileErrorLog": null,
       "Protocols": null,
-      "Hidden": false
+      "Hidden": false,
+      "ImportStartedAt": null,
+      "ImportFinishedAt": null,
+      "ImportTotalLines": 0,
+      "ImportCurrentLine": 0,
+      "ImportSuccess": false,
+      "ImportErrorCount": 0
     }
   ],
   "ElectionStatistics.Model.LineDescription": [

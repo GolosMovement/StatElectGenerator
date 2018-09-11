@@ -66,6 +66,14 @@ namespace ElectionStatistics.Tests.Core.Import
                 data.Clear();
             }
 
+            public void UpdateProtocolSet(ProtocolSet protocolSet)
+            {
+            }
+
+            public void UpdateProtocolSetBulk(ProtocolSet protocolSet)
+            {
+            }
+
             private int GetId()
             {
                 return id++;
@@ -96,6 +104,16 @@ namespace ElectionStatistics.Tests.Core.Import
                 }
             }
 
+            public string GetFileName()
+            {
+                return null;
+            }
+
+            public int GetErrorsCount()
+            {
+                return errors.Count;
+            }
+
             public void Error(int line, int column, string humanColumn,
                 string message)
             {
@@ -106,6 +124,36 @@ namespace ElectionStatistics.Tests.Core.Import
             public void Reset()
             {
                 errors.Clear();
+            }
+        }
+
+        private class Notifier : IProgressNotifier
+        {
+            private List<string> events = new List<string>();
+
+            public List<string> Events
+            {
+                get
+                {
+                    return events;
+                }
+            }
+
+            public void Start(int totalLines)
+            {
+                events.Add(string.Format("Start: {0}", totalLines));
+            }
+
+            public void Progress(int currentLine, int errorCount)
+            {
+                events.Add(string.Format("Progress: {0} {1}", currentLine,
+                    errorCount));
+            }
+
+            public void Finish(int currentLine, bool success, int errorCount)
+            {
+                events.Add(string.Format("Finish: {0} {1} {2}", currentLine,
+                    success, errorCount));
             }
         }
 
@@ -124,19 +172,20 @@ namespace ElectionStatistics.Tests.Core.Import
         public void InputFileNotFound()
         {
             Assert.Throws<ImportException>(
-                () => service.Execute("fake", null, null, null));
+                () => service.Configure("fake", null, null, null).Execute());
         }
 
         [Fact]
         public void EmptyMappingsOrNull()
         {
             Assert.Throws<ImportException>(
-                () => service.Execute(testFile, new ProtocolSet(), null, null));
+                () => service.Configure(testFile, new ProtocolSet(), null, null)
+                    .Execute());
             Assert.Throws<ImportException>(
-                () => service.Execute(testFile, new ProtocolSet(),
-                    new Mapping(), null));
+                () => service.Configure(testFile, new ProtocolSet(),
+                    new Mapping(), null).Execute());
             Assert.Throws<ImportException>(
-                () => service.Execute(testFile, null, null, null));
+                () => service.Configure(testFile, null, null, null).Execute());
         }
 
         [Fact]
@@ -174,9 +223,11 @@ namespace ElectionStatistics.Tests.Core.Import
                     TitleRus = "kom1nmb" }
             };
 
-            service.Execute(testFile,
+            var notifier = new Notifier();
+
+            service.Configure(testFile,
                 new ProtocolSet() { TitleRus = "Hello", DescriptionRus = "P" },
-                mapping, mappingList);
+                mapping, mappingList).Execute(notifier);
 
             var actualResultFile = "test-import_data.json";
             System.IO.File.WriteAllText(actualResultFile,
@@ -197,6 +248,16 @@ namespace ElectionStatistics.Tests.Core.Import
                     "../../../Resources/import_errors.json");
 
             Assert.Equal(MD5Hash(expectErrors), MD5Hash(actualErrors));
+
+            var actualNotifier = "test-import_notifer.json";
+            System.IO.File.WriteAllText(actualNotifier,
+                ToJson(notifier.Events));
+
+            var expectNotifier =
+                Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory +
+                    "../../../Resources/import_notifier.json");
+
+            Assert.Equal(MD5Hash(expectNotifier), MD5Hash(actualNotifier));
         }
 
         [Fact]
@@ -242,9 +303,11 @@ namespace ElectionStatistics.Tests.Core.Import
                 );
             }
 
-            service.Execute(noUikNumberTestFile,
+            var notifier = new Notifier();
+
+            service.Configure(noUikNumberTestFile,
                 new ProtocolSet() { TitleRus = "No UIK", DescriptionRus = "P" },
-                mapping, mappingList);
+                mapping, mappingList).Execute(notifier);
 
             var actualResultFile = "test-dag_no_uik_nmbr.json";
             System.IO.File.WriteAllText(actualResultFile,
@@ -255,7 +318,27 @@ namespace ElectionStatistics.Tests.Core.Import
                     "../../../Resources/dag_no_uik_nmbr.json");
 
             Assert.Equal(MD5Hash(expectResultFile), MD5Hash(actualResultFile));
-            Assert.Empty(errorLogger.Errors);
+
+            // Issue #49 case
+            var actualErrors = "test-dag_no_uik_nmbr_errors.json";
+            System.IO.File.WriteAllText(actualErrors,
+                ToJson(errorLogger.Errors));
+
+            var expectErrors =
+                Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory +
+                    "../../../Resources/dag_no_uik_nmbr_errors.json");
+
+            Assert.Equal(MD5Hash(expectErrors), MD5Hash(actualErrors));
+
+            var actualNotifier = "test-dag_no_uik_nmbr_notifier.json";
+            System.IO.File.WriteAllText(actualNotifier,
+                ToJson(notifier.Events));
+
+            var expectNotifier =
+                Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory +
+                    "../../../Resources/dag_no_uik_nmbr_notifier.json");
+
+            Assert.Equal(MD5Hash(expectNotifier), MD5Hash(actualNotifier));
         }
 
         private static string ToJson(object obj)

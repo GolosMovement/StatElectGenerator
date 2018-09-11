@@ -127,13 +127,19 @@ namespace ElectionStatistics.Model.Migrations
                         column: x => x.ElectionId,
                         principalTable: "Elections",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        // FIXME: System.Data.SqlClient.SqlException (0x80131904):
+                        // Introducing FOREIGN KEY constraint
+                        //'FK_ElectoralDistrictElections_ElectoralDistricts_ElectoralDistrictId'
+                        // on table 'ElectoralDistrictElections' may cause cycles or
+                        // multiple cascade paths. Specify ON DELETE NO ACTION or
+                        // ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_ElectionResults_ElectoralDistricts_ElectoralDistrictId",
                         column: x => x.ElectoralDistrictId,
                         principalTable: "ElectoralDistricts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,13 +158,13 @@ namespace ElectionStatistics.Model.Migrations
                         column: x => x.ElectionId,
                         principalTable: "Elections",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_ElectoralDistrictElections_ElectoralDistricts_ElectoralDistrictId",
                         column: x => x.ElectoralDistrictId,
                         principalTable: "ElectoralDistricts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(

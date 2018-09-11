@@ -10,5 +10,7 @@ namespace ElectionStatistics.Core.Import
         void CreateLineNumber(LineNumber lineNumber);
         void CreateLineString(LineString lineString);
         void AfterImport();
+        void UpdateProtocolSet(ProtocolSet protocolSet);
+        void UpdateProtocolSetBulk(ProtocolSet protocolSet);
     }
 }
