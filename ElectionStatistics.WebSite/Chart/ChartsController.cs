@@ -298,31 +298,12 @@ namespace ElectionStatistics.WebSite
             var lineNumbers =
                 modelContext.Set<LineNumber>().Where(line => lds.Contains(line.LineDescriptionId));
 
-            int? topParentProtocolId = 0;
-            if (parameters.ProtocolTopId != null)
-            {
-                if (parameters.ProtocolMidId != null)
-                {
-                    if (parameters.ProtocolBotId != null)
-                    {
-                        topParentProtocolId = parameters.ProtocolBotId;
-                    }
-                    else
-                    {
-                        topParentProtocolId = parameters.ProtocolMidId;
-                    }
-                }
-                else
-                {
-                    topParentProtocolId = parameters.ProtocolTopId;
-                }
-            }
-            if (topParentProtocolId != 0)
+            if (parameters.ProtocolId != null)
             {
                 var sql = @"WITH query AS
                 (SELECT *
                    FROM protocols p1
-                  WHERE p1.parentid = @p0
+                  WHERE p1.parentid = @p0 OR p1.id = @p0
                  UNION ALL
                  SELECT p2.*
                    FROM protocols p2
@@ -330,7 +311,7 @@ namespace ElectionStatistics.WebSite
                 SELECT * FROM query";
                 var protocols =
                     modelContext.Set<Protocol>()
-                        .FromSql(sql, topParentProtocolId).Select(p => p.Id).ToList();
+                        .FromSql(sql, parameters.ProtocolId).Select(p => p.Id).ToList();
                 lineNumbers = lineNumbers.Where(line => protocols.Contains((int)line.ProtocolId));
             }
 
@@ -441,9 +422,7 @@ namespace ElectionStatistics.WebSite
         public class LastDigitAnalyzerBuildParameters
         {
             public int ProtocolSetId { get; set; }
-            public int? ProtocolTopId { get; set; }
-            public int? ProtocolMidId { get; set; }
-            public int? ProtocolBotId { get; set; }
+            public int? ProtocolId { get; set; }
             public int[] LineDescriptionIds { get; set; }
             public int? MinValue { get; set; }
         }

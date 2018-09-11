@@ -2,12 +2,11 @@ import React from 'react';
 import { Spin, Select } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 
-import { LazySelect, LazySelectProps } from '../Common';
+import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
 import { IProtocolSet } from '../Import/NewProtocolSet';
 import { ChartsController } from './ChartsController';
 import { DictionariesController } from './DictionariesController';
-import { AxisOptions, PlotOptions } from 'highcharts';
 
 const chiSquaredStats = [
     [99.9, 27.877, 'совершенно невероятно'],
@@ -19,6 +18,10 @@ const chiSquaredStats = [
     [80, 0, 'чаще']
 ];
 
+export interface IProtocol extends IModel {
+    lowerProtocols: IProtocol[];
+}
+
 export interface IModel {
     id: number;
     titleRus: string;
@@ -27,10 +30,8 @@ export interface IModel {
 }
 
 export interface ILDAChartBuildParameters {
+    protocolId: number | null;
     protocolSetId: number | null;
-    protocolTopId: number | null;
-    protocolMidId: number | null;
-    protocolBotId: number | null;
     lineDescriptionIds: number[];
     minValue: number | null;
 }
@@ -51,8 +52,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
         super(props);
 
         this.state = {
-            isLoading: false, protocolSetId: null, protocolTopId: null, protocolMidId: null,
-            protocolBotId: null, lineDescriptionIds: [], minValue: null
+            isLoading: false, protocolSetId: null, lineDescriptionIds: [], minValue: null, protocolId: null
         };
 
         this.changeMinValue = this.changeMinValue.bind(this);
@@ -71,7 +71,9 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
                 </div>
                 <div className='row'>
                     <label className='col-sm-12 control-label'>Избирательный округ</label>
-                    {this.protocolSelects()}
+                    <div className='col-md-6'>
+                        {this.protocolSelect()}
+                    </div>
                 </div>
                 <div className='row'>
                     <label className='col-sm-12 control-label'>Параметры</label>
@@ -105,75 +107,22 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
             getValue={(protocolSet) => protocolSet.id ? protocolSet.id : 0}
             getText={(protocolSet) => protocolSet ? protocolSet.titleRus : ''}
             onChange={(protocolSet) => this.setState({
-                ...this.state,
-                protocolSetId: protocolSet, protocolTopId: null, protocolMidId: null, protocolBotId: null
-            })} />;
+                ...this.state, protocolId: null, protocolSetId: protocolSet })} />;
     }
 
-    private protocolSelects(): React.ReactNode {
-        return (
-            <div className='col-sm-12'>
-                <div className='inline-block'>{this.protocolTopSelect()}</div>
-                <div className='inline-block'>{this.protocolMidSelect()}</div>
-                <div className='inline-block'>{this.protocolBotSelect()}</div>
-            </div>
-        );
-    }
-
-    private protocolTopSelect(): React.ReactNode {
+    private protocolSelect(): React.ReactNode {
         if (this.state.protocolSetId) {
-            const LSelect = LazySelect as new (props: LazySelectProps<IModel, number>) =>
-                LazySelect<IModel, number>;
+            const TreeSelect = LazyTreeSelect as
+                new (props: LazyTreeSelectProps<IProtocol, number>) => LazyTreeSelect<IProtocol, number>;
 
-            return <LSelect
+            return <TreeSelect
+                allowClear
                 itemsPromise={DictionariesController.Instance.getProtocols(this.state.protocolSetId)}
-                selectedValue={this.state.protocolTopId}
-                getValue={(protocol) => protocol.id ? protocol.id : 0}
-                getText={(protocol) => protocol ? protocol.titleRus : ''}
-                onChange={(protocolId) => this.setState({
-                    ...this.state,
-                    protocolTopId: protocolId, protocolMidId: null, protocolBotId: null
-                })} className='fixed-width-select-sm' />;
-        } else {
-            return;
-        }
-    }
-
-    private protocolMidSelect(): React.ReactNode {
-        if (this.state.protocolTopId) {
-            const LSelect = LazySelect as new (props: LazySelectProps<IModel, number>) =>
-                LazySelect<IModel, number>;
-
-            return <LSelect
-                itemsPromise={DictionariesController.Instance.getProtocols(this.state.protocolSetId,
-                    this.state.protocolTopId)}
-                selectedValue={this.state.protocolMidId}
-                getValue={(protocol) => protocol.id ? protocol.id : 0}
-                getText={(protocol) => protocol ? protocol.titleRus : ''}
-                onChange={(protocolId) => this.setState({
-                    ...this.state,
-                    protocolMidId: protocolId, protocolBotId: null
-                })} className='fixed-width-select-sm' />;
-        } else {
-            return;
-        }
-    }
-
-    private protocolBotSelect(): React.ReactNode {
-        if (this.state.protocolMidId) {
-            const LSelect = LazySelect as new (props: LazySelectProps<IModel, number>) =>
-                LazySelect<IModel, number>;
-
-            return <LSelect
-                itemsPromise={DictionariesController.Instance.getProtocols(this.state.protocolSetId,
-                    this.state.protocolMidId)}
-                selectedValue={this.state.protocolBotId}
-                getValue={(protocol) => protocol.id ? protocol.id : 0}
-                getText={(protocol) => protocol ? protocol.titleRus : ''}
-                onChange={(protocolId) => this.setState({
-                    ...this.state,
-                    protocolBotId: protocolId
-                })} className='fixed-width-select-sm' />;
+                selectedValue={this.state.protocolId}
+                getValue={(protocol) => protocol.id}
+                getText={(protocol) => protocol.titleRus}
+                getChildren={(protocol) => protocol.lowerProtocols}
+                onChange={(protocolId) => this.setState({ ...this.state, protocolId })} />;
         }
     }
 
@@ -347,10 +296,8 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
         this.setState({ ...this.state, isLoading: true });
 
         const buildParams = {
+            protocolId: this.state.protocolId,
             protocolSetId: this.state.protocolSetId,
-            protocolTopId: this.state.protocolTopId,
-            protocolMidId: this.state.protocolMidId,
-            protocolBotId: this.state.protocolBotId,
             lineDescriptionIds: this.state.lineDescriptionIds,
             minValue: this.state.minValue
         } as ILDAChartBuildParameters;

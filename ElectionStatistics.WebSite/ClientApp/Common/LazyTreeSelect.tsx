@@ -1,11 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 
 import { TreeSelect, Spin } from 'antd';
 import { IStringDictionary } from '.';
 const TreeNode = TreeSelect.TreeNode;
 
-export interface LazyTreeSelectProps<TItem, TValue extends React.Key> 
-{
+export interface LazyTreeSelectProps<TItem, TValue extends React.Key> {
     selectedValue: TValue | null;
     itemsPromise: Promise<TItem[]>;
     getValue: (value: TItem) => TValue;
@@ -16,15 +15,14 @@ export interface LazyTreeSelectProps<TItem, TValue extends React.Key>
     allowClear?: boolean;
 }
 
-interface LazyTreeSelectState<TItem>
-{
+interface LazyTreeSelectState<TItem> {
     items: TItem[];
     itemsFilterValues: IStringDictionary<string[]>;
     itemsPromise: Promise<TItem[]> | null;
 }
 
-export class LazyTreeSelect<TItem, TValue extends React.Key> extends React.Component<LazyTreeSelectProps<TItem, TValue>, LazyTreeSelectState<TItem>>
-{
+export class LazyTreeSelect<TItem, TValue extends React.Key>
+    extends React.Component<LazyTreeSelectProps<TItem, TValue>, LazyTreeSelectState<TItem>> {
     constructor(props: LazyTreeSelectProps<TItem, TValue>) {
         super(props);
         this.state = {
@@ -34,50 +32,10 @@ export class LazyTreeSelect<TItem, TValue extends React.Key> extends React.Compo
         };
     }
 
-    public componentWillMount() {
-        this.loadData();
-    }
-
-    public componentDidUpdate() {
-        if (this.isLoading()) {
-            this.loadData();
-        }
-    }
-
-    private loadData() {
-        this.props.itemsPromise.then(items => {
-            const itemsFilterValues: IStringDictionary<string[]> = {};
-
-            for (let item of items) {
-                this.addFilterValues(itemsFilterValues, item, []);
-            }
-
-            this.setState({
-                    items: items,
-                    itemsFilterValues: itemsFilterValues,
-                    itemsPromise: this.props.itemsPromise
-                });
-        });
-    }
-
-    private addFilterValues(itemsFilterValues: IStringDictionary<string[]>, item: TItem, parentValues: string[]) {
-        const currentValues = parentValues.concat([this.props.getText(item).toLowerCase()]);
-        const value = this.props.getValue(item) as string;
-        itemsFilterValues[value] = currentValues;
-
-        const children = this.props.getChildren(item);
-        if (children != null) {
-            for (let childItem of children) {
-                this.addFilterValues(itemsFilterValues, childItem, currentValues);
-            }
-        }
-    }
-
-    public render(): JSX.Element {   
+    public render(): JSX.Element {
         if (this.isLoading()) {
             return <Spin />;
-        }
-        else {
+        } else {
             const treeNodes = this.state.items.map(this.buildTreeNode);
             const selectedText = this.props.selectedValue == null
                 ? undefined
@@ -98,10 +56,48 @@ export class LazyTreeSelect<TItem, TValue extends React.Key> extends React.Compo
         }
     }
 
+    public componentWillMount() {
+        this.loadData();
+    }
+
+    public componentDidUpdate() {
+        if (this.isLoading()) {
+            this.loadData();
+        }
+    }
+
+    private loadData() {
+        this.props.itemsPromise.then((items) => {
+            const itemsFilterValues: IStringDictionary<string[]> = {};
+
+            for (const item of items) {
+                this.addFilterValues(itemsFilterValues, item, []);
+            }
+
+            this.setState({
+                    items, itemsFilterValues,
+                    itemsPromise: this.props.itemsPromise
+                });
+        });
+    }
+
+    private addFilterValues(itemsFilterValues: IStringDictionary<string[]>, item: TItem, parentValues: string[]) {
+        const currentValues = parentValues.concat([this.props.getText(item).toLowerCase()]);
+        const value = this.props.getValue(item) as string;
+        itemsFilterValues[value] = currentValues;
+
+        const children = this.props.getChildren(item);
+        if (children != null) {
+            for (const childItem of children) {
+                this.addFilterValues(itemsFilterValues, childItem, currentValues);
+            }
+        }
+    }
+
     private filterTreeNode = (input: string, treeNode: any) => {
         const itemFilterValues = this.state.itemsFilterValues[treeNode.props.value];
         const inputInLowerCase = input.toLowerCase();
-        return itemFilterValues.some(text => text.indexOf(inputInLowerCase) >= 0);
+        return itemFilterValues.some((text) => text.indexOf(inputInLowerCase) >= 0);
     }
 
     private buildTreeNode = (item: TItem): JSX.Element => {
@@ -110,27 +106,25 @@ export class LazyTreeSelect<TItem, TValue extends React.Key> extends React.Compo
         const children = this.props.getChildren(item);
 
         return (
-            <TreeNode value={value} title={text} key={value}>
+            <TreeNode value={value.toString()} title={text} key={value}>
                 {children == null ? null : children.map(this.buildTreeNode)}
             </TreeNode>);
     }
 
     private getSelectedItem = (items: TItem[]): TItem | null => {
-        const selectedItems = items.filter(item => this.props.getValue(item) == this.props.selectedValue);
+        const selectedItems = items.filter((item) => this.props.getValue(item) == this.props.selectedValue);
         if (selectedItems.length === 1) {
             return selectedItems[0];
-        }
-        else {
+        } else {
             const selectedChildItems = items
                 .map(this.props.getChildren)
-                .filter(children => children != null)
+                .filter((children) => children != null)
                 .map(this.getSelectedItem)
-                .filter(selectedChild => selectedChild != null);
+                .filter((selectedChild) => selectedChild != null);
 
             if (selectedChildItems.length == 1) {
                 return selectedChildItems[0];
-            }
-            else {                
+            } else {
                 return null;
             }
         }

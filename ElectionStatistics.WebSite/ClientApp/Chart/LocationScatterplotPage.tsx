@@ -1,17 +1,17 @@
-import * as React from 'react';
+import React from 'react';
 
 import { HighchartComponent } from '../Highchart/Component';
 
 import { ChartsController, ChartBuildParameters } from './ChartsController';
 import { ChartPage, ScatterploChartPageRouteProps } from './ChartPage';
-import { ElectoralDistrictDto, DictionariesController, NamedChartParameter } from './DictionariesController';
+import { DictionariesController } from './DictionariesController';
 import { QueryString } from '../Common';
 import { Link } from 'react-router-dom';
 
 export class LocationScatterplotPage extends ChartPage {
     protected renderAdditionalParameterSelectors(): JSX.Element[] {
         return [
-        <div className="row">
+        <div key={1} className="row">
             <div className="col-md-3">
                 {this.renderParametersSelect(
                     "Выберите параметр для оси Y",

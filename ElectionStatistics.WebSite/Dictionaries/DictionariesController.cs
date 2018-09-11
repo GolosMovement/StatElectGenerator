@@ -43,13 +43,12 @@ namespace ElectionStatistics.WebSite
         {
             var election = modelContext.Elections.GetById(electionId);
             var districtsByHigherDistrtict = modelContext.ElectoralDistricts
-                .ByElection(modelContext, electionId)
+                .ByElection(modelContext, electionId).AsNoTracking()
                 .ToArray()
                 .GroupBy(district => district.HigherDistrictId)
                 .ToDictionary(
                     grouping => grouping.Key.Value,
                     grouping => grouping.ToArray());
-
             return districtsByHigherDistrtict.Values
                 .SelectMany(districts => districts)
                 .Where(district => district.HigherDistrictId == election.ElectoralDistrictId)
@@ -140,21 +139,45 @@ namespace ElectionStatistics.WebSite
             public string TitleRus { get; set; }
             public string TitleEng { get; set; }
             public string TitleNative { get; set; }
+            public ProtocolDto[] LowerProtocols { get; set; }
         }
 
         [HttpGet, Route("protocols")]
-        public IEnumerable<ProtocolDto> GetProtocols(int protocolSetId, int? parentId)
+        public IEnumerable<ProtocolDto> GetProtocols(int protocolSetId)
         {
-            return modelContext.Set<Protocol>().AsNoTracking()
-                .Where(protocol =>
-                    protocol.ProtocolSetId == protocolSetId && protocol.ParentId == parentId)
-                .Select(protocol => new ProtocolDto()
-                {
-                    Id = protocol.Id,
-                    TitleRus = protocol.TitleRus,
-                    TitleEng = protocol.TitleEng,
-                    TitleNative = protocol.TitleNative
-                }).ToArray();
+            var protocols = modelContext.Set<Protocol>().AsNoTracking()
+                .Where(protocol => protocol.ProtocolSetId == protocolSetId &&
+                    protocol.ParentId != null &&
+                    modelContext.Set<Protocol>().Any(pr => pr.ParentId == protocol.Id)).ToArray()
+                .GroupBy(protocol => protocol.ParentId)
+                .ToDictionary(grouping => grouping.Key.Value, grouping => grouping.ToArray());
+            var topProtocols = modelContext.Set<Protocol>()
+                .Where(pt => pt.ParentId == null && pt.ProtocolSetId == protocolSetId);
+
+            return topProtocols.OrderBy(protocol => protocol.TitleRus)
+                .Select(protocol => BuildProtocolDto(protocol, protocols));
+        }
+
+        private ProtocolDto BuildProtocolDto(Protocol protocol,
+            Dictionary<int, Protocol[]> protocols)
+        {
+            var result = new ProtocolDto
+            {
+                Id = protocol.Id,
+                TitleRus = protocol.TitleRus,
+                TitleEng = protocol.TitleEng,
+                TitleNative = protocol.TitleNative
+            };
+
+            if (protocols.TryGetValue(protocol.Id, out var lowerProtocols))
+            {
+                result.LowerProtocols = lowerProtocols
+                    .Select(lowerProtocol => BuildProtocolDto(lowerProtocol, protocols))
+                    .OrderBy(dto => dto.TitleRus)
+                    .ToArray();
+            }
+
+            return result;
         }
 
         public struct LineDescriptionDto

@@ -1,6 +1,6 @@
-import { INumberDictionary, IStringDictionary } from '../Common';
+import { INumberDictionary } from '../Common';
 import { IProtocolSet } from '../Import/NewProtocolSet';
-import { IModel } from './LastDigitAnalyzer';
+import { IModel, IProtocol } from './LastDigitAnalyzer';
 
 export interface NamedChartParameter {
     name: string;
@@ -28,8 +28,8 @@ export class DictionariesController {
     private elections?: Promise<ElectionDto[]>;
     private districtsByElection: INumberDictionary<Promise<ElectoralDistrictDto[]>> = {};
     private parametersByElection: INumberDictionary<Promise<NamedChartParameter[]>> = {};
-    private protocolsByProtocolSetAndParent: IStringDictionary<Promise<IModel[]>> = {};
     private lineDescriptionsByProtocolSet: INumberDictionary<Promise<IModel[]>> = {};
+    private protocols: INumberDictionary<Promise<IProtocol[]>> = {};
     private summaryParameters?: Promise<NamedChartParameter[]>;
     private protocolSets?: Promise<IProtocolSet[]>;
 
@@ -78,13 +78,12 @@ export class DictionariesController {
         return this.protocolSets;
     }
 
-    public getProtocols(protocolSetId: number | null, parentId?: number): Promise<IModel[]> {
-        if (!this.protocolsByProtocolSetAndParent[`${protocolSetId}, ${parentId}`]) {
-            this.protocolsByProtocolSetAndParent[`${protocolSetId}, ${parentId}`] =
-                fetch(`/api/protocols?protocolSetId=${protocolSetId}&parentId=${parentId}`)
-                    .then((response) => response.json());
+    public getProtocols(protocolSetId: number): Promise<IProtocol[]> {
+        if (!this.protocols[protocolSetId]) {
+            this.protocols[protocolSetId] = fetch(`/api/protocols?protocolSetId=${protocolSetId}`)
+                .then((response) => response.json());
         }
-        return this.protocolsByProtocolSetAndParent[`${protocolSetId}, ${parentId}`];
+        return this.protocols[protocolSetId];
     }
 
     public getLineDescriptions(protocolSetId: number): Promise<IModel[]> {
