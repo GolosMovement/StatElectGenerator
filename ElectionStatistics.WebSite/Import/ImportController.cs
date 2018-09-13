@@ -145,7 +145,8 @@ namespace ElectionStatistics.WebSite
                 {
                     entry = mapping,
                     lines = modelContext.Set<MappingLine>()
-                        .Where(m => m.MappingId == mapping.Id).ToArray()
+                        .Where(ml => ml.MappingId == mapping.Id)
+                        .OrderBy(ml => ml.ColumnNumber).ToArray()
                 };
                 result.Add(element);
             }
