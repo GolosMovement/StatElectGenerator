@@ -163,6 +163,7 @@ namespace ElectionStatistics.WebSite
             var mappingTableJson = JsonConvert.DeserializeObject<List<MappingLine>>(mappingTable);
             foreach (MappingLine line in mappingTableJson)
             {
+                line.Id = 0;
                 line.MappingId = mapping.Id;
                 modelContext.Add(line);
             }
