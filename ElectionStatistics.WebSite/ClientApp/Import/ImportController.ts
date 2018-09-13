@@ -42,6 +42,11 @@ export class ImportController {
         return reqPromise.then((response) => response.json());
     }
 
+    public progress(id: number): Promise<IApiResponse> {
+        const reqPromise = fetch(`/api/import/protocolSets/${id}/progress`);
+        return reqPromise.then((response) => response.json());
+    }
+
     public updateDataset(id: number, protocolSet: IProtocolSet): Promise<IApiResponse> {
         const data = new FormData();
         data.append('protocolSet', JSON.stringify(protocolSet));

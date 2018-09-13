@@ -30,6 +30,12 @@ namespace ElectionStatistics.WebSite
             public MappingLine[] lines;
         }
 
+        public struct ImportProgressData
+        {
+            public int progress;
+            public bool? success;
+        }
+
         private readonly ModelContext modelContext;
         private readonly Core.Import.IBackgroundQueue importQueue;
 
@@ -64,8 +70,27 @@ namespace ElectionStatistics.WebSite
 
             if (file == null || file.Length == 0)
             {
-                return JsonConvert.SerializeObject(new ApiResponse { status = "fail",
-                    message = "no file provided" });
+                return JsonConvert.SerializeObject(new ApiResponse
+                {
+                    status = "fail", message = "no file provided"
+                });
+            }
+
+            var protocolSetJson = JsonConvert.DeserializeObject<ProtocolSet>(protocolSet);
+            if (protocolSetJson.TitleRus.Length == 0) {
+                return JsonConvert.SerializeObject(new ApiResponse
+                {
+                    status = "fail", message = "empty 'TitleRus' field"
+                });
+            }
+
+            if (modelContext.Set<ProtocolSet>().Any(ps => ps.TitleRus == protocolSetJson.TitleRus))
+            {
+                return JsonConvert.SerializeObject(new ApiResponse
+                {
+                    status = "fail",
+                    message = $"ProtocolSet '{protocolSetJson.TitleRus}' already exists"
+                });
             }
 
             var dbSerializer = new Core.Import.DbSerializer(modelContext);
@@ -83,7 +108,6 @@ namespace ElectionStatistics.WebSite
             var mapping = new Mapping() { DataLineNumber = startLine };
             var mappingLines = new List<MappingLine>();
             var mappingTableJson = JsonConvert.DeserializeObject<List<MappingLine>>(mappingTable);
-            var protocolSetJson = JsonConvert.DeserializeObject<ProtocolSet>(protocolSet);
 
             try {
                 service.Configure(filePath, protocolSetJson, mapping,
@@ -134,6 +158,17 @@ namespace ElectionStatistics.WebSite
                 .OrderBy(protocolSet => protocolSet.TitleRus);
         }
 
+        [HttpGet, Route("api/import/protocolSets/{id}")]
+        public ProtocolSet ProtocolSet(int id)
+        {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return null;
+            }
+
+            return modelContext.Find<ProtocolSet>(id);
+        }
+
         [HttpGet, Route("api/import/protocolSets/{id}/log")]
         public IActionResult ImportErrorLog(int id)
         {
@@ -152,15 +187,28 @@ namespace ElectionStatistics.WebSite
             return File(file, "text/plain", $"import-protocolSet-{id}.log");
         }
 
-        [HttpGet, Route("api/import/protocolSets/{id}")]
-        public ProtocolSet ProtocolSet(int id)
+        [HttpGet, Route("/api/import/protocolSets/{id}/progress")]
+        public ApiResponse ImportProgress(int id)
         {
-            if (HttpContext.Session.GetString("admin") == null)
+            var protocolSet = modelContext.Find<ProtocolSet>(id);
+            if (protocolSet != null)
             {
-                return null;
+                var success = protocolSet.ImportSuccess;
+                var data = new ImportProgressData();
+                if (protocolSet.ImportFinishedAt != null)
+                {
+                    data.success = protocolSet.ImportSuccess;
+                }
+                data.progress = ImportProgressRate(protocolSet);
+                return new ApiResponse() { status = "ok", data = data };
             }
-
-            return modelContext.Find<ProtocolSet>(id);
+            else
+            {
+                return new ApiResponse()
+                {
+                    status = "fail", message = $"ProtocolSet ID {id} not found"
+                };
+            }
         }
 
         [HttpPatch, Route("api/import/protocolSets/{id}")]
@@ -230,6 +278,12 @@ namespace ElectionStatistics.WebSite
             modelContext.SaveChanges();
 
             return new ApiResponse { status = "ok" };
+        }
+
+        private int ImportProgressRate(ProtocolSet protocolSet)
+        {
+            var rate = ((double)protocolSet.ImportCurrentLine / protocolSet.ImportTotalLines);
+            return double.IsNaN(rate) ? 0 : (int)(rate * 100);
         }
     }
 }

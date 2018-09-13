@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ASPNETCORE_ENVIRONMENT=Development dotnet run -p ElectionStatistics.WebSite
+ASPNETCORE_ENVIRONMENT=Development dotnet watch -p ElectionStatistics.WebSite run

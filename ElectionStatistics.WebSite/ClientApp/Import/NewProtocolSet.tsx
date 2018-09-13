@@ -5,14 +5,21 @@ import { SelectValue } from 'antd/lib/select';
 import { ImportController } from './ImportController';
 import { MappingColumn } from './MappingColumn';
 import { IMappingColumn, IMappingTableState, MappingTable } from './MappingTable';
+import { ProgressBar } from './ProgressBar';
 
 export interface IProtocolSet {
     id?: number;
     titleEng: string;
-    descriptionEng: string;
     titleRus: string;
+    descriptionEng: string;
     descriptionRus: string;
     hidden: boolean;
+    importStartedAt?: Date;
+    importFinishedAt?: Date;
+    importTotalLines?: number;
+    importCurrentLine?: number;
+    importSuccess?: boolean;
+    importErrorCount?: number;
 }
 
 export interface IMappingList {
@@ -37,11 +44,14 @@ interface IDatasetState extends IDataset {
     mappings?: IMappingList[];
     mappingToLoad?: number;
     isLoading: boolean;
+    progress?: number;
+    success?: boolean;
 }
 
 export class NewProtocolSet extends React.Component<{}, IDatasetState> {
     private static DEFAULT_NEW_COLUMN_INDEX = 1;
     private static DEFAULT_START_LINE = 2;
+    private static PROGRESS_INTERVAL = 20_000;
 
     constructor(props: {}) {
         super(props);
@@ -65,6 +75,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
         this.changeHidden = this.changeHidden.bind(this);
         this.changePosition = this.changePosition.bind(this);
         this.onSubmitForm = this.onSubmitForm.bind(this);
+        this.launchProgress = this.launchProgress.bind(this);
 
         this.changeSelectedMapping = this.changeSelectedMapping.bind(this);
         this.loadMapping = this.loadMapping.bind(this);
@@ -201,6 +212,8 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
                     </div>
                 </form>
 
+                {this.progressBar()}
+
                 {this.mappingColumnForm()}
             </div>
         );
@@ -258,12 +271,11 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
         ImportController.Instance.createDataset(this.state.mappingTable.dataset, this.state.file,
             this.state.protocolSet, this.state.startLine)
             .then((result) => {
-                this.setState({ ...this.state, isLoading: false });
-
                 if (result.status == 'ok') {
                     this.setState({ ...this.state, protocolSet: { ...this.state.protocolSet, id: result.data } });
-                    alert('Success!');
+                    this.launchProgress();
                 } else {
+                    this.setState({ ...this.state, isLoading: false });
                     alert(`Fail! ${result.message}`);
                 }
             }).catch((err) => {
@@ -280,8 +292,32 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
         this.submitForm();
     }
 
-    private errorLogFileDownload(): React.ReactNode {
+    private launchProgress(): void {
+        const timer = setTimeout(this.launchProgress, NewProtocolSet.PROGRESS_INTERVAL);
+
         if (this.state.protocolSet.id) {
+            const result = ImportController.Instance.progress(this.state.protocolSet.id);
+            result.then((response) => {
+                if (response.status == 'ok') {
+                    const success = response.data.success;
+                    this.setState({
+                        ...this.state, success, progress: response.data.progress,
+                        isLoading: success == undefined
+                    });
+
+                    if (success != undefined) { clearTimeout(timer); }
+                } else {
+                    clearTimeout(timer);
+                }
+            }).catch((err) => {
+                clearTimeout(timer);
+                alert('Server error' + err);
+            });
+        }
+    }
+
+    private errorLogFileDownload(): React.ReactNode {
+        if (this.state.protocolSet.id && this.state.success != undefined) {
             const href = `/api/import/protocolSets/${this.state.protocolSet.id}/log`;
             return <a href={href} className='btn btn-default'>Download error logfile</a>;
         }
@@ -340,6 +376,12 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
             );
         } else {
             return <Select></Select>;
+        }
+    }
+
+    private progressBar(): React.ReactNode {
+        if (this.state.progress != undefined) {
+            return <ProgressBar now={this.state.progress} event={this.state.success === false ? 'fail' : undefined}/>;
         }
     }
 
