@@ -111,7 +111,7 @@ export class ProtocolSets extends React.Component<{}, IProtocolSetState> {
 
     private formatTime(timestamp: Date | undefined): string | undefined {
         if (timestamp) {
-            return moment(timestamp).format('D.M.Y H:m');
+            return moment(timestamp).format('DD.MM.YYYY H:mm');
         }
     }
 }
