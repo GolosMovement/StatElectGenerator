@@ -57,6 +57,11 @@ namespace ElectionStatistics.WebSite
         public string Create(IFormFile file, string mappingTable, string protocolSet,
                              int startLine)
         {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return null;
+            }
+
             if (file == null || file.Length == 0)
             {
                 return JsonConvert.SerializeObject(new ApiResponse { status = "fail",
@@ -120,6 +125,11 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("api/import/protocolSets")]
         public IEnumerable<ProtocolSet> ProtocolSets()
         {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return null;
+            }
+
             return modelContext.Set<ProtocolSet>().AsNoTracking()
                 .OrderBy(protocolSet => protocolSet.TitleRus);
         }
@@ -127,6 +137,11 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("api/import/protocolSets/{id}/log")]
         public IActionResult ImportErrorLog(int id)
         {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return null;
+            }
+
             var protocol = modelContext.Find<ProtocolSet>(id);
             if (protocol == null || !System.IO.File.Exists(protocol.ImportFileErrorLog))
             {
@@ -140,12 +155,22 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("api/import/protocolSets/{id}")]
         public ProtocolSet ProtocolSet(int id)
         {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return null;
+            }
+
             return modelContext.Find<ProtocolSet>(id);
         }
 
         [HttpPatch, Route("api/import/protocolSets/{id}")]
         public ApiResponse Update(int id, string protocolSet)
         {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return new ApiResponse { status = "fail", message = "Not found"};
+            }
+
             var protocolSetJson = JsonConvert.DeserializeObject<ProtocolSet>(protocolSet);
             if (id != protocolSetJson.Id)
             {
@@ -160,6 +185,11 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("api/import/mappings")]
         public List<MappingsResponse> Mappings()
         {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return null;
+            }
+
             var result = new List<MappingsResponse>();
             var mappings = modelContext.Set<Mapping>().OrderBy(mapping => mapping.Id);
             foreach (Mapping mapping in mappings)
@@ -180,6 +210,11 @@ namespace ElectionStatistics.WebSite
         [HttpPost, Route("api/import/mappings")]
         public ApiResponse CreateMapping(string name, int dataLineNumber, string mappingTable)
         {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return new ApiResponse { status = "fail" };
+            }
+
             var mapping = new Mapping() { Name = name, DataLineNumber = dataLineNumber };
             modelContext.Add(mapping);
             modelContext.SaveChanges();
