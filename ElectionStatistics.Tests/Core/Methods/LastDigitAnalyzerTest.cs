@@ -14,10 +14,8 @@ namespace ElectionStatistics.Tests.Core.Methods
         [Fact]
         public void GetData_OK_ReturnsData()
         {
-            var minValue = 10;
-
             var numbers = new List<int> { 10, 10, 10, 11, 13, 14, 15, 15, 17, 18 };
-            LDAResult result = Service().GetData(numbers, minValue);
+            LDAResult result = Service().GetData(numbers);
             Assert.Equal(Math.Sqrt(0.09/numbers.Count), result.Sigma, 15);
             Assert.Equal(8, result.ChiSquared);
             Assert.Equal(new List<double>() { 0.3, 0.1, 0.0, 0.1, 0.1, 0.2, 0.0, 0.1, 0.1, 0.0 },
@@ -28,7 +26,7 @@ namespace ElectionStatistics.Tests.Core.Methods
         public void GetData_NoLineNumbers_ThrowsException()
         {
             Assert.Throws<ArgumentException>(
-                () => Service().GetData(new List<int>(), 0));
+                () => Service().GetData(new List<int>()));
         }
 
         private LastDigitAnalyzer Service()

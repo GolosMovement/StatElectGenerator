@@ -285,42 +285,86 @@ namespace ElectionStatistics.WebSite
         {
             var parameters = DeserialzeJson<LastDigitAnalyzerBuildParameters>(parametersString);
 
-            var lineDescriptions = modelContext.Set<LineDescription>()
-                .Where(lineDescr => lineDescr.ProtocolSetId == parameters.ProtocolSetId);
+            var baseQuery =
+                @"%hierarchyQuery%
+                SELECT
+                    LineNumbers.Id
+                    ,LineNumbers.ProtocolId
+                    ,LineNumbers.LineDescriptionId
+                    ,LineNumbers.Value
+                FROM LineNumbers
+                JOIN LineDescriptions ON (LineDescriptions.Id = LineNumbers.LineDescriptionId)
+                WHERE
+                    LineDescriptions.ProtocolSetId = @protocol_set
+                    %lineDescFilter%
+                    %protocolFilter%
+                    %minValueFilter%";
+
+            var hierarchyQuery =
+                @"WITH query AS
+                    (SELECT *
+                    FROM Protocols p1
+                    WHERE p1.id = @protocol
+                    UNION ALL
+                    SELECT p2.*
+                    FROM Protocols p2
+                    JOIN query ON p2.ParentId = query.Id)";
+
+            var lineDescFilter =
+                @"AND LineDescriptions.Id in (%lineDescriptions%)";
+
+            var protocolFilter = @"AND LineNumbers.ProtocolId in (SELECT Id FROM query)";
+
+            var minValueFilter = @"AND LineNumbers.Value > @min_value";
+
+            var sql = baseQuery;
+
+            List<SqlParameter> sqlParameters = new List<SqlParameter>();
+            sqlParameters.Add(new SqlParameter("@protocol_set", parameters.ProtocolSetId));
+
             if (parameters.LineDescriptionIds.Count() > 0)
             {
-                lineDescriptions =
-                    lineDescriptions.Where(lineDescr =>
-                        parameters.LineDescriptionIds.Contains(lineDescr.Id));
+                sql = sql.Replace("%lineDescFilter%", lineDescFilter)
+                    // FIXME: possible SQL injection
+                    .Replace("%lineDescriptions%", string.Join(",", parameters.LineDescriptionIds));
             }
-
-            var lds = lineDescriptions.Select(lineDescr => lineDescr.Id).ToList();
-            var lineNumbers =
-                modelContext.Set<LineNumber>().Where(line => lds.Contains(line.LineDescriptionId));
+            else
+            {
+                sql = sql.Replace("%lineDescJoin%", "").Replace("%lineDescFilter%", "");
+            }
 
             if (parameters.ProtocolId != null)
             {
-                var sql = @"WITH query AS
-                (SELECT *
-                   FROM protocols p1
-                  WHERE p1.parentid = @p0 OR p1.id = @p0
-                 UNION ALL
-                 SELECT p2.*
-                   FROM protocols p2
-                   JOIN query ON p2.ParentId = query.Id)
-                SELECT * FROM query";
-                var protocols =
-                    modelContext.Set<Protocol>()
-                        .FromSql(sql, parameters.ProtocolId).Select(p => p.Id).ToList();
-                lineNumbers = lineNumbers.Where(line => protocols.Contains((int)line.ProtocolId));
+                sql = sql.Replace("%hierarchyQuery%", hierarchyQuery)
+                    .Replace("%protocolFilter%", protocolFilter);
+
+                sqlParameters.Add(new SqlParameter("@protocol", parameters.ProtocolId));
             }
+            else
+            {
+                sql = sql.Replace("%hierarchyQuery%", "").Replace("%protocolFilter%", "");
+            }
+
+            if (parameters.MinValue != null)
+            {
+                sql = sql.Replace("%minValueFilter%", minValueFilter);
+
+                sqlParameters.Add(new SqlParameter("@min_value", parameters.MinValue));
+            }
+            else
+            {
+                sql = sql.Replace("%minValueFilter%", "");
+            }
+
+            // TODO: query plain values without an entity
+            var lns = modelContext.Set<LineNumber>().FromSql(sql,
+                    sqlParameters.Cast<object>().ToArray())
+                .Select(l => l.Value).ToList();
 
             Core.Methods.LDAResult results;
             try
             {
-                var numbers = lineNumbers.Select(lineNumber => lineNumber.Value);
-                results = new Core.Methods.LastDigitAnalyzer()
-                    .GetData(numbers.ToList(), parameters.MinValue);
+                results = new Core.Methods.LastDigitAnalyzer().GetData(lns);
             }
             catch (ArgumentException)
             {

@@ -15,13 +15,8 @@ namespace ElectionStatistics.Core.Methods
 
     public class LastDigitAnalyzer
     {
-        public LDAResult GetData(List<int> numbers, int? minValue)
+        public LDAResult GetData(List<int> numbers)
         {
-            if (minValue != null)
-            {
-                numbers = numbers.Where((n) => n >= minValue).ToList();
-            }
-
             if (numbers.Count == 0)
             {
                 throw new ArgumentException("lineNumbers should not be empty");
