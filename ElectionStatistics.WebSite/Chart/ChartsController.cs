@@ -330,7 +330,7 @@ namespace ElectionStatistics.WebSite
             }
             else
             {
-                sql = sql.Replace("%lineDescJoin%", "").Replace("%lineDescFilter%", "");
+                sql = sql.Replace("%lineDescFilter%", "");
             }
 
             if (parameters.ProtocolId != null)
