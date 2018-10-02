@@ -169,6 +169,7 @@ namespace ElectionStatistics.Core.Import
                     Initialize();
                 }
 
+                serializer.BeforeImport();
                 int totalLines = GetTotalLines();
                 notifier.Start(totalLines);
 
@@ -224,6 +225,9 @@ namespace ElectionStatistics.Core.Import
 
                                 CreateLines(line, protocol, mappings, reader);
 
+                                // TODO: progress notifier is not useful because
+                                // all the work is on the bulk insertions
+                                // right now, see DbSerializer#AfterImport
                                 notifier.Progress(line,
                                     errorLogger.GetErrorsCount());
                             }

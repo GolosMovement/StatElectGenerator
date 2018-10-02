@@ -3,7 +3,7 @@ using ElectionStatistics.Model;
 
 namespace ElectionStatistics.Core.Import
 {
-    // TODO: tests
+    // TODO: use in-memory storage instead of DB
     public class DbProgressNotifier : IProgressNotifier
     {
         private readonly DbSerializer serializer;
@@ -55,7 +55,7 @@ namespace ElectionStatistics.Core.Import
             protocolSet.ImportCurrentLine = currentLine;
             protocolSet.ImportErrorCount = errorCount;
 
-            serializer.UpdateProtocolSetBulk(protocolSet);
+            serializer.UpdateProtocolSet(protocolSet);
 
             lastProgress = DateTime.Now;
         }

@@ -26,6 +26,11 @@ namespace ElectionStatistics.Tests.Core.Import
                 get { return data; }
             }
 
+            public void BeforeImport()
+            {
+                AddItem("BeforeImport");
+            }
+
             public void CreateProtocolSet(ProtocolSet protocolSet)
             {
                 protocolSet.Id = GetId();

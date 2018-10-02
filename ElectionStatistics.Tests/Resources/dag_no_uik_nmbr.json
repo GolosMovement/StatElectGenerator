@@ -17,6 +17,10 @@
       "ImportErrorCount": 0
     }
   ],
+  "System.String": [
+    "BeforeImport",
+    "AfterImport"
+  ],
   "ElectionStatistics.Model.LineDescription": [
     {
       "Id": 140,
@@ -1937,8 +1941,5 @@
       "LineDescriptionId": 144,
       "LineDescription": null
     }
-  ],
-  "System.String": [
-    "AfterImport"
   ]
 }

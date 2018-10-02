@@ -1,19 +1,37 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ElectionStatistics.Model;
 
+using EFCore.BulkExtensions;
+
 namespace ElectionStatistics.Core.Import
 {
+    // TODO: tests
+    // FIXME: possible PK conflicts due to client side ids generation
     public class DbSerializer : ISerializer
     {
         private DbContext context;
-        private int commitCount = 0;
-        private const int bulkSize = 4000;
+
+        private const int defaultId = 0;
+        private int protocolId;
+        private int lineNumberId;
+        private int lineStringId;
+
+        private List<Protocol> protocols;
+        private List<LineNumber> lineNumbers;
+        private List<LineString> lineStrings;
 
         public DbSerializer(DbContext context)
         {
             this.context = context;
-            context.ChangeTracker.AutoDetectChangesEnabled = false;
+        }
+
+        public void BeforeImport()
+        {
+            CreateLists();
+            LoadIdentities();
         }
 
         public void CreateProtocolSet(ProtocolSet protocolSet)
@@ -30,25 +48,31 @@ namespace ElectionStatistics.Core.Import
 
         public void CreateProtocol(Protocol protocol)
         {
-            context.Set<Protocol>().Add(protocol);
-            BulkSave();
+            protocol.Id = NextProtocolId();
+            protocols.Add(protocol);
         }
 
         public void CreateLineNumber(LineNumber lineNumber)
         {
-            context.Set<LineNumber>().Add(lineNumber);
-            BulkSave();
+            lineNumber.Id = NextLineNumberId();
+            lineNumbers.Add(lineNumber);
         }
 
         public void CreateLineString(LineString lineString)
         {
-            context.Set<LineString>().Add(lineString);
-            BulkSave();
+            lineString.Id = NextLineStringId();
+            lineStrings.Add(lineString);
         }
 
         public void AfterImport()
         {
-            context.SaveChanges();
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                context.BulkInsert(protocols);
+                context.BulkInsert(lineNumbers);
+                context.BulkInsert(lineStrings);
+                transaction.Commit();
+            }
         }
 
         public void UpdateProtocolSet(ProtocolSet protocolSet)
@@ -57,20 +81,61 @@ namespace ElectionStatistics.Core.Import
             context.SaveChanges();
         }
 
-        public void UpdateProtocolSetBulk(ProtocolSet protocolSet)
+        private void LoadIdentities()
         {
-            context.Update(protocolSet);
-            BulkSave();
+            LoadProtocolId();
+            LoadLineNumberId();
+            LoadLineStringId();
         }
 
-        private void BulkSave()
+        // TODO: DRY
+        private void LoadProtocolId()
         {
-            commitCount++;
+            var obj = context.Set<Protocol>()
+                .OrderByDescending(o => o.Id)
+                .FirstOrDefault();
 
-            if (commitCount % bulkSize == 0)
-            {
-                context.SaveChanges();
-            }
+            protocolId = obj == null ? defaultId : obj.Id;
+        }
+
+        private void LoadLineNumberId()
+        {
+            var obj = context.Set<LineNumber>()
+                .OrderByDescending(o => o.Id)
+                .FirstOrDefault();
+
+            lineNumberId = obj == null ? defaultId : obj.Id;
+        }
+
+        private void LoadLineStringId()
+        {
+            var obj = context.Set<LineString>()
+                .OrderByDescending(o => o.Id)
+                .FirstOrDefault();
+
+            lineStringId = obj == null ? defaultId : obj.Id;
+        }
+
+        private int NextProtocolId()
+        {
+            return ++protocolId;
+        }
+
+        private int NextLineNumberId()
+        {
+            return ++lineNumberId;
+        }
+
+        private int NextLineStringId()
+        {
+            return ++lineStringId;
+        }
+
+        private void CreateLists()
+        {
+            this.protocols = new List<Protocol>();
+            this.lineNumbers = new List<LineNumber>();
+            this.lineStrings = new List<LineString>();
         }
     }
 }

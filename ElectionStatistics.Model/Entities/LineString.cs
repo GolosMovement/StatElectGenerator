@@ -7,9 +7,10 @@ namespace ElectionStatistics.Model
     [Table("LineStrings")]
     public class LineString
     {
+        // TODO: use long type
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+
         [Required]
         public string Value { get; set; }
 
