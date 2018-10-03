@@ -35,28 +35,31 @@ namespace ElectionStatistics.WebSite
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddResponseCaching();
+        {
+            services.AddResponseCaching();
 
-			services
-				.AddMvc(options =>
-				{
-					options.CacheProfiles.Add("Default",
-						new CacheProfile
-						{
-							Duration = 3600,
-							VaryByQueryKeys = new [] { "*" }
-						});
-				})
-				.AddJsonOptions(options =>
-				{
-					options.SerializerSettings.SerializationBinder = new AttributeSerializationBinder();
-					options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
-					options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-				});
+            services
+                .AddMvc(options =>
+                {
+                    options.CacheProfiles.Add("Default",
+                        new CacheProfile
+                        {
+                            Duration = 3600,
+                            VaryByQueryKeys = new [] { "*" }
+                        });
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.SerializationBinder = new AttributeSerializationBinder();
+                    options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
 
-	        services.AddDbContext<ModelContext>(options =>
-		        options.UseSqlServer(Configuration.GetConnectionString("ElectionStatisticsDatabase")));
+            services.AddDbContext<ModelContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("ElectionStatisticsDatabase"),
+                    serverOptions => serverOptions.CommandTimeout(120));
+            });
 
             services.AddDistributedMemoryCache();
 
