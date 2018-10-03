@@ -24,19 +24,19 @@ export class ProtocolSets extends React.Component<{}, IProtocolSetState> {
     public render(): React.ReactNode {
         return (
             <div>
-                <h1>ProtocolSets</h1>
+                <h1>Выбрать набор протоколов (выборы)</h1>
                 <table className='table-bordered table-condensed table-hover'>
                     <thead>
                         <tr className='text-center'>
-                            <th>NameRus</th>
-                            <th>NameEng</th>
-                            <th>Hidden</th>
-                            <th>Import started at</th>
-                            <th>Import finished at</th>
-                            <th>Import current line</th>
-                            <th>Import total lines</th>
-                            <th>Imported</th>
-                            <th>Import error count</th>
+                            <th>Заголовок</th>
+                            <th>Title</th>
+                            <th>Скрыт</th>
+                            <th>Время начала импорта</th>
+                            <th>Время завершения импорта</th>
+                            <th>Текущая импортируемая строка</th>
+                            <th>Общее количество строк импорта</th>
+                            <th>Импортирован</th>
+                            <th>Количество ошибок импорта</th>
                             <th></th>
                         </tr>
                     </thead>

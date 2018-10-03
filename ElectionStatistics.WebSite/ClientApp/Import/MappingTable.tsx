@@ -43,57 +43,57 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
             <table className='table table-bordered table-condensed table-hover mapping-table'>
                 <thead>
                     <tr>
-                        <th>Column number</th>
+                        <th>Номер колонки в таблице результатов</th>
                         {this.rowElements('columnNumber')}
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Data type</td>
+                        <td>Тип данных</td>
                         {this.typeRows()}
                     </tr>
                     <tr>
-                        <td>TitleRU</td>
+                        <td>Заголовок (рус)</td>
                         {this.rowElements('titleRus')}
                     </tr>
                     <tr>
-                        <td>DescriptionRU</td>
+                        <td>Описание (рус)</td>
                         {this.rowElements('descriptionRus')}
                     </tr>
                     <tr>
-                        <td>TitleEng</td>
+                        <td>Заголовок (eng)</td>
                         {this.rowElements('titleEng')}
                     </tr>
                     <tr>
-                        <td>DescriptionEng</td>
+                        <td>Описание (eng)</td>
                         {this.rowElements('descriptionEng')}
                     </tr>
                     <tr>
-                        <td>Official description in native lang</td>
+                        <td>Официальное описание на родном языке (на случай проблем с переводом)</td>
                         {this.rowElements('descriptionNative')}
                     </tr>
                     <tr>
-                        <td>Vote result</td>
+                        <td>Волеизъявление?</td>
                         {this.boolFieldRows('isVoteResult')}
                     </tr>
                     <tr>
-                        <td>Calc result</td>
+                        <td>Расчётная?</td>
                         {this.boolFieldRows('isCalcResult')}
                     </tr>
                     <tr>
-                        <td>Hierarchy</td>
+                        <td>Иерархия</td>
                         {this.boolFieldRows('hierarchy')}
                     </tr>
                     <tr>
-                        <td>Hierarchy level</td>
+                        <td>Уровень иерархии</td>
                         {this.hierarchyLevelRows()}
                     </tr>
                     <tr>
-                        <td>Hierarchy lang</td>
+                        <td>Язык иерархии</td>
                         {this.hierarchyLangRows()}
                     </tr>
                     <tr>
-                        <td></td>
+                        <td>Управление</td>
                         {this.columnButtonsRow()}
                     </tr>
                 </tbody>
@@ -113,7 +113,7 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
 
     private typeRows(): React.ReactNode {
         return this.state.dataset.map((column: IMappingColumn, i: number) =>
-            <td key={i}>{column.isNumber ? 'number' : 'string'}</td>
+            <td key={i}>{column.isNumber ? 'число' : 'текст'}</td>
         );
     }
 

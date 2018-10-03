@@ -86,19 +86,25 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
         // TODO: CSRF protection
         return (
             <div>
-                <h1>{'Import new ProtocolSet'}</h1>
+                <h1>Импорт Таблицы Результатов Выборов</h1>
                 <form onSubmit={this.onSubmitForm}>
                     <div className='row'>
+                        <div className='col-sm-12'>
+                            <p>По-русски</p>
+                        </div>
                         <div className='col-sm-3'>
                             <div className='form-group'>
-                                <label htmlFor='titleRus'>TitleRus</label>
+                                <label htmlFor='titleRus'>
+                                    Краткое наименование
+                                    (для менюшек)
+                                </label>
                                 <input id='titleRus' value={this.state.protocolSet.titleRus}
                                     onChange={this.changeTitleRu} className='form-control' />
                             </div>
                         </div>
                         <div className='col-sm-4'>
                             <div className='form-group'>
-                                <label htmlFor='descriptionRus'>DescriptionRus</label>
+                                <label htmlFor='descriptionRus'>Подробное описание</label>
                                 <textarea id='descriptionRus' value={this.state.protocolSet.descriptionRus}
                                     onChange={this.changeDescrRu} className='form-control' ></textarea>
                             </div>
@@ -109,23 +115,32 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
                                 <label className='control-label'>
                                     <input type='checkbox' id='hidden' checked={this.state.protocolSet.hidden}
                                         onChange={this.changeHidden} />
-                                    Hidden
+                                    Скрыть
                                 </label>
                             </div>
                         </div>
                     </div>
 
                     <div className='row'>
+                        <div className='col-sm-12'>
+                            <p>По-английски</p>
+                        </div>
                         <div className='col-sm-3'>
                             <div className='form-group'>
-                                <label htmlFor='titleEng'>TitleEng</label>
+                                <label htmlFor='titleEng'>
+                                    Short Title
+                                    (for menus)
+                                </label>
                                 <input id='titleEng' value={this.state.protocolSet.titleEng}
                                     onChange={this.changeTitle} className='form-control' />
                             </div>
                         </div>
                         <div className='col-sm-4'>
                             <div className='form-group'>
-                                <label htmlFor='descriptionEng'>DescriptionEng</label>
+                                <label htmlFor='descriptionEng'>
+                                    Description
+                                    (for clarifications)
+                                </label>
                                 <textarea id='descriptionEng' value={this.state.protocolSet.descriptionEng}
                                     onChange={this.changeDescr} className='form-control' />
                             </div>
@@ -134,7 +149,9 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
 
                     <div className='row'>
                         <div className='form-group'>
-                            <label htmlFor='start-line' className='col-sm-3'>Start line:</label>
+                            <label htmlFor='start-line' className='col-sm-3'>
+                                С какой строки начинаются данные:
+                            </label>
                             <div className='col-sm-3'>
                                 <input id='start-line' type='number' value={this.state.startLine}
                                     onChange={this.changeStartLine} className='form-control' />
@@ -148,31 +165,31 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
                         editColumnParentCallback={this.editButtonColumnCallback} />
 
                     <div className='row'>
-                        <div className='col-sm-3'>
+                        <div className='col-sm-2'>
                             {this.newColumnLink()}
                         </div>
 
-                        <div className='col-sm-3'>
+                        <div className='col-sm-4'>
                             <div className='radio'>
                                 <label className='radio-inline'>
                                     <input type='radio' name='add-column-position' id='end' defaultChecked={true}
                                         value='end' onChange={this.changePosition} />
-                                    End
+                                    В конец
                                 </label>
                                 <label className='radio-inline'>
                                     <input type='radio' name='add-column-position' id='begin'
-                                        value='begin' onChange={this.changePosition}  />
-                                    Begin
+                                        value='begin' onChange={this.changePosition} />
+                                    В начало
                                 </label>
                                 <label className='radio-inline'>
                                     <input type='radio' name='add-column-position' id='index'
                                             value='index' onChange={this.changePosition} />
-                                    Index:
+                                    На позицию:
                                 </label>
                             </div>
                         </div>
 
-                        <div className='col-sm-3'>
+                        <div className='col-sm-2'>
                             <input type='number' id='add-column-index' className='form-control'
                                 defaultValue={NewProtocolSet.DEFAULT_NEW_COLUMN_INDEX.toString()}
                                 onChange={this.changePosition} />
@@ -180,27 +197,27 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
                     </div>
 
                     <div className='row'>
-                        <div className='col-sm-6'>
-                            <div className='col-sm-8'>
-                                {this.mappingList()}
-                            </div>
-                            <div className='col-sm-4'>
-                                <button type='button' id='load-mapping' onClick={this.loadMapping}>
-                                    Load mapping
-                                </button>
-                            </div>
+                        <div className='col-sm-4'>
+                            {this.mappingList()}
+                        </div>
+                        <div className='col-sm-3'>
+                            <button type='button' id='load-mapping' onClick={this.loadMapping}
+                                className='btn btn-default'>
+                                Загрузить маппинг
+                            </button>
                         </div>
 
                         <div className='col-sm-3'>
-                            <button type='button' id='save-mapping' onClick={this.saveMapping} >
-                                Save mapping
+                            <button type='button' id='save-mapping' onClick={this.saveMapping}
+                                className='btn btn-default'>
+                                Сохранить маппинг как...
                             </button>
                         </div>
                     </div>
 
                     <div className='row'>
-                        <div className='col-sm-3'>
-                            <label htmlFor='file'>Choose file: </label>
+                        <div className='col-sm-2'>
+                            <label htmlFor='file'>Загрузить файл: </label>
                         </div>
                         <div className='col-sm-3'>
                             <input type='file' name='file' id='file' onChange={this.pickFile} accept='.xlsx' />
@@ -208,7 +225,9 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
                     </div>
 
                     <div className='row'>
-                        {this.submitButton()}
+                        <div className='col-sm-3'>
+                            {this.submitButton()}
+                        </div>
                     </div>
                 </form>
 
@@ -319,7 +338,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
     private errorLogFileDownload(): React.ReactNode {
         if (this.state.protocolSet.id && this.state.success != undefined) {
             const href = `/api/import/protocolSets/${this.state.protocolSet.id}/log`;
-            return <a href={href} className='btn btn-default'>Download error logfile</a>;
+            return <a href={href} className='btn btn-default'>Скачать лог ошибок</a>;
         }
     }
 
@@ -332,7 +351,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
     private newColumnLink(): React.ReactNode {
         return (
             <button type='button' id='open-column-form' className='btn btn-default'
-                onClick={this.openColumnForm}>Add column</button>
+                onClick={this.openColumnForm}>Добавить колонку</button>
         );
     }
 
@@ -340,7 +359,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
         if (this.state.isLoading) {
             return <Spin/>;
         } else {
-            return <input type='submit' className='btn btn-primary' />;
+            return <input type='submit' className='btn btn-primary' value='Импортировать' />;
         }
     }
 
@@ -358,7 +377,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
             <div id='column-form' className='modal'>
                 <div className='modal-content'>
                     <div className='modal-header text-center'>
-                        <h4 className='inline-block'>Add column</h4>
+                        <h4 className='inline-block'>Описание колонки Таблицы Результатов Выборов</h4>
                         <span className='modal-close' onClick={this.toggleColumnModal}>&times;</span>
                     </div>
                     {component}
@@ -463,7 +482,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
         e.preventDefault();
 
         if (this.state.mappings != undefined && this.state.mappingToLoad != undefined) {
-            if (!confirm('Are you sure?')) { return; }
+            if (!confirm('Вы уверены?')) { return; }
 
             this.state.mappings.forEach((mapping) => {
                 if (mapping.entry.id == this.state.mappingToLoad) {
@@ -475,22 +494,22 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
                 }
             });
         } else {
-            alert('Select mapping first');
+            alert('Выберите маппинг');
         }
     }
 
     private saveMapping(e: React.FormEvent<HTMLButtonElement>): void {
         e.preventDefault();
 
-        const name = prompt('Enter new mapping name');
+        const name = prompt('Введите название нового маппинга');
         if (name != null && name != '') {
             ImportController.Instance.createMapping(name, this.state.startLine, this.state.mappingTable.dataset)
                 .then((result) => {
                     if (result.status == 'ok') {
                         this.fetchMappings();
-                        alert('Mapping saved');
+                        alert('Маппинг успешно сохранен');
                     } else {
-                        alert('Failed mapping save');
+                        alert('Не удалось сохранить маппинг');
                     }
                 })
                 .catch(() => alert('Server error'));

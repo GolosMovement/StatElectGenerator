@@ -34,19 +34,25 @@ export class EditProtocolSet extends React.Component<IEditProtocolSetProps, IEdi
     public render(): React.ReactNode {
         return (
             <div>
-                <h1>{`Edit ProtocolSet #${this.state.protocolSet.id}`}</h1>
+                <h1>{`Редактирование Таблицы Результатов Выборов #${this.state.protocolSet.id}`}</h1>
                 <form onSubmit={this.onSubmitForm}>
                     <div className='row'>
+                        <div className='col-sm-12'>
+                            <p>По-русски</p>
+                        </div>
                         <div className='col-sm-3'>
                             <div className='form-group'>
-                                <label htmlFor='titleRus'>TitleRus</label>
+                                <label htmlFor='titleRus'>
+                                    Краткое наименование
+                                    (для менюшек)
+                                </label>
                                 <input id='titleRus' value={this.state.protocolSet.titleRus}
                                     onChange={this.changeTitleRu} className='form-control' />
                             </div>
                         </div>
                         <div className='col-sm-4'>
                             <div className='form-group'>
-                                <label htmlFor='descriptionRus'>DescriptionRus</label>
+                                <label htmlFor='descriptionRus'>Подробное описание</label>
                                 <textarea id='descriptionRus' value={this.state.protocolSet.descriptionRus}
                                     onChange={this.changeDescrRu} className='form-control' ></textarea>
                             </div>
@@ -57,23 +63,32 @@ export class EditProtocolSet extends React.Component<IEditProtocolSetProps, IEdi
                                 <label className='control-label'>
                                     <input type='checkbox' id='hidden' checked={this.state.protocolSet.hidden}
                                         onChange={this.changeHidden} />
-                                    Hidden
+                                    Скрыть
                                 </label>
                             </div>
                         </div>
                     </div>
 
                     <div className='row'>
+                        <div className='col-sm-12'>
+                            <p>По-английски</p>
+                        </div>
                         <div className='col-sm-3'>
                             <div className='form-group'>
-                                <label htmlFor='titleEng'>TitleEng</label>
+                                <label htmlFor='titleEng'>
+                                    Short Title
+                                    (for menus)
+                                </label>
                                 <input id='titleEng' value={this.state.protocolSet.titleEng}
                                     onChange={this.changeTitle} className='form-control' />
                             </div>
                         </div>
                         <div className='col-sm-4'>
                             <div className='form-group'>
-                                <label htmlFor='descriptionEng'>DescriptionEng</label>
+                                <label htmlFor='descriptionEng'>
+                                    Description
+                                    (for clarifications)
+                                </label>
                                 <textarea id='descriptionEng' value={this.state.protocolSet.descriptionEng}
                                     onChange={this.changeDescr} className='form-control' />
                             </div>
@@ -125,7 +140,7 @@ export class EditProtocolSet extends React.Component<IEditProtocolSetProps, IEdi
     private errorLogFileDownload(): React.ReactNode {
         if (this.state.protocolSet.id) {
             const href = `/api/import/protocolSets/${this.state.protocolSet.id}/log`;
-            return <a href={href} className='btn btn-default'>Download error logfile</a>;
+            return <a href={href} className='btn btn-default'>Скачать лог ошибок</a>;
         }
     }
 
@@ -133,7 +148,7 @@ export class EditProtocolSet extends React.Component<IEditProtocolSetProps, IEdi
         if (this.state.isLoading) {
             return <Spin />;
         } else {
-            return <input type='submit' className='btn btn-primary' />;
+            return <input type='submit' className='btn btn-primary' value='Сохранить' />;
         }
     }
 
