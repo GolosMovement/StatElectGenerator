@@ -82,7 +82,7 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
                     </tr>
                     <tr>
                         <td>Иерархия</td>
-                        {this.boolFieldRows('hierarchy')}
+                        {this.boolFieldRows('isHierarchy')}
                     </tr>
                     <tr>
                         <td>Уровень иерархии</td>
