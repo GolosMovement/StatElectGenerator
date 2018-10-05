@@ -66,6 +66,7 @@ namespace ElectionStatistics.WebSite
             services.AddSession(options =>
             {
                 options.Cookie.HttpOnly = true;
+                options.IdleTimeout = TimeSpan.FromDays(7);
             });
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));

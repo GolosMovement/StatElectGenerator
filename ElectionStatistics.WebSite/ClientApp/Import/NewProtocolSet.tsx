@@ -52,6 +52,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
     private static DEFAULT_NEW_COLUMN_INDEX = 1;
     private static DEFAULT_START_LINE = 2;
     private static PROGRESS_INTERVAL = 20_000;
+    private static MAPPING_STORAGE_KEY = 'lastMappingSchema';
 
     constructor(props: {}) {
         super(props);
@@ -80,6 +81,10 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
         this.changeSelectedMapping = this.changeSelectedMapping.bind(this);
         this.loadMapping = this.loadMapping.bind(this);
         this.saveMapping = this.saveMapping.bind(this);
+        this.resetMapping = this.resetMapping.bind(this);
+        this.isMappingClearDisabled = this.isMappingClearDisabled.bind(this);
+        this.localLoadMapping = this.localLoadMapping.bind(this);
+        this.onVisibilityChanged = this.onVisibilityChanged.bind(this);
     }
 
     public render(): React.ReactNode {
@@ -213,6 +218,12 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
                                 Сохранить маппинг как...
                             </button>
                         </div>
+                        <div className='col-sm-2'>
+                            <button type='button' id='reset-mapping' onClick={this.resetMapping}
+                                disabled={this.isMappingClearDisabled()} className='btn btn-default'>
+                                Очистить маппинг
+                            </button>
+                        </div>
                     </div>
 
                     <div className='row'>
@@ -240,10 +251,19 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
 
     public componentWillMount(): void {
         this.fetchMappings();
+
+        this.localLoadMapping();
+
+        window.addEventListener('visibilitychange', this.onVisibilityChanged);
+    }
+
+    public componentWillUnmount(): void {
+        window.removeEventListener('visibilitychange', this.onVisibilityChanged);
     }
 
     public updateMappingTableCallback = (nextTable: IMappingTableState) => {
         this.setState({ ...this.state, mappingTable: nextTable });
+        this.localSaveMapping(nextTable.dataset);
     }
 
     public newColumnCallback = (nextColumn: IMappingColumn) => {
@@ -268,6 +288,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
             ...this.state, columnNumber: newDataset[newDataset.length - 1].columnNumber + 1,
             mappingTable: { dataset: newDataset }
         });
+        this.localSaveMapping(newDataset);
     }
 
     public editButtonColumnCallback = (editColumn: IMappingColumn, index?: number) => {
@@ -282,6 +303,7 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
             const updatedDataset = [...this.state.mappingTable.dataset.slice(0, this.state.initialIndexColumn),
                 updatedColumn, ...this.state.mappingTable.dataset.slice(this.state.initialIndexColumn + 1)];
             this.setState({ ...this.state, mappingTable: { dataset: updatedDataset } });
+            this.localSaveMapping(updatedDataset);
             this.toggleColumnModal();
         }
     }
@@ -519,5 +541,33 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
     private fetchMappings(): void {
         ImportController.Instance.mappings()
             .then((result) => this.setState({ ...this.state, mappings: result }));
+    }
+
+    private isMappingClearDisabled(): boolean {
+        return this.state.mappingTable.dataset.length == 0;
+    }
+
+    private resetMapping(): void {
+        if (!confirm('Вы уверены?')) { return; }
+
+        this.setState({ ...this.state, mappingTable: { dataset: [] } });
+        localStorage.setItem(NewProtocolSet.MAPPING_STORAGE_KEY, JSON.stringify([]));
+    }
+
+    private localSaveMapping(newMapping: IMappingColumn[]): void {
+        localStorage.setItem(NewProtocolSet.MAPPING_STORAGE_KEY, JSON.stringify(newMapping));
+    }
+
+    private localLoadMapping(): void {
+        const lastMappingSchema = localStorage.getItem(NewProtocolSet.MAPPING_STORAGE_KEY);
+        if (lastMappingSchema) {
+            this.setState({ ...this.state, mappingTable: { dataset: JSON.parse(lastMappingSchema) } });
+        }
+    }
+
+    private onVisibilityChanged(): void {
+        if (!document.hidden) {
+            this.localLoadMapping();
+        }
     }
 }
