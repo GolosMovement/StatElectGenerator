@@ -8,13 +8,6 @@ import { IMappingColumn } from './MappingTable';
 const langs = ['русский', 'английский', 'другой'];
 const types = ['строка', 'число'];
 
-interface IHierarchyLevel {
-    type: string;
-    level: number;
-    key: string;
-    name: string;
-}
-
 interface IColumnProps {
     index: number;
     callbackFromParent: (nextColumn: IMappingColumn, index?: number) => void;
@@ -25,7 +18,7 @@ interface IColumnState {
     mapping: IMappingColumn;
 }
 
-export abstract class MappingColumn extends React.Component<IColumnProps, IColumnState> {
+export class MappingColumn extends React.Component<IColumnProps, IColumnState> {
     constructor(props: IColumnProps) {
         super(props);
         this.state = {
@@ -42,6 +35,7 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
         this.changeVoteResult = this.changeVoteResult.bind(this);
         this.changeCalcResult = this.changeCalcResult.bind(this);
         this.updateHierarchyLang = this.updateHierarchyLang.bind(this);
+        this.updateHierarchyType = this.updateHierarchyType.bind(this);
         this.updateHierarchyLevel = this.updateHierarchyLevel.bind(this);
         this.submitColumn = this.submitColumn.bind(this);
     }
@@ -143,13 +137,11 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
                 </div>
 
                 <div className='row'>
+                    <div className='col-sm-12'>
+                        <label>Является ли свойством иерархии коммиссий, если да, то каким:</label>
+                    </div>
                     <div className='form-group'>
-                        <div className='col-sm-6'>
-                            {this.hierarchyLevelSelect()}
-                        </div>
-                        <div className='col-sm-6'>
-                            {this.hierarchyLangSelect()}
-                        </div>
+                        {this.hierarchySelect()}
                     </div>
                 </div>
 
@@ -191,33 +183,39 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
         );
     }
 
-    private hierarchyLevelSelect(): React.ReactNode {
-        const levels: IHierarchyLevel[] = [
-            { level: 1, type: 'number', key: 'number_1', name: 'номер комиссии 1 (нижнего) уровня' },
-            { level: 1, type: 'name', key: 'name_1', name: 'название комиссии 1 (нижнего) уровня' }
-        ];
-        for (let i = 2; i <= 4; ++i) {
-            levels.push({ level: i, type: 'number', key: `number_${i}`, name: `номер комиссии ${i} уровня` });
-            levels.push({ level: i, type: 'name', key: `name_${i}`, name: `название комиссии ${i} уровня` });
-        }
+    private hierarchySelect(): React.ReactNode {
+        const options = [['number', 'номер'], ['name', 'название']].map((level, i) =>
+            <Select.Option key={i} value={level[0]}>{level[1]}</Select.Option>);
 
-        const options = levels.map((level, i) => <Select.Option key={i} value={level.key}>{level.name}</Select.Option>);
-        let selectedVal: string;
-        if (this.state.mapping.isHierarchy) {
-            const prefix = this.state.mapping.hierarchyType == 'number' ? 'number' : 'name';
-            selectedVal = `${prefix}_${this.state.mapping.hierarchyLevel}`;
-        } else {
-            selectedVal = '';
+        let selectedValue = '';
+        if (this.state.mapping.hierarchyType) {
+            selectedValue = this.state.mapping.hierarchyType;
+        } else if (this.state.mapping.isHierarchy) {
+            selectedValue = this.state.mapping.isNumber ? 'number' : 'name';
         }
-
         return (
             <div>
-                <label>Является ли свойством иерархии коммиссий, если да, то каким:</label>
-                <Select value={selectedVal} onChange={this.updateHierarchyLevel}>
-                    <Select.Option value=''>не является</Select.Option>{options}
-                </Select>
+                <div className='col-sm-2'>
+                    <Select value={selectedValue} onChange={this.updateHierarchyType}>
+                        <Select.Option value=''>не является</Select.Option>{options}
+                    </Select>
+                </div>
+
+                {this.hierarchyLevelSelect()}
+                {this.hierarchyLangSelect()}
             </div>
         );
+    }
+
+    private hierarchyLevelSelect(): React.ReactNode {
+        if (this.state.mapping.isHierarchy) {
+            return (
+                <div className='col-sm-2'>
+                    <input type='number' id='hierarchy-level' className='form-control'
+                        value={this.state.mapping.hierarchyLevel} onChange={this.updateHierarchyLevel} />
+                </div>
+            );
+        }
     }
 
     private hierarchyLangSelect(): React.ReactNode {
@@ -228,9 +226,15 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
         const options = langs.map((lang, i) => <Select.Option key={i} value={lang}>{lang}</Select.Option>);
 
         return (
-            <div>
-                <label>Название на</label>
-                <Select onChange={this.updateHierarchyLang} defaultValue={langs[0]}>{options}</Select>
+            <div className='col-sm-4'>
+                <div className='col-sm-5'>
+                    <label>Название на</label>
+                </div>
+                <div className='col-sm-7'>
+                    <Select onChange={this.updateHierarchyLang} value={this.state.mapping.hierarchyLang}>
+                        {options}
+                    </Select>
+                </div>
             </div>
         );
     }
@@ -280,15 +284,29 @@ export abstract class MappingColumn extends React.Component<IColumnProps, IColum
         this.setState({ ...this.state, mapping: { ...this.state.mapping, isCalcResult: e.currentTarget.checked } });
     }
 
-    private updateHierarchyLevel(val: SelectValue): void {
-        const level = val.toString().match(/\d+/);
+    private updateHierarchyType(val: SelectValue): void {
+        let hierarchyType = '';
+        const isHierarchy = !!val;
+
+        if (isHierarchy) {
+            hierarchyType = val.toString() == 'number' ? 'number' : 'name';
+        }
         this.setState({
             ...this.state,
             mapping: {
-                ...this.state.mapping, isHierarchy: !!val, hierarchyLevel: level ? parseInt(level[0], 10) : 0,
-                hierarchyType: val.toString().search('name_') == -1 ? 'number' : 'name'
+                ...this.state.mapping, isHierarchy, hierarchyType,
+                hierarchyLevel: isHierarchy ? this.state.mapping.hierarchyLevel : 0
             }
         });
+    }
+
+    private updateHierarchyLevel(e: React.ChangeEvent<HTMLInputElement>): void {
+        const hierarchyLevel = parseInt(e.currentTarget.value, 10);
+        if (!isNaN(hierarchyLevel)) {
+            this.setState({
+                ...this.state, mapping: { ...this.state.mapping, hierarchyLevel }
+            });
+        }
     }
 
     private updateHierarchyLang(val: SelectValue): void {

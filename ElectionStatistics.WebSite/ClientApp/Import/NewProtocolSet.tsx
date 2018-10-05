@@ -253,12 +253,6 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
         this.fetchMappings();
 
         this.localLoadMapping();
-
-        window.addEventListener('visibilitychange', this.onVisibilityChanged);
-    }
-
-    public componentWillUnmount(): void {
-        window.removeEventListener('visibilitychange', this.onVisibilityChanged);
     }
 
     public updateMappingTableCallback = (nextTable: IMappingTableState) => {
