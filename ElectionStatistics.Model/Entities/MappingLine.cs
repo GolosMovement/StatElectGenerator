@@ -24,6 +24,7 @@ namespace ElectionStatistics.Model
 
         public bool IsHierarchy { get; set; }
         public int HierarchyLevel { get; set; }
+        public LanguageEnum HierarchyLanguage { get; set; }
 
         public bool IsNumber { get; set; }
 

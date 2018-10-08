@@ -308,26 +308,35 @@ namespace ElectionStatistics.Core.Import
 
             foreach (var item in groups)
             {
-                var str = item
-                    .Where(x => !x.MappingLine.IsNumber)
-                    .SingleOrDefault();
-                var number = item
-                    .Where(x => x.MappingLine.IsNumber)
-                    .SingleOrDefault();
+                var hierarchyItem = new HirarchyEnvelope();
 
-                if (str == null)
+                foreach (var subitem in item)
                 {
-                    continue;
+                    if (subitem.MappingLine.IsNumber)
+                    {
+                        hierarchyItem.Number = subitem;
+                    }
+                    else
+                    {
+                        switch(subitem.MappingLine.HierarchyLanguage)
+                        {
+                            case LanguageEnum.Russian:
+                                hierarchyItem.Russian = subitem;
+                                break;
+
+                            case LanguageEnum.English:
+                                hierarchyItem.English = subitem;
+                                break;
+
+                            default:
+                                hierarchyItem.Native = subitem;
+                                break;
+                        }
+                    }
                 }
 
-                var envelope = new HirarchyEnvelope() { StringValue = str };
-
-                if (number != null)
-                {
-                    envelope.NumberValue = number;
-                }
-
-                list.Add(envelope);
+                // TODO: skip invalid hierarchy items
+                list.Add(hierarchyItem);
             }
 
             return list;
@@ -355,16 +364,18 @@ namespace ElectionStatistics.Core.Import
             for (int i = 0; i < hierarchy.Count; i++)
             {
                 var current = hierarchy[i];
-                var mapping = current.StringValue.MappingLine;
-                var stringColumn = ColumnLine.Dehumanize(mapping.ColumnNumber);
+                var mappingRus = current.Russian.MappingLine;
+                var columnRus = ColumnLine.Dehumanize(
+                    mappingRus.ColumnNumber);
+
                 var isLastItem = i == hierarchy.Count - 1;
 
-                var titleType = reader.GetFieldType(stringColumn);
+                var titleType = reader.GetFieldType(columnRus);
                 if (titleType != null && titleType != typeof(System.String))
                 {
                     if (!rootCreated)
                     {
-                        Error(line, stringColumn,
+                        Error(line, columnRus,
                             "Line has been skipped. " +
                             "Protocol title should be a string. " +
                             "No root hierarchy");
@@ -372,23 +383,24 @@ namespace ElectionStatistics.Core.Import
                     }
                     else
                     {
-                        Error(line, stringColumn,
+                        Error(line, columnRus,
                             "Protocol title should be a string");
                         continue;
                     }
                 }
 
-                var protocolTitle = reader.GetString(stringColumn);
+                var protocolRusTitle = reader.GetString(columnRus);
 
-                if (!rootCreated && String.IsNullOrEmpty(protocolTitle))
+                if (!rootCreated && String.IsNullOrEmpty(protocolRusTitle))
                 {
-                    Error(line, stringColumn, "Line has been skipped. " +
+                    Error(line, columnRus, "Line has been skipped. " +
                         "It has no root hierarchy");
                     return null;
                 }
-                else if (String.IsNullOrEmpty(protocolTitle))
+                else
+                if (String.IsNullOrEmpty(protocolRusTitle))
                 {
-                    // If protocolTitle is empty that means a skip inside
+                    // If protocolRusTitle is empty that means a skip inside
                     // the hierarchy
                     if (isLastItem)
                     {
@@ -404,23 +416,26 @@ namespace ElectionStatistics.Core.Import
                 }
 
                 double protocolCommission = 0.0;
-                if (current.NumberValue != null)
+                if (current.Number != null)
                 {
                     var numberColumn =
                         ColumnLine.Dehumanize(
-                            current.NumberValue.MappingLine.ColumnNumber);
+                            current.Number.MappingLine.ColumnNumber);
 
                     var commType = reader.GetFieldType(numberColumn);
                     if (commType != typeof(System.Double))
                     {
                         Error(line, numberColumn,
                             "Protocol commission number should be a number");
-                    } else {
+                    }
+                    else
+                    {
                         protocolCommission = reader.GetDouble(numberColumn);
                     }
                 }
 
-                var key = mapping.HierarchyLevel.ToString() + protocolTitle;
+                var key = mappingRus.HierarchyLevel.ToString() +
+                    protocolRusTitle;
 
                 // Last item in the hierarchy is always created
                 if (!isLastItem)
@@ -440,7 +455,12 @@ namespace ElectionStatistics.Core.Import
 
                 var protocol = new Protocol();
 
-                protocol.TitleRus = protocolTitle;
+                protocol.TitleRus = protocolRusTitle;
+                protocol.TitleEng = ReadHierarchyTitle(current.English,
+                    reader);
+                protocol.TitleNative = ReadHierarchyTitle(current.Native,
+                    reader);
+
                 protocol.ProtocolSetId = protocolSet.Id;
 
                 if (protocolCommission > 0.0)
@@ -466,6 +486,32 @@ namespace ElectionStatistics.Core.Import
             }
 
             return parent;
+        }
+
+        private string ReadHierarchyTitle(MappingEnvelope mappingEnv,
+            IExcelDataReader reader)
+        {
+            if (mappingEnv == null)
+            {
+                return null;
+            }
+
+            var mappingLine = mappingEnv.MappingLine;
+            var column = ColumnLine.Dehumanize(mappingLine.ColumnNumber);
+
+            var titleType = reader.GetFieldType(column);
+            if (titleType != null && titleType != typeof(System.String))
+            {
+                return null;
+            }
+
+            var title = reader.GetString(column);
+            if (String.IsNullOrEmpty(title))
+            {
+                return null;
+            }
+
+            return title;
         }
 
         // TODO: inherit LineNumber and LineString from a base class for DRY

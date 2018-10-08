@@ -9,12 +9,12 @@ namespace ElectionStatistics.Model
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+
         [Required]
         public string TitleRus { get; set; }
         public string TitleEng { get; set; }
         public string TitleNative { get; set; }
-        
+
         public int CommissionNumber { get; set; }
 
         [Required]

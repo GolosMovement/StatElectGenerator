@@ -216,7 +216,8 @@ namespace ElectionStatistics.Tests.Core.Import
                     TitleRus = "uik" },
                 new MappingLine() { ColumnNumber = ColumnLine.FromLetters("C"),
                     IsNumber = false, IsHierarchy = true, HierarchyLevel = 3,
-                    TitleRus = "kom1" },
+                    TitleRus = "kom1",
+                    HierarchyLanguage = LanguageEnum.Russian },
                 new MappingLine() { ColumnNumber = ColumnLine.FromLetters("D"),
                     IsNumber = false, IsHierarchy = true, HierarchyLevel = 2,
                     TitleRus = "kom2" },
@@ -225,7 +226,15 @@ namespace ElectionStatistics.Tests.Core.Import
                     TitleRus = "kom3" },
                 new MappingLine() { ColumnNumber = ColumnLine.FromLetters("F"),
                     IsNumber = true, IsHierarchy = true, HierarchyLevel = 3,
-                    TitleRus = "kom1nmb" }
+                    TitleRus = "kom1nmb" },
+                new MappingLine() { ColumnNumber = ColumnLine.FromLetters("AC"),
+                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 3,
+                    TitleRus = "kom1-eng",
+                    HierarchyLanguage = LanguageEnum.English },
+                new MappingLine() { ColumnNumber = ColumnLine.FromLetters("AD"),
+                    IsNumber = false, IsHierarchy = true, HierarchyLevel = 3,
+                    TitleRus = "kom1-native",
+                    HierarchyLanguage = LanguageEnum.Native }
             };
 
             var notifier = new Notifier();
