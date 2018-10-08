@@ -213,6 +213,7 @@ export class MappingColumn extends React.Component<IColumnProps, IColumnState> {
                 <div className='col-sm-2'>
                     <input type='number' id='hierarchy-level' className='form-control'
                         value={this.state.mapping.hierarchyLevel} onChange={this.updateHierarchyLevel} />
+                    <small>1-й уровень нижний</small>
                 </div>
             );
         }
