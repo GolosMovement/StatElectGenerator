@@ -102,6 +102,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
             LazySelect<IProtocolSet, number>;
 
         return <LSelect
+            placeholder='Укажите выборы'
             itemsPromise={DictionariesController.Instance.getProtocolSets()}
             selectedValue={this.state.protocolSetId}
             getValue={(protocolSet) => protocolSet.id ? protocolSet.id : 0}
@@ -117,6 +118,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
 
             return <TreeSelect
                 allowClear
+                placeholder='Все округа'
                 itemsPromise={DictionariesController.Instance.getProtocols(this.state.protocolSetId)}
                 selectedValue={this.state.protocolId}
                 getValue={(protocol) => protocol.id}
@@ -133,6 +135,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
 
             return <LSelect
                 mode='multiple'
+                placeholder='Все параметры'
                 itemsPromise={DictionariesController.Instance.getLineDescriptions(this.state.protocolSetId)}
                 selectedValue={this.state.lineDescriptionIds}
                 getValue={(line) => line.id}
@@ -149,11 +152,11 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
         return (
             <div>
                 <div className='col-sm-4'>
-                    <Select onChange={this.changeMinValue} className='fixed-width-select-sm'>
+                    <Select onChange={this.changeMinValue} className='full-width-select' placeholder='любые'>
                         {opts}
                     </Select>
                 </div>
-                <div className='col-sm-1'>
+                <div className='col-sm-2 text-center'>
                     или &ge;
                 </div>
                 <div className='col-sm-2'>
