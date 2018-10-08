@@ -3,8 +3,8 @@ import { Select, Spin } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 
 import { ImportController } from './ImportController';
-import { MappingColumn } from './MappingColumn';
-import { IMappingColumn, IMappingTableState, MappingTable } from './MappingTable';
+import { IMappingColumn, MappingColumn } from './MappingColumn';
+import { IMappingTableState, MappingTable } from './MappingTable';
 import { ProgressBar } from './ProgressBar';
 
 export interface IProtocolSet {

@@ -1,4 +1,4 @@
-import { IMappingColumn } from './MappingTable';
+import { IMappingColumn } from './MappingColumn';
 import { IProtocolSet, IMappingList } from './NewProtocolSet';
 
 export interface IApiResponse {

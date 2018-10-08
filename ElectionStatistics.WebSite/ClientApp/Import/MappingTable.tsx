@@ -1,22 +1,6 @@
 import React from 'react';
 
-export interface IMappingColumn {
-    columnNumber: number;
-    type: number;
-    titleRus: string;
-    descriptionRus: string;
-    titleEng: string;
-    descriptionEng: string;
-    descriptionNative: string;
-    isNumber: boolean;
-    isVoteResult: boolean;
-    isCalcResult: boolean;
-    isHierarchy: boolean;
-    hierarchyType: string;
-    hierarchyLang: string;
-    hierarchyLevel: number;
-    [index: string]: any;
-}
+import { hierarchyLangs, IMappingColumn } from './MappingColumn';
 
 interface IMappingTableProps {
     dataset: IMappingColumn[];
@@ -129,7 +113,7 @@ export class MappingTable extends React.Component<IMappingTableProps, IMappingTa
 
     private hierarchyLangRows(): React.ReactNode {
         return this.state.dataset.map((column: IMappingColumn, i: number) =>
-            <td key={i}>{column.hierarchyType == 'name' ? column.hierarchyLang : ''}</td>
+            <td key={i}>{column.isHierarchy && !column.isNumber ? hierarchyLangs[column.hierarchyLanguage] : ''}</td>
         );
     }
 
