@@ -313,7 +313,7 @@ export class MappingColumn extends React.Component<IColumnProps, IColumnState> {
 
     private updateHierarchyLevel(e: React.ChangeEvent<HTMLInputElement>): void {
         const hierarchyLevel = parseInt(e.currentTarget.value, 10);
-        if (!isNaN(hierarchyLevel)) {
+        if (!isNaN(hierarchyLevel) && hierarchyLevel >= 0) {
             this.setState({
                 ...this.state, mapping: { ...this.state.mapping, hierarchyLevel }
             });
