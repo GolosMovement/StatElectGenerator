@@ -199,8 +199,12 @@ export class MappingColumn extends React.Component<IColumnProps, IColumnState> {
     }
 
     private hierarchySelect(): React.ReactNode {
-        const options = [['number', 'номер'], ['name', 'название']].map((level, i) =>
-            <Select.Option key={i} value={level[0]}>{level[1]}</Select.Option>);
+        let option: string[];
+        if (this.state.mapping.isNumber) {
+            option = ['number', 'номер'];
+        } else {
+            option = ['name', 'название'];
+        }
 
         let selectedValue = '';
         if (this.state.mapping.isHierarchy) {
@@ -210,7 +214,8 @@ export class MappingColumn extends React.Component<IColumnProps, IColumnState> {
             <div>
                 <div className='col-sm-2'>
                     <Select value={selectedValue} onChange={this.updateHierarchyType}>
-                        <Select.Option value=''>не является</Select.Option>{options}
+                        <Select.Option value=''>не является</Select.Option>
+                        <Select.Option value={option[0]}>{option[1]}</Select.Option>
                     </Select>
                 </div>
 
