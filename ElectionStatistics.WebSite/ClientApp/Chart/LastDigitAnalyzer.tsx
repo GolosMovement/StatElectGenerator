@@ -45,6 +45,7 @@ interface ILastDigitState extends ILDAChartBuildParameters {
     chartOptions?: {};
     chiSquared?: number;
     isLoading: boolean;
+    customMinValue: boolean;
 }
 
 export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDigitState> {
@@ -52,7 +53,8 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
         super(props);
 
         this.state = {
-            isLoading: false, protocolSetId: null, lineDescriptionIds: [], minValue: null, protocolId: null
+            isLoading: false, protocolSetId: null, lineDescriptionIds: [], minValue: null,
+            protocolId: null, customMinValue: false
         };
 
         this.changeMinValue = this.changeMinValue.bind(this);
@@ -147,23 +149,34 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
     }
 
     private minValueSelect(): React.ReactNode {
-        const opts = [0, 10, 100, 1000].map((num, i) => <Select.Option key={i} value={num}>&ge; {num}</Select.Option>);
+        const opts = [0, 10, 100, 1000].map((val, i) =>
+            <Select.Option key={i} value={val}>&ge; {val}</Select.Option>);
 
         return (
             <div>
                 <div className='col-sm-4'>
-                    <Select onChange={this.changeMinValue} className='full-width-select' placeholder='любые'>
+                    <Select onChange={this.changeMinValue} className='full-width-select'
+                        placeholder='любые' allowClear>
                         {opts}
+                        <Select.Option value='custom'>&ge; произвольного</Select.Option>
                     </Select>
                 </div>
-                <div className='col-sm-2 text-center'>
-                    или &ge;
-                </div>
-                <div className='col-sm-2'>
-                    <input type='number' className='form-control' onChange={this.changeCustomMinValue} />
-                </div>
+                {this.customMinValueInput()}
             </div>
         );
+    }
+
+    private customMinValueInput(): React.ReactNode {
+        if (this.state.customMinValue) {
+            const value = this.state.minValue != null ? this.state.minValue : '';
+
+            return (
+                <div className='col-sm-2'>
+                    <input type='number' className='form-control'
+                        onChange={this.changeCustomMinValue} value={value} />
+                </div>
+            );
+        }
     }
 
     private renderChartButton(): React.ReactNode {
@@ -287,12 +300,31 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
         return <HighchartComponent options={options} />;
     }
 
-    private changeMinValue(value: SelectValue): void {
-        this.setState({ ...this.state, minValue: parseInt(value.toString(), 10) });
+    private changeMinValue(value: SelectValue | undefined): void {
+        let minValue: number | null;
+        let customMinValue = false;
+
+        if (value !== undefined) {
+            if (value.toString() == 'custom') {
+                minValue = 0;
+                customMinValue = true;
+            } else {
+                minValue = parseInt(value.toString(), 10);
+            }
+        } else {
+            minValue = null;
+        }
+
+        this.setState({ ...this.state, minValue, customMinValue });
     }
 
     private changeCustomMinValue(e: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({ ...this.state, minValue: parseInt(e.currentTarget.value, 10) });
+        const minValue = parseInt(e.currentTarget.value, 10);
+        if (!isNaN(minValue) && minValue >= 0) {
+            this.setState({ ...this.state, minValue });
+        } else {
+            this.setState({ ...this.state, minValue: null });
+        }
     }
 
     private getChartData(): void {
