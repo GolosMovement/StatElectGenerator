@@ -21,7 +21,6 @@ namespace ElectionStatistics.WebSite
         public AxisLabels Labels { get; set; }
         public decimal? Min { get; set; }
         public decimal? Max { get; set; }
-        public PlotLine[] PlotLines { get; set; }
     }
 
     public class AxisLabels
@@ -32,14 +31,6 @@ namespace ElectionStatistics.WebSite
     public class TitleOptions
     {
         public string Text { get; set; }
-    }
-
-    public class PlotLine
-    {
-        public string Color { get; set; }
-        public double Value { get; set; }
-        public int Width { get; set; }
-        public int ZIndex { get; set; }
     }
 
     public class ChartSeries
@@ -81,9 +72,11 @@ namespace ElectionStatistics.WebSite
         public decimal[][] Data { get; set; }
     }
 
-    public class LastDigitAnalyzerChartSeries : ChartSeries
+    public class LDAChartSeries : ChartSeries
     {
         public double[] Data { get; set; }
+        public string Color { get; set; }
+        public string Type { get; set; }
     }
 
     public class SeriesTooltipOptions

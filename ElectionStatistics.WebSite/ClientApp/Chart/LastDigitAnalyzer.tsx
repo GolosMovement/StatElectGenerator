@@ -282,22 +282,59 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
     private renderChart(): React.ReactNode {
         const options = {
             ...this.state.chartOptions,
-            chart: { type: 'column', height: '390px' },
+            chart: { height: '390px' },
             title: { text: 'Частота последних цифр в выборке' },
             plotOptions: {
                 column: {
                     borderColor: 'black',
-                    borderWidth: 1
+                    borderWidth: 1,
+                    showInLegend: false,
+                    tooltip: {
+                        headerFormat: undefined,
+                        pointFormatter: this.columnTooltipFormatter
+                    }
+                },
+                line: {
+                    marker: { enabled: false },
+                    tooltip: {
+                        headerFormat: undefined,
+                        pointFormat: this.lineTooltipFormatter(),
+                        valueDecimals: 4
+                    }
                 },
                 series: {
-                    turboThreshold: 100000,
-                    showInLegend: false,
+                    turboThreshold: 100000
                 }
             },
             xAxis: [{ categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], title: { text: 'Последняя цифра' } }]
-        };
+        } as Highcharts.Options;
+        const exportOptions = {
+            chartOptions: {
+                plotOptions: {
+                    column: {
+                        dataLabels: {
+                            enabled: true,
+                            formatter: this.exportDataLabelFormatter
+                        }
+                    }
+                }
+            }
+        } as Highcharts.ExportingOptions;
 
-        return <HighchartComponent options={options} />;
+        return <HighchartComponent options={options} exportOptions={exportOptions} />;
+    }
+
+    private columnTooltipFormatter(this: Highcharts.PointObject): string {
+        return `<span>Цифра: <b>${this.x}</b><br />Частотность: <b>${this.y.toFixed(4)}</b></span>`;
+    }
+
+    private lineTooltipFormatter(): string {
+        return '<span style="color: {point.color}">\u25CF</span> ' +
+            '{series.name}: <b>{point.y}</b><br/>';
+    }
+
+    private exportDataLabelFormatter(this: Highcharts.PointObject): string {
+        return `<span>${this.y.toFixed(4)}</span>`;
     }
 
     private changeMinValue(value: SelectValue | undefined): void {

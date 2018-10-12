@@ -375,43 +375,53 @@ namespace ElectionStatistics.WebSite
             {
                 YAxis = new AxisOptions
                 {
-                    PlotLines = new PlotLine[]
-                    {
-                        new PlotLine
-                        {
-                            Color = "blue", Value = 0.1, Width = 2, ZIndex = 4
-                        },
-                        new PlotLine
-                        {
-                            Color = "green", Value = 0.1 + results.Sigma, Width = 2, ZIndex = 4
-                        },
-                        new PlotLine
-                        {
-                            Color = "green", Value = 0.1 - results.Sigma, Width = 2, ZIndex = 4
-                        },
-                        new PlotLine
-                        {
-                            Color = "yellow", Value = 0.1 + 2 * results.Sigma, Width = 2, ZIndex = 4
-                        },
-                        new PlotLine
-                        {
-                            Color = "yellow", Value = 0.1 - 2 * results.Sigma, Width = 2, ZIndex = 4
-                        },
-                        new PlotLine
-                        {
-                            Color = "red", Value = 0.1 + 3 * results.Sigma, Width = 2, ZIndex = 4
-                        },
-                        new PlotLine
-                        {
-                            Color = "red", Value = 0.1 - 3 * results.Sigma, Width = 2, ZIndex = 4
-                        }
-                    },
                     Title = new TitleOptions { Text = "Частотность появления цифры" }
                 }
             };
 
-            var series = new LastDigitAnalyzerChartSeries { Data = results.Frequency.ToArray() };
-            highchartsOptions.Series = new ChartSeries[] { series };
+            var series = new LDAChartSeries
+            {
+                Data = results.Frequency.ToArray(), Name = "Частота", Type = "column"
+            };
+            highchartsOptions.Series = new ChartSeries[]
+            {
+                series,
+                new LDAChartSeries
+                {
+                    Color = "blue", Name = "ожидаемое", Type = "line",
+                    Data = Enumerable.Repeat(0.1, 10).ToArray()
+                },
+                new LDAChartSeries
+                {
+                    Color = "green", Name = "+1 сигма", Type = "line",
+                    Data = Enumerable.Repeat(0.1 + results.Sigma, 10).ToArray()
+                },
+                new LDAChartSeries
+                {
+                    Color = "green", Name = "-1 сигма", Type = "line",
+                    Data = Enumerable.Repeat(0.1 - results.Sigma, 10).ToArray()
+                },
+                new LDAChartSeries
+                {
+                    Color = "yellow", Name = "+2 сигма", Type = "line",
+                    Data = Enumerable.Repeat(0.1 + 2 * results.Sigma, 10).ToArray()
+                },
+                new LDAChartSeries
+                {
+                    Color = "yellow", Name = "-2 сигма", Type = "line",
+                    Data = Enumerable.Repeat(0.1 - 2 * results.Sigma, 10).ToArray()
+                },
+                new LDAChartSeries
+                {
+                    Color = "red", Name = "+3 сигма", Type = "line",
+                    Data = Enumerable.Repeat(0.1 + 3 * results.Sigma, 10).ToArray()
+                },
+                new LDAChartSeries
+                {
+                    Color = "red", Name = "-3 сигма", Type = "line",
+                    Data = Enumerable.Repeat(0.1 - 3 * results.Sigma, 10).ToArray()
+                }
+            };
 
             return new LastDigitAnalyzerData {
                 ChartOptions = highchartsOptions, ChiSquared = results.ChiSquared

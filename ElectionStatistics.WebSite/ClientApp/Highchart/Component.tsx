@@ -4,7 +4,12 @@ import Highcharts from 'highcharts';
 import HighchartsExporting from 'highcharts/modules/exporting';
 (HighchartsExporting as any)(Highcharts);
 
-export class HighchartComponent extends React.Component<{options: Highcharts.Options}, {}> {
+interface IHighchartComponentProps {
+    options: Highcharts.Options;
+    exportOptions?: Highcharts.ExportingOptions;
+}
+
+export class HighchartComponent extends React.Component<IHighchartComponentProps, {}> {
     private chartRef?: HTMLElement;
 
     public componentDidMount() {
@@ -42,7 +47,8 @@ export class HighchartComponent extends React.Component<{options: Highcharts.Opt
                     downloadSVG: {
                         text: 'Скачать SVG'
                     }
-                }
+                },
+                ...this.props.exportOptions as IHighchartComponentProps
             },
             chart: {
                 height: '50%',
