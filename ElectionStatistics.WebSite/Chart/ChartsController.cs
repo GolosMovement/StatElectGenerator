@@ -315,7 +315,7 @@ namespace ElectionStatistics.WebSite
 
             var protocolFilter = @"AND LineNumbers.ProtocolId in (SELECT Id FROM query)";
 
-            var minValueFilter = @"AND LineNumbers.Value > @min_value";
+            var minValueFilter = @"AND LineNumbers.Value >= @min_value";
 
             var sql = baseQuery;
 
