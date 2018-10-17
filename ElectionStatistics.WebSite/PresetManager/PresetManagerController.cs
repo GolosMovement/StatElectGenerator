@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using EFCore.BulkExtensions;
 
 using Newtonsoft.Json;
 
@@ -51,18 +55,18 @@ namespace ElectionStatistics.WebSite
             }
 
             var presetJson = JsonConvert.DeserializeObject<Preset>(preset);
-
+            var protocolSet = modelContext.Find<ProtocolSet>(presetJson.ProtocolSetId);
             try
             {
                 var validator = new Core.Preset.Validator(modelContext, new Core.Preset.Parser());
-                validator.Execute(presetJson.Expression,
-                    modelContext.Find<ProtocolSet>(presetJson.ProtocolSetId));
+                validator.Execute(presetJson.Expression, protocolSet);
             }
             catch (Core.Preset.ValidationException ex)
             {
                 return new ImportController.ApiResponse() { status = "fail", message = ex.Message };
             }
 
+            protocolSet.ShouldRecalculatePresets = true;
             modelContext.Set<Preset>().Add(presetJson);
             modelContext.SaveChanges();
 
@@ -83,17 +87,18 @@ namespace ElectionStatistics.WebSite
                 return new ImportController.ApiResponse { status = "fail", message = "Not found" };
             }
 
+            var protocolSet = modelContext.Find<ProtocolSet>(presetJson.ProtocolSetId);
             try
             {
                 var validator = new Core.Preset.Validator(modelContext, new Core.Preset.Parser());
-                validator.Execute(presetJson.Expression,
-                    modelContext.Find<ProtocolSet>(presetJson.ProtocolSetId));
+                validator.Execute(presetJson.Expression, protocolSet);
             }
             catch (Core.Preset.ValidationException ex)
             {
                 return new ImportController.ApiResponse() { status = "fail", message = ex.Message };
             }
 
+            protocolSet.ShouldRecalculatePresets = true;
             modelContext.Update(presetJson);
             modelContext.SaveChanges();
             return new ImportController.ApiResponse() { status = "ok" };
@@ -109,6 +114,43 @@ namespace ElectionStatistics.WebSite
 
             modelContext.Remove<Preset>(modelContext.Find<Preset>(id));
             modelContext.SaveChanges();
+
+            return new ImportController.ApiResponse() { status = "ok" };
+        }
+
+        [HttpPost, Route("api/presets/recalc/protocolSet/{protocolSetId}")]
+        public ImportController.ApiResponse RecalcPresets(int protocolSetId)
+        {
+            if (HttpContext.Session.GetString("admin") == null)
+            {
+                return null;
+            }
+
+            var protocolSet = modelContext.Find<ProtocolSet>(protocolSetId);
+            if (!protocolSet.ShouldRecalculatePresets)
+            {
+                return null;
+            }
+
+            var presets = modelContext.Set<Preset>()
+                .Where(preset => preset.ProtocolSetId == protocolSetId);
+            var lineCalculatedValues = modelContext.Set<LineCalculatedValue>()
+                .Where(lcv => presets.Select(preset => preset.Id).Contains(lcv.PresetId));
+
+            var parser = new Core.Preset.Parser();
+
+            using (var transaction = modelContext.Database.BeginTransaction())
+            {
+                modelContext.BulkDelete(lineCalculatedValues.ToList());
+                presets.ToList().ForEach(preset =>
+                {
+                    var service = new Core.Preset.Calculator(modelContext, parser, preset);
+                    modelContext.BulkInsert(service.Execute());
+                });
+                protocolSet.ShouldRecalculatePresets = false;
+                modelContext.BulkUpdate(new List<ProtocolSet>() { protocolSet });
+                transaction.Commit();
+            }
 
             return new ImportController.ApiResponse() { status = "ok" };
         }

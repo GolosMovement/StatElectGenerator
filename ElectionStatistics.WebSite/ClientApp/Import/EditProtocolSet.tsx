@@ -19,7 +19,7 @@ export class EditProtocolSet extends React.Component<IEditProtocolSetProps, IEdi
         this.state = {
             protocolSet: {
                 titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '', hidden: false,
-                id: props.match.params.id
+                shouldRecalculatePresets: false, id: props.match.params.id
             }, isLoading: false
         };
 

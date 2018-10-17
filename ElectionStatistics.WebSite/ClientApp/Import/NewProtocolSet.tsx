@@ -14,6 +14,7 @@ export interface IProtocolSet {
     descriptionEng: string;
     descriptionRus: string;
     hidden: boolean;
+    shouldRecalculatePresets: boolean;
     importStartedAt?: Date;
     importFinishedAt?: Date;
     importTotalLines?: number;
@@ -61,7 +62,8 @@ export class NewProtocolSet extends React.Component<{}, IDatasetState> {
             columnForm: 'new', columnNumber: NewProtocolSet.DEFAULT_NEW_COLUMN_INDEX, file: new File([], ''),
             index: NewProtocolSet.DEFAULT_NEW_COLUMN_INDEX, mappingTable: { dataset: [] }, position: 'end',
             protocolSet: {
-                titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '', hidden: false, id: 0
+                titleEng: '', descriptionEng: '', titleRus: '', descriptionRus: '', hidden: false,
+                shouldRecalculatePresets: false, id: 0
             }, startLine: NewProtocolSet.DEFAULT_START_LINE, isLoading: false
         };
 

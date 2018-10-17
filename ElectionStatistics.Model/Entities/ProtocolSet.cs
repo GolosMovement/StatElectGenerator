@@ -24,6 +24,7 @@ namespace ElectionStatistics.Model
         public virtual ICollection<Protocol> Protocols { get; set; }
 
         public bool Hidden { get; set; }
+        public bool ShouldRecalculatePresets { get; set; }
 
         public DateTime? ImportStartedAt { get; set; }
         public DateTime? ImportFinishedAt { get; set; }

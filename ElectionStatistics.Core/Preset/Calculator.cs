@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
+
 using ElectionStatistics.Model;
 
 namespace ElectionStatistics.Core.Preset
@@ -12,43 +14,65 @@ namespace ElectionStatistics.Core.Preset
         private ModelContext modelContext;
 
         private List<int> lineDescriptionIds;
-        private string expression;
+        private Model.Preset preset;
         // DataTable is for expression evaluation
         private DataTable dataTable = new DataTable();
 
-        public Calculator(ModelContext modelContext, Parser parser, string expression)
+        public Calculator(ModelContext modelContext, Parser parser, Model.Preset preset)
         {
             this.modelContext = modelContext;
-            this.expression = expression;
+            this.preset = preset;
 
-            lineDescriptionIds = parser.Execute(expression);
+            lineDescriptionIds = parser.Execute(preset.Expression);
         }
 
-        public double Execute(int protocolId)
+        public List<LineCalculatedValue> Execute()
+        {
+            var protocols = modelContext.Set<Protocol>().AsNoTracking()
+                .Where(protocol => protocol.ProtocolSetId == this.preset.ProtocolSetId)
+                    .GroupJoin(modelContext.Set<LineNumber>()
+                        .Where(lineNumber =>
+                            lineDescriptionIds.Contains(lineNumber.LineDescriptionId)),
+                        protocol => protocol.Id,
+                        lineNumber => lineNumber.ProtocolId,
+                        (protocol, lineNumbers) => new Protocol
+                        {
+                            Id = protocol.Id, LineNumbers = lineNumbers.ToList()
+                        })
+                .Where(protocol => protocol.LineNumbers.Count > 0).ToList();
+            return protocols.Select(protocol =>
+                new LineCalculatedValue()
+                {
+                    Value = ExecuteSingle(protocol),
+                    ProtocolId = protocol.Id,
+                    PresetId = preset.Id
+                }).ToList();
+        }
+
+        private double ExecuteSingle(Protocol protocol)
         {
             var exprBuilder = new StringBuilder();
-
-            var lineNumbers = GetMatchedLineNumbers(protocolId);
+            var lineNumbers = GetMatchedLineNumbers(protocol);
 
             var lastIndex = 0;
             for (int i = 0; i < lineDescriptionIds.Count; ++i)
             {
-                var index = expression.IndexOf(lineDescriptionIds[i].ToString());
-                exprBuilder.Append(expression.Substring(lastIndex, index - lastIndex));
+                var index = preset.Expression.IndexOf(lineDescriptionIds[i].ToString());
+                exprBuilder.Append(preset.Expression.Substring(lastIndex, index - lastIndex));
                 exprBuilder.Append(lineNumbers[i].Value);
                 lastIndex = index + lineDescriptionIds[i].ToString().Length;
             }
-            exprBuilder.Append(expression.Substring(lastIndex, expression.Length - lastIndex));
+            exprBuilder.Append(preset.Expression.Substring(lastIndex,
+                preset.Expression.Length - lastIndex));
 
-            return (double) dataTable.Compute(exprBuilder.ToString(), null);
+            return Convert.ToDouble(dataTable.Compute(exprBuilder.ToString(), null));
         }
 
-        private List<LineNumber> GetMatchedLineNumbers(int protocolId)
+        private List<LineNumber> GetMatchedLineNumbers(Protocol protocol)
         {
             return lineDescriptionIds.Select(lineDescrId =>
-                modelContext.Set<LineNumber>()
-                    .Where(line => line.ProtocolId == protocolId &&
-                        line.LineDescriptionId == lineDescrId).SingleOrDefault()).ToList();
+                protocol.LineNumbers.Where(line => line.LineDescriptionId == lineDescrId)
+                    .SingleOrDefault()).ToList();
         }
     }
 }

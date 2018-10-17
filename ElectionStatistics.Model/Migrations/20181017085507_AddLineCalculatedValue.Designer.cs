@@ -4,14 +4,16 @@ using ElectionStatistics.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ElectionStatistics.Model.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    partial class ModelContextModelSnapshot : ModelSnapshot
+    [Migration("20181017085507_AddLineCalculatedValue")]
+    partial class AddLineCalculatedValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -427,8 +429,6 @@ namespace ElectionStatistics.Model.Migrations
                     b.Property<bool>("ImportSuccess");
 
                     b.Property<int>("ImportTotalLines");
-
-                    b.Property<bool>("ShouldRecalculatePresets");
 
                     b.Property<string>("TitleEng");
 

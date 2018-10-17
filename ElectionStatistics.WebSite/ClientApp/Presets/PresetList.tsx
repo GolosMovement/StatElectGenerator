@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { Spin } from 'antd';
 
 import { DictionariesController } from '../Chart/DictionariesController';
 import { LazySelect, LazySelectProps } from '../Common';
@@ -21,6 +22,7 @@ interface IPresetListState {
     protocolSets: IProtocolSet[];
     protocolSetsPromise: Promise<IProtocolSet[]> | null;
     presets: IPreset[];
+    isRecalcLoading: boolean;
 }
 
 interface IPresetListProps extends RouteComponentProps<any> { }
@@ -29,9 +31,13 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
     constructor(props: IPresetListProps) {
         super(props);
 
-        this.state = { protocolSetIndex: null, protocolSetsPromise: null, protocolSets: [], presets: [] };
+        this.state = {
+            protocolSetIndex: null, protocolSetsPromise: null, protocolSets: [], presets: [],
+            isRecalcLoading: false
+        };
 
         this.deletePreset = this.deletePreset.bind(this);
+        this.recalcPresets = this.recalcPresets.bind(this);
     }
 
     public render(): React.ReactNode {
@@ -42,6 +48,9 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
                     <label className='col-sm-12 control-label'>Выберите набор протоколов (т.е. выборы):</label>
                     <div className='col-md-6'>
                         {this.protocolSetSelect()}
+                    </div>
+                    <div className='col-sm-6'>
+                        {this.recalcPresetsButton()}
                     </div>
                 </div>
                 {this.protocolSetInfo()}
@@ -90,6 +99,21 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
             getValue={(protocolSet) => this.state.protocolSets.indexOf(protocolSet)}
             getText={(protocolSet) => protocolSet.titleRus}
             onChange={(protocolSet) => this.changeProtocolSet(protocolSet)} />;
+    }
+
+    private recalcPresetsButton(): React.ReactNode {
+        if (this.state.isRecalcLoading) {
+            return <Spin size='large' />;
+        } else if (this.state.protocolSetIndex != null) {
+            const protocolSet = this.state.protocolSets[this.state.protocolSetIndex];
+            return (
+                <button type='button' value={protocolSet.id} onClick={this.recalcPresets}
+                    className='btn btn-xs btn-default'
+                    disabled={!protocolSet.shouldRecalculatePresets}>
+                    Рассчитать
+                </button>
+            );
+        }
     }
 
     private getProtocolSets(): Promise<IProtocolSet[]> {
@@ -178,7 +202,7 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
     private createNewButton(): React.ReactNode {
         let href = '/presets/new';
 
-        if (this.state.protocolSetIndex) {
+        if (this.state.protocolSetIndex != null) {
             href += `?protocolSetId=${this.state.protocolSets[this.state.protocolSetIndex].id}`;
         }
 
@@ -195,13 +219,15 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
                 .then((result) => {
                     if (result.status == 'ok') {
                         this.setState({
-                            ...this.state, presets: this.state.presets.filter((preset) => preset.id != id)
+                            ...this.state,
+                            presets: this.state.presets.filter((preset) => preset.id != id)
                         });
-                        alert('Deleted!');
+                        alert('Удалено!');
                     } else {
-                        alert('Server error!');
+                        alert('Не удалось выполнить удаление');
                     }
-            });
+                })
+                .catch(() => alert('Server error!'));
         }
     }
 
@@ -216,5 +242,34 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
     private fetchPresets(protocolSet: IProtocolSet): void {
         DictionariesController.Instance.getPresets(protocolSet.id)
             .then((result) => this.setState({ ...this.state, presets: result }));
+    }
+
+    private recalcPresets(e: React.MouseEvent<HTMLButtonElement>): void {
+        if (confirm('Вы уверены?')) {
+            const protocolSetId = parseInt(e.currentTarget.value, 10);
+
+            this.setState({ ...this.state, isRecalcLoading: true });
+
+            PresetsController.Instance.recalcPresets(protocolSetId)
+                .then((result) => {
+                    if (result.status == 'ok') {
+                        const protocolSets = this.state.protocolSets;
+                        protocolSets.forEach((protocolSet) => {
+                            if (protocolSet.id == protocolSetId) {
+                                protocolSet.shouldRecalculatePresets = false;
+                            }
+                        });
+                        this.setState({ ...this.state, isRecalcLoading: false, protocolSets });
+                        alert('Предрасчет завершен!');
+                    } else {
+                        this.setState({ ...this.state, isRecalcLoading: false });
+                        alert('Не удалось произвести предрасчет');
+                    }
+                })
+                .catch(() => {
+                    this.setState({ ...this.state, isRecalcLoading: false });
+                    alert('Server error!');
+                });
+        }
     }
 }

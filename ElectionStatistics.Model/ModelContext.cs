@@ -62,6 +62,7 @@ namespace ElectionStatistics.Model
             get { return Set<ElectionCandidateVote>(); }
         }
 
+        private DbSet<LineCalculatedValue> LineCalculatedValues { get; set; }
         private DbSet<LineDescription> LineDescriptions { get; set; }
         private DbSet<LineNumber> LineNumbers { get; set; }
         private DbSet<LineString> LineStrings { get; set; }
