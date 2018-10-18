@@ -133,9 +133,10 @@ namespace ElectionStatistics.WebSite
             }
 
             var presets = modelContext.Set<Preset>()
-                .Where(preset => preset.ProtocolSetId == protocolSetId);
+                .Where(preset => preset.ProtocolSetId == protocolSetId).AsNoTracking();
             var lineCalculatedValues = modelContext.Set<LineCalculatedValue>()
-                .Where(lcv => presets.Select(preset => preset.Id).Contains(lcv.PresetId));
+                .Where(lcv => presets.Select(preset => preset.Id).Contains(lcv.PresetId))
+                .AsNoTracking();
 
             var parser = new Core.Preset.Parser();
 
