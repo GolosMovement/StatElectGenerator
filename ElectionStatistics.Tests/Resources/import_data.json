@@ -9,6 +9,7 @@
       "ImportFileErrorLog": null,
       "Protocols": null,
       "Hidden": false,
+      "ShouldRecalculatePresets": false,
       "ImportStartedAt": null,
       "ImportFinishedAt": null,
       "ImportTotalLines": 0,
