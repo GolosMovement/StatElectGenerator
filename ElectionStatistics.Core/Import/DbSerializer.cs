@@ -23,6 +23,8 @@ namespace ElectionStatistics.Core.Import
         private List<LineNumber> lineNumbers;
         private List<LineString> lineStrings;
 
+        private int chunkSize = 1000000;
+
         public DbSerializer(DbContext context)
         {
             this.context = context;
@@ -69,9 +71,34 @@ namespace ElectionStatistics.Core.Import
             using (var transaction = context.Database.BeginTransaction())
             {
                 context.BulkInsert(protocols);
-                context.BulkInsert(lineNumbers);
+
+                if (lineNumbers.Count <= chunkSize)
+                {
+                    context.BulkInsert(lineNumbers);
+                }
+
                 context.BulkInsert(lineStrings);
                 transaction.Commit();
+            }
+
+            if (lineNumbers.Count > chunkSize)
+            {
+                var chunkOffset = 0;
+
+                while (chunkOffset < lineNumbers.Count)
+                {
+                    var lineNumbersChunk =
+                        lineNumbers.Skip(chunkOffset).Take(chunkSize).ToList();
+
+                    using (var transaction = context.Database.BeginTransaction())
+                    {
+                        context.BulkInsert(lineNumbersChunk);
+                        transaction.Commit();
+                    }
+
+                    chunkOffset += lineNumbersChunk.Count;
+                }
+
             }
         }
 
