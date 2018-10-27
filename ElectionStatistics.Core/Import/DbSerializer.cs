@@ -23,8 +23,6 @@ namespace ElectionStatistics.Core.Import
         private List<LineNumber> lineNumbers;
         private List<LineString> lineStrings;
 
-        private int chunkSize = 1000000;
-
         public DbSerializer(DbContext context)
         {
             this.context = context;
@@ -68,37 +66,14 @@ namespace ElectionStatistics.Core.Import
 
         public void AfterImport()
         {
+            var bulkConfig = new BulkConfig { BulkCopyTimeout = 0 };
+
             using (var transaction = context.Database.BeginTransaction())
             {
-                context.BulkInsert(protocols);
-
-                if (lineNumbers.Count <= chunkSize)
-                {
-                    context.BulkInsert(lineNumbers);
-                }
-
-                context.BulkInsert(lineStrings);
+                context.BulkInsert(protocols, bulkConfig);
+                context.BulkInsert(lineNumbers, bulkConfig);
+                context.BulkInsert(lineStrings, bulkConfig);
                 transaction.Commit();
-            }
-
-            if (lineNumbers.Count > chunkSize)
-            {
-                var chunkOffset = 0;
-
-                while (chunkOffset < lineNumbers.Count)
-                {
-                    var lineNumbersChunk =
-                        lineNumbers.Skip(chunkOffset).Take(chunkSize).ToList();
-
-                    using (var transaction = context.Database.BeginTransaction())
-                    {
-                        context.BulkInsert(lineNumbersChunk);
-                        transaction.Commit();
-                    }
-
-                    chunkOffset += lineNumbersChunk.Count;
-                }
-
             }
         }
 
