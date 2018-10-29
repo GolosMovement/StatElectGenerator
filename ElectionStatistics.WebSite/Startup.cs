@@ -58,7 +58,7 @@ namespace ElectionStatistics.WebSite
             services.AddDbContext<ModelContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ElectionStatisticsDatabase"),
-                    serverOptions => serverOptions.CommandTimeout(120));
+                    serverOptions => serverOptions.CommandTimeout(1800));
             });
 
             services.AddDistributedMemoryCache();

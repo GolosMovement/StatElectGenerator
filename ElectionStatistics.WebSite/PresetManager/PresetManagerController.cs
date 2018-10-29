@@ -142,14 +142,16 @@ namespace ElectionStatistics.WebSite
 
             using (var transaction = modelContext.Database.BeginTransaction())
             {
-                modelContext.BulkDelete(lineCalculatedValues.ToList());
+                var bulkConfig = new BulkConfig { BulkCopyTimeout = 0 };
+
+                modelContext.BulkDelete(lineCalculatedValues.ToList(), bulkConfig);
                 presets.ToList().ForEach(preset =>
                 {
                     var service = new Core.Preset.Calculator(modelContext, parser, preset);
-                    modelContext.BulkInsert(service.Execute());
+                    modelContext.BulkInsert(service.Execute(), bulkConfig);
                 });
                 protocolSet.ShouldRecalculatePresets = false;
-                modelContext.BulkUpdate(new List<ProtocolSet>() { protocolSet });
+                modelContext.BulkUpdate(new List<ProtocolSet>() { protocolSet }, bulkConfig);
                 transaction.Commit();
             }
 
