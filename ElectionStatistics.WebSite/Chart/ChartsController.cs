@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using ElectionStatistics.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using ElectionStatistics.Model;
+using ElectionStatistics.Core.Methods;
 
 using Newtonsoft.Json;
 
@@ -161,74 +163,49 @@ namespace ElectionStatistics.WebSite
             return highchartsOptions;
         }
 
+        class ProtocolDto : Protocol
+        {
+            public int N { get; set; }
+        }
+
         [HttpGet, Route("location-scatterplot"), ResponseCache(CacheProfileName = "Default")]
         public HighchartsOptions GetDataForLocationScatterplot(string parametersString)
         {
             var parameters = DeserialzeJson<LocationScatterplotBuildParameters>(parametersString);
 
-            var results = parameters.GetElectionResults(modelContext);
+            var results = parameters.GetLineCalculatedValues(modelContext).ToArray();
 
-            ElectoralDistrict[] highestDistricts;
-            if (parameters.DistrictId != null)
+            Protocol[] higherProtocols;
+            if (parameters.ProtocolId != null)
             {
-                var highestDistrictsQueryable = modelContext.ElectoralDistricts.ByHigherDistrict(parameters.DistrictId.Value);
-                highestDistricts = highestDistrictsQueryable.Any(district => !district.LowerDistricts.Any())
-                    ? new [] { modelContext.ElectoralDistricts.GetById(parameters.DistrictId.Value) }
-                    : highestDistrictsQueryable.ToArray();
+                var sql = @"WITH query AS
+                    (SELECT *
+                       FROM protocols p1
+                      WHERE p1.parentid = @p0
+                      UNION ALL
+                     SELECT p2.*
+                       FROM protocols p2
+                       JOIN query ON p2.ParentId = query.Id)
+                    SELECT * FROM query
+                     WHERE EXISTS (SELECT 1 FROM protocols WHERE protocols.parentid = query.id)";
+                higherProtocols = modelContext.Set<Protocol>().FromSql(sql, parameters.ProtocolId)
+                    .DefaultIfEmpty(modelContext.Find<Protocol>(parameters.ProtocolId)).ToArray();
             }
             else
             {
-                var election = modelContext.Elections.GetById(parameters.ElectionId);
-                highestDistricts = modelContext.ElectoralDistricts.ByHigherDistrict(election.ElectoralDistrictId).ToArray();
+                higherProtocols = modelContext.Set<Protocol>().AsNoTracking()
+                    .Where(p => p.ProtocolSetId == parameters.ProtocolSetId &&
+                        modelContext.Set<Protocol>().Any(pp => pp.Id == p.ParentId)).ToArray();
             }
-
-            var sourceData = results
-                .Join(
-                    parameters.Y.GetParameters(modelContext),
-                    result => result.Id,
-                    votes => votes.ElectionResultId,
-                    (result, parameterValue) => new
-                    {
-                        result.ElectoralDistrict.Id,
-                        DistrictName = result.ElectoralDistrict.Name,
-                        Y = parameterValue.Value,
-                        result.ElectoralDistrict.HierarchyPath
-                    })
-                .ToArray()
-                .Select(arg => new
-                {
-                    Number = int.Parse(arg.DistrictName.Replace("УИК №", "")),
-                    arg.DistrictName,
-                    arg.Y,
-                    HighestDistrict = highestDistricts.Single(
-                        district =>
-                            arg.HierarchyPath.StartsWith(district.GetChildrenHierarchyPath()))
-                })
-                .ToArray();
-
-            var districtOrderNumbers = sourceData
-                .GroupBy(arg => arg.HighestDistrict)
-                .ToDictionary(grouping => grouping.Key, grouping => grouping.Min(arg => arg.Number));
-
-            var seriesGrouping = sourceData
-                .OrderBy(arg => districtOrderNumbers[arg.HighestDistrict])
-                .ThenBy(arg => arg.HighestDistrict.Name)
-                .ThenBy(arg => arg.Number)
-                .Select((arg, index) => new
-                {
-                    arg.DistrictName,
-                    arg.Y,
-                    arg.HighestDistrict,
-                    Index = index
-                })
-                .GroupBy(arg => arg.HighestDistrict);
+            var data = new LocationScatterplot(modelContext)
+                .GetData(parameters, results, higherProtocols);
 
             var highchartsOptions = new HighchartsOptions
             {
                 XAxis = new AxisOptions
                 {
                     Min = 0,
-                    Max = sourceData.Length,
+                    Max = results.Length,
                     Labels = new AxisLabels
                     {
                         Enabled = false
@@ -236,19 +213,19 @@ namespace ElectionStatistics.WebSite
                 },
                 YAxis = new AxisOptions
                 {
-                    Min = parameters.Y.MinValue,
-                    Max = parameters.Y.MaxValue,
+                    Min = 0,
+                    Max = 100,
                     Title = new TitleOptions
                     {
-                        Text = parameters.Y.GetName(modelContext)
+                        Text = modelContext.Find<Preset>(parameters.Y).TitleRus
                     }
                 }
             };
 
-            var series = seriesGrouping
+            var series = data
                 .Select(grouping => new FullScatterplotChartSeries
                 {
-                    Name = grouping.Key.Name,
+                    Name = grouping.Key.TitleRus,
                     Tooltip = new SeriesTooltipOptions
                     {
                         PointFormat = "{point.name}<br />{point.y:.1f}%"
@@ -257,14 +234,14 @@ namespace ElectionStatistics.WebSite
                         .Select(
                             arg => new Point
                             {
-                                Name = arg.DistrictName,
+                                Name = arg.ProtocolName,
                                 X = arg.Index,
-                                Y = arg.Y
+                                Y = Convert.ToDecimal(arg.Y) * 100
                             })
                         .ToArray()
                 });
 
-            if (sourceData.Length >= 10000)
+            if (results.Length >= 10000)
             {
                 highchartsOptions.Legend = new LegendOptions { Enabled = false };
 
@@ -361,10 +338,10 @@ namespace ElectionStatistics.WebSite
                     sqlParameters.Cast<object>().ToArray())
                 .Select(l => l.Value).ToList();
 
-            Core.Methods.LDAResult results;
+            LDAResult results;
             try
             {
-                results = new Core.Methods.LastDigitAnalyzer().GetData(lns);
+                results = new LastDigitAnalyzer().GetData(lns);
             }
             catch (ArgumentException)
             {
@@ -437,7 +414,7 @@ namespace ElectionStatistics.WebSite
             });
         }
 
-        public class ChartBuildParameters
+        public class OldChartBuildParameters
         {
             public int ElectionId { get; set; }
             public int? DistrictId { get; set; }
@@ -454,23 +431,17 @@ namespace ElectionStatistics.WebSite
             }
         }
 
-        public class HistogramBuildParameters : ChartBuildParameters
+        public class HistogramBuildParameters : OldChartBuildParameters
         {
             public ChartParameter X { get; set; }
             public ChartParameter Y { get; set; }
             public decimal StepSize { get; set; }
         }
 
-        public class ScatterplotBuildParameters : ChartBuildParameters
+        public class ScatterplotBuildParameters : OldChartBuildParameters
         {
             public ChartParameter X { get; set; }
             public ChartParameter Y { get; set; }
-        }
-
-        public class LocationScatterplotBuildParameters : ChartBuildParameters
-        {
-            public ChartParameter Y { get; set; }
-            public decimal StepSize { get; set; }
         }
 
         public class LastDigitAnalyzerBuildParameters

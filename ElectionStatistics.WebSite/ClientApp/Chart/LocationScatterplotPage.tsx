@@ -1,48 +1,47 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { HighchartComponent } from '../Highchart/Component';
 
-import { ChartsController, ChartBuildParameters } from './ChartsController';
-import { ChartPage, ScatterploChartPageRouteProps } from './ChartPage';
-import { DictionariesController } from './DictionariesController';
 import { QueryString } from '../Common';
-import { Link } from 'react-router-dom';
+import { ChartPage, IScatterplotChartPageRouteProps } from './ChartPage';
+import { ChartsController, IChartBuildParameters } from './ChartsController';
+import { DictionariesController } from './DictionariesController';
 
 export class LocationScatterplotPage extends ChartPage {
-    protected renderAdditionalParameterSelectors(): JSX.Element[] {
+    protected renderAdditionalParameterSelectors(): React.ReactNode[] {
         return [
-        <div key={1} className="row">
-            <div className="col-md-3">
-                {this.renderParametersSelect(
-                    "Выберите параметр для оси Y",
-                    this.state.y,
-                    electionId => DictionariesController.Instance.getParameters(electionId),
-                    this.onYChange
-                )}
+            <div key={1} className='row'>
+                <div className='col-md-3'>
+                    {this.presetSelect(
+                        'Выберите параметр для оси Y',
+                        this.state.yId,
+                        (protocolSetId) => DictionariesController.Instance.getPresets(protocolSetId),
+                        this.onYChange
+                    )}
+                </div>
             </div>
-        </div>
         ];
     }
 
-    protected getChartData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
+    protected getChartData(parameters: IChartBuildParameters): Promise<Highcharts.Options> {
         return ChartsController.Instance.getLocationScatterplotData(parameters);
     }
 
-    protected renderButton() {
-        if (this.state.electionId === null ||
-            this.state.y === null) {
+    protected renderButton(): React.ReactNode {
+        if (this.state.protocolSetId === null ||
+            this.state.yId === null) {
             return null;
-        }
-        else {
-            const queryParams: ScatterploChartPageRouteProps = {
-                electionId: this.state.electionId,
-                districtId: this.state.districtId || undefined,
-                y: this.toQueryStringParameter(this.state.y)
-            }
+        } else {
+            const queryParams: IScatterplotChartPageRouteProps = {
+                protocolSetId: this.state.protocolSetId,
+                protocolId: this.state.protocolId || undefined,
+                y: this.state.yId
+            };
 
             return (
                 <Link
-                    className="btn btn-primary"
+                    className='btn btn-primary'
                     to={{ search: QueryString.stringify(queryParams)}}>
                     Построить
                 </Link>
@@ -50,20 +49,20 @@ export class LocationScatterplotPage extends ChartPage {
         }
     }
 
-    protected tryLoadChartData() {
-        if (this.state.electionId !== null &&
-            this.state.y !== null) {
+    protected tryLoadChartData(): void {
+        if (this.state.protocolSetId !== null &&
+            this.state.yId !== null) {
             this.setState({
                 ...this.state,
                 isLoading: true
             });
 
             this.getChartData({
-                    electionId: this.state.electionId,
-                    districtId: this.state.districtId,
-                    y: this.state.y,
+                    protocolSetId: this.state.protocolSetId,
+                    protocolId: this.state.protocolId,
+                    y: this.state.yId
                 })
-                .then(series => {
+                .then((series) => {
                     this.setState({
                         ...this.state,
                         isLoading: false,
@@ -73,7 +72,7 @@ export class LocationScatterplotPage extends ChartPage {
         }
     }
 
-    protected renderChart(optionsFromBackend: Highcharts.Options): JSX.Element {
+    protected renderChart(optionsFromBackend: Highcharts.Options): React.ReactNode {
         const options = {
             ...optionsFromBackend,
             title: { text: '' },
@@ -83,7 +82,7 @@ export class LocationScatterplotPage extends ChartPage {
                 usePreAllocated: true
             },
             series: (optionsFromBackend.series as Highcharts.ScatterChartSeriesOptions[])
-                .map(s => ({
+                .map((s) => ({
                     ...s,
                     marker: {
                         radius: 2
@@ -103,7 +102,7 @@ export class LocationScatterplotPage extends ChartPage {
                         }
                     }
                 }
-            },
+            }
         };
 
         return <HighchartComponent options={options} />;

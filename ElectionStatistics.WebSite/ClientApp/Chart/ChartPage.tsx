@@ -1,63 +1,44 @@
-import * as React from 'react';
+import React from 'react';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
-import { RouteComponentProps, Link } from 'react-router-dom';
-
-import { LazyItems } from '../Common';
-import { HighchartComponent } from '../Highchart/Component';
-
-import { ElectionDto, ElectoralDistrictDto, NamedChartParameter, DictionariesController, ChartParameter } from './DictionariesController';
-import { ChartsController, ChartBuildParameters } from './ChartsController';
-import { SelectValue } from 'antd/lib/select';
-import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps, QueryString } from '../Common';
 import { Spin } from 'antd';
 
-interface QueryStringChartParameter {
-    type: string;
+import { IProtocolSet } from 'ClientApp/Import';
+import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps, QueryString } from '../Common';
+import { IChartBuildParameters } from './ChartsController';
+import { DictionariesController } from './DictionariesController';
+import { IProtocol } from './LastDigitAnalyzer';
+import { IPreset } from 'ClientApp/Presets';
+
+interface IChartPageRouteProps {
+    protocolSetId?: number;
+    protocolId?: number;
 }
 
-export interface ChartPageRouteProps {
-    electionId?: number;
-    districtId?: number;
+export interface IScatterplotChartPageRouteProps extends IChartPageRouteProps {
+    x?: number;
+    y?: number;
 }
 
+interface IChartPageProps extends RouteComponentProps<IScatterplotChartPageRouteProps> {}
 
-export interface ScatterploChartPageRouteProps extends ChartPageRouteProps {
-    x?: QueryStringChartParameter;
-    y?: QueryStringChartParameter;
-}
-
-interface ChartPageProps extends RouteComponentProps<ScatterploChartPageRouteProps> {
-}
-
-interface ChartPageState {
+interface IChartPageState {
     isLoading: boolean;
-    electionId: number | null;
-    districtId: number | null;
-    x: ChartParameter | null;
-    y: ChartParameter | null;
+    protocolSetId: number | null;
+    protocolId: number | null;
+    xId: number | null;
+    yId: number | null;
     chartOptions?: Highcharts.Options;
 }
 
-export abstract class ChartPage extends React.Component<ChartPageProps, ChartPageState> {
-    constructor(props: ChartPageProps) {
+export abstract class ChartPage extends React.Component<IChartPageProps, IChartPageState> {
+    constructor(props: IChartPageProps) {
         super(props);
 
         this.state = this.getStateFromRouteProps();
     }
 
-    private getStateFromRouteProps(): ChartPageState {
-        const routeProps = QueryString.parse(this.props.location.search) as ScatterploChartPageRouteProps;
-
-        return {
-            isLoading: false,
-            electionId: routeProps.electionId || null,
-            districtId: routeProps.districtId || null,
-            x: this.fromQueryStringParameter(routeProps.x),
-            y: this.fromQueryStringParameter(routeProps.y)
-        };
-    }
-
-    public componentWillMount() {        
+    public componentWillMount() {
         this.tryLoadChartData();
     }
 
@@ -66,200 +47,170 @@ export abstract class ChartPage extends React.Component<ChartPageProps, ChartPag
         this.tryLoadChartData();
     }
 
-    public render() {
+    public render(): React.ReactNode {
         return (
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-md-3">
-                        {this.renderElectionsSelect()}
+            <div className='container-fluid'>
+                <div className='row'>
+                    <div className='col-md-3'>
+                        {this.protocolSetSelect()}
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-3">
-                        {this.renderDistrictsSelect()}
+                <div className='row'>
+                    <div className='col-md-3'>
+                        {this.protocolSelect()}
                     </div>
                 </div>
-                { this.renderAdditionalParameterSelectors() }
-                <div className="row">
-                    <div className="col-md-3">
+                {this.renderAdditionalParameterSelectors()}
+                <div className='row'>
+                    <div className='col-md-3'>
                         {this.renderButton()}
                     </div>
                 </div>
-                <div className="row">
+                <div className='row'>
                     {this.tryRenderChart()}
                 </div>
             </div>
         );
     }
 
-    private renderElectionsSelect() {
-        const Select = LazySelect as new (props: LazySelectProps<ElectionDto, number>) => LazySelect<ElectionDto, number>;
-
-        return <Select
-            placeholder="Укажите выборы"
-            itemsPromise={DictionariesController.Instance.getElections()}
-            selectedValue={this.state.electionId}
-            getValue={election => election.id} 
-            getText={election => election.name}
-            onChange={electionId => this.setState({
-                ...this.state,
-                electionId: electionId,
-                districtId: null,
-                x: null,
-                y: null
-            })}/>
-    }
-
-    private renderDistrictsSelect() {
-        if (this.state.electionId == null) {
-            return null;
-        }
-        else {
-            const TreeSelect = LazyTreeSelect as new (props: LazyTreeSelectProps<ElectoralDistrictDto, number>) => LazyTreeSelect<ElectoralDistrictDto, number>;
-
-            return <TreeSelect
-                allowClear
-                placeholder="Все округа"
-                itemsPromise={DictionariesController.Instance.getDistricts(this.state.electionId)}
-                selectedValue={this.state.districtId}
-                getValue={district => district.id} 
-                getText={district => district.name}
-                getChildren={district => district.lowerDitsrticts}
-                onChange={districtId => this.setState({
-                    ...this.state,
-                    districtId: districtId
-                })}/>
-        }
-    }
-
-    protected onXChange = (newX: ChartParameter | null) => {
+    protected onXChange = (newX: number | null): void => {
         this.setState({
             ...this.state,
-            x: newX
+            xId: newX
         });
     }
 
-    protected onYChange = (newY: ChartParameter | null) => {
+    protected onYChange = (newY: number | null): void => {
         this.setState({
             ...this.state,
-            y: newY
+            yId: newY
         });
     }
 
-    protected renderParametersSelect(
+    protected presetSelect(
         placeholder: string,
-        selectedParameter: ChartParameter | null,
-        getParametersPromise: (electionId: number) => Promise<NamedChartParameter[]>,
-        onChange: (newSelectedParameter: ChartParameter | null) => void) {
-        if (this.state.electionId == null) {
-            return null;
-        }
-        else {
-            const Select = LazySelect as new (props: LazySelectProps<NamedChartParameter, ChartParameter>) => LazySelect<NamedChartParameter, ChartParameter>;
+        selectedParameter: number | null,
+        getParametersPromise: (protocolSetId: number) => Promise<IPreset[]>,
+        onChange: (newSelectedParameter: number | null) => void): React.ReactNode {
 
-            return <Select
+        if (this.state.protocolSetId) {
+            const LSelect = LazySelect as new (props: LazySelectProps<IPreset, number>) =>
+                LazySelect<IPreset, number>;
+
+            return <LSelect
                 placeholder={placeholder}
-                itemsPromise={getParametersPromise(this.state.electionId)}
+                itemsPromise={getParametersPromise(this.state.protocolSetId)}
                 selectedValue={selectedParameter}
-                getValue={namedParameter => namedParameter.parameter} 
-                getText={namedParameter => namedParameter.name}
-                onChange={onChange} 
-            />
+                getValue={(line) => line.id}
+                getText={(line) => line.titleRus}
+                onChange={onChange}
+                className='fixed-width-select-sm' />;
         }
     }
 
-    protected renderAdditionalParameterSelectors(): JSX.Element[] {
+    protected renderAdditionalParameterSelectors(): React.ReactNode[] {
         return [];
     }
 
-    protected renderButton() {
-        if (this.state.electionId === null ||
-            this.state.x === null ||
-            this.state.y === null) {
+    protected renderButton(): React.ReactNode {
+        if (this.state.protocolSetId === null ||
+            this.state.xId === null ||
+            this.state.yId === null) {
             return null;
-        }
-        else {
-            const queryParams: ScatterploChartPageRouteProps = {
-                electionId: this.state.electionId,
-                districtId: this.state.districtId || undefined,
-                x: this.toQueryStringParameter(this.state.x),
-                y: this.toQueryStringParameter(this.state.y)
-            }
-    
+        } else {
+            const queryParams: IScatterplotChartPageRouteProps = {
+                protocolSetId: this.state.protocolSetId,
+                protocolId: this.state.protocolId || undefined,
+                x: this.state.xId,
+                y: this.state.yId
+            };
+
             return (
-                <Link 
-                    className="btn btn-primary"               
-                    to={{ search: QueryString.stringify(queryParams)}}>
+                <Link
+                    className='btn btn-primary'
+                    to={{ search: QueryString.stringify(queryParams) }}>
                     Построить
                 </Link>
             );
         }
     }
 
-    protected abstract getChartData(parameters: ChartBuildParameters) : Promise<Highcharts.Options>;
-
-    protected tryLoadChartData() {
-        if (this.state.electionId !== null &&
-            this.state.x !== null &&
-            this.state.y !== null) {
+    protected tryLoadChartData(): void {
+        if (this.state.protocolSetId !== null &&
+            this.state.xId !== null &&
+            this.state.yId !== null) {
             this.setState({
                 ...this.state,
                 isLoading: true
             });
-            
+
             this.getChartData({
-                    electionId: this.state.electionId,
-                    districtId: this.state.districtId,
-                    x: this.state.x,
-                    y: this.state.y,
-                })
-                .then(chartOptions => {
-                    this.setState({
-                        ...this.state,
-                        isLoading: false,
-                        chartOptions: chartOptions
-                    });
+                protocolSetId: this.state.protocolSetId,
+                protocolId: this.state.protocolId,
+                x: this.state.xId,
+                y: this.state.yId,
+            }).then((chartOptions) => {
+                this.setState({
+                    ...this.state,
+                    isLoading: false,
+                    chartOptions: chartOptions
                 });
+            }).catch(() => alert('Ошибка'));
         }
     }
 
-    private tryRenderChart() {
-        if (this.state.isLoading) {
-            return <Spin size="large" />;
+    protected abstract getChartData(parameters: IChartBuildParameters): Promise<Highcharts.Options>;
+    protected abstract renderChart(optionsFromBackend: Highcharts.Options): React.ReactNode;
+
+    private getStateFromRouteProps(): IChartPageState {
+        const routeProps = QueryString.parse(this.props.location.search) as IScatterplotChartPageRouteProps;
+
+        return {
+            isLoading: false,
+            protocolSetId: routeProps.protocolSetId || null,
+            protocolId: routeProps.protocolId || null,
+            xId: routeProps.x || null,
+            yId: routeProps.y || null
+        };
+    }
+
+    private protocolSetSelect(): React.ReactNode {
+        const LSelect = LazySelect as new (props: LazySelectProps<IProtocolSet, number>) =>
+            LazySelect<IProtocolSet, number>;
+
+        return <LSelect
+            placeholder='Укажите выборы'
+            itemsPromise={DictionariesController.Instance.getProtocolSets()}
+            selectedValue={this.state.protocolSetId}
+            getValue={(protocolSet) => protocolSet.id}
+            getText={(protocolSet) => protocolSet.titleRus}
+            onChange={(protocolSet) => this.setState({
+                ...this.state, protocolId: null, protocolSetId: protocolSet, xId: null, yId: null
+            })} />;
+    }
+
+    private protocolSelect(): React.ReactNode {
+        if (this.state.protocolSetId) {
+            const TreeSelect = LazyTreeSelect as
+                new (props: LazyTreeSelectProps<IProtocol, number>) => LazyTreeSelect<IProtocol, number>;
+
+            return <TreeSelect
+                allowClear
+                placeholder='Все округа'
+                itemsPromise={DictionariesController.Instance.getProtocols(this.state.protocolSetId)}
+                selectedValue={this.state.protocolId}
+                getValue={(protocol) => protocol.id}
+                getText={(protocol) => protocol.titleRus}
+                getChildren={(protocol) => protocol.lowerProtocols}
+                onChange={(protocolId) => this.setState({ ...this.state, protocolId })} />;
         }
-        else if (this.state.chartOptions != null) {
+    }
+
+    private tryRenderChart(): React.ReactNode {
+        if (this.state.isLoading) {
+            return <Spin size='large' />;
+        } else if (this.state.chartOptions != null) {
             return this.renderChart(this.state.chartOptions);
         }
-        else {
-            return null;
-        }
-    }
-
-    protected abstract renderChart(optionsFromBackend: Highcharts.Options) : JSX.Element;
-
-    protected toQueryStringParameter(parameter: ChartParameter) {
-        if (parameter == null) {
-            return undefined;
-        }
-
-        const queryStringParameter = {
-            type: parameter.$type,        
-            ...parameter
-        };
-        delete queryStringParameter.$type;
-        return queryStringParameter as QueryStringChartParameter;
-    }
-
-    protected fromQueryStringParameter(queryStringParameter?: QueryStringChartParameter) {
-        if (queryStringParameter == null) {
-            return null;
-        }
-
-        const parameter = {
-            $type: queryStringParameter.type,
-            ...queryStringParameter
-        };
-        delete parameter.type;
-        return parameter as ChartParameter;
     }
 }

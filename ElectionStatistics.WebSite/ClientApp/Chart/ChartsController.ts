@@ -11,6 +11,13 @@ export interface ChartBuildParameters {
     y: ChartParameter;
 }
 
+export interface IChartBuildParameters {
+    protocolSetId: number;
+    protocolId: number | null;
+    x?: number;
+    y: number;
+}
+
 export interface HistogramBuildParameters extends ChartBuildParameters {
     stepSize: number;
 }
@@ -39,7 +46,7 @@ export class ChartsController {
         return this.histogramDataPromises[parametersString];
     }
 
-    public getScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
+    public getScatterplotData(parameters: ChartBuildParameters): Promise<Highcharts.Options> {
         const parametersString = JSON.stringify(parameters);
         if (!this.scatterplotDataPromises[parametersString]) {
             this.scatterplotDataPromises[parametersString] =
@@ -49,7 +56,7 @@ export class ChartsController {
         return this.scatterplotDataPromises[parametersString];
     }
 
-    public getLocationScatterplotData(parameters: ChartBuildParameters) : Promise<Highcharts.Options> {
+    public getLocationScatterplotData(parameters: IChartBuildParameters): Promise<Highcharts.Options> {
         const parametersString = JSON.stringify(parameters);
         if (!this.locationScatterplotDataPromises[parametersString]) {
             this.locationScatterplotDataPromises[parametersString] =
@@ -64,7 +71,7 @@ export class ChartsController {
         if (!this.lastDigitAnalyzerDataPromises[parametersString]) {
             this.lastDigitAnalyzerDataPromises[parametersString] =
                 fetch(`api/charts/last-digit-analyzer?parametersString=${parametersString}`)
-                .then((response) => response.json());
+                    .then((response) => response.json());
         }
         return this.lastDigitAnalyzerDataPromises[parametersString];
     }

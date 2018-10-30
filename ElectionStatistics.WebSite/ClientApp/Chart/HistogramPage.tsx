@@ -3,10 +3,10 @@ import * as React from 'react';
 import { HighchartComponent } from '../Highchart/Component';
 
 import { ChartsController, ChartBuildParameters } from './ChartsController';
-import { ChartPage } from './ChartPage';
-import { DictionariesController, ElectoralDistrictDto, NamedChartParameter } from './DictionariesController';
+import { OldChartPage } from './OldChartPage';
+import { DictionariesController, ElectoralDistrictDto, INamedChartParameter } from './DictionariesController';
 
-export class HistogramPage extends ChartPage {
+export class HistogramPage extends OldChartPage {
     protected renderAdditionalParameterSelectors(): JSX.Element[] {
         return [
         (<div key={1} className="row">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { ChartPageRouteProps } from '../Chart/ChartPage';
+import { ChartPageRouteProps } from '../Chart/OldChartPage';
 import { QueryString } from '../Common';
 
 export class NavigationMenuComponent extends React.Component {

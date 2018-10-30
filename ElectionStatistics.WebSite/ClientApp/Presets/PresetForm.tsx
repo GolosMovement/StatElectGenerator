@@ -1,14 +1,13 @@
 import React from 'react';
-import { RouteComponentProps, Redirect } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import { Spin } from 'antd';
 
 import { IModel } from '../Chart';
 import { DictionariesController } from '../Chart/DictionariesController';
 import { LazySelect, LazySelectProps } from '../Common';
+import { IApiResponse } from '../Import/ImportController';
 import { IProtocolSet } from '../Import/NewProtocolSet';
 import { IPreset } from './PresetList';
-import { IApiResponse } from '../Import/ImportController';
-import { Link } from 'react-router-dom';
 
 export interface ILineDescription extends IModel {
     descriptionRus: string;

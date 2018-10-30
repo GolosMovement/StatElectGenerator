@@ -221,7 +221,7 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("presets")]
         public IEnumerable<PresetDto> GetPresets(int protocolSetId)
         {
-            return modelContext.Set<Preset>().ToArray()
+            return modelContext.Set<Preset>().AsNoTracking()
                 .Where(preset => preset.ProtocolSetId == protocolSetId)
                 .Select(preset => new PresetDto()
                 {

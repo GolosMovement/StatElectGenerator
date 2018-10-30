@@ -3,10 +3,10 @@ import * as React from 'react';
 import { HighchartComponent } from '../Highchart/Component';
 
 import { ChartsController, ChartBuildParameters } from './ChartsController';
-import { ChartPage } from './ChartPage';
-import { ElectoralDistrictDto, DictionariesController, NamedChartParameter } from './DictionariesController';
+import { OldChartPage } from './OldChartPage';
+import { ElectoralDistrictDto, DictionariesController, INamedChartParameter } from './DictionariesController';
 
-export class ScatterplotPage extends ChartPage {
+export class ScatterplotPage extends OldChartPage {
     protected renderAdditionalParameterSelectors(): JSX.Element[] {
         return [
         (<div key={1} className="row">

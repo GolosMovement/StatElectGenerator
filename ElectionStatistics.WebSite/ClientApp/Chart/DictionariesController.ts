@@ -1,4 +1,4 @@
-import { INumberDictionary, IStringDictionary } from '../Common';
+import { INumberDictionary } from '../Common';
 import { IProtocolSet } from '../Import/NewProtocolSet';
 import { IPreset } from '../Presets';
 import { ILineDescription } from '../Presets/PresetForm';
@@ -7,6 +7,11 @@ import { IModel, IProtocol } from './LastDigitAnalyzer';
 export interface NamedChartParameter {
     name: string;
     parameter: ChartParameter;
+}
+
+export interface INamedChartParameter {
+    name: string;
+    parameter: number;
 }
 
 export interface ChartParameter {
