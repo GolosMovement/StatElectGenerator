@@ -8,16 +8,16 @@ namespace ElectionStatistics.Model.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateIndex(
-                name: "IX_LineNumbers_Value",
+                name: "IX_LineNumbers_LineDescriptionId_Value",
                 table: "LineNumbers",
-                column: "Value"
+                columns: new[] { "LineDescriptionId", "Value" }
             );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropIndex(
-                name: "IX_LineNumbers_Value",
+                name: "IX_LineNumbers_LineDescriptionId_Value",
                 table: "LineNumbers"
             );
         }
