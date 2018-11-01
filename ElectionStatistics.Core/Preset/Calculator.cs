@@ -64,8 +64,10 @@ namespace ElectionStatistics.Core.Preset
             }
             exprBuilder.Append(preset.Expression.Substring(lastIndex,
                 preset.Expression.Length - lastIndex));
+            var result = Convert.ToDouble(dataTable.Compute(exprBuilder.ToString(), null));
 
-            return Convert.ToDouble(dataTable.Compute(exprBuilder.ToString(), null));
+            // TODO: choose another way to handle NaN and infinity
+            return Double.IsFinite(result) ? result : 0;
         }
 
         private List<LineNumber> GetMatchedLineNumbers(Protocol protocol)

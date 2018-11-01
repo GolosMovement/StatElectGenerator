@@ -30,7 +30,7 @@ namespace ElectionStatistics.Tests.Core.Preset
 
             var lineDescriptions = Enumerable.Range(1, 3).Select((n) =>
                 new LineDescription() { ProtocolSetId = protocolSet.Id }).ToList();
-            lineDescriptions.ForEach(lineDes => modelContext.Add(lineDes));
+            modelContext.AddRange(lineDescriptions);
 
             var lineNumbers = new List<LineNumber>()
             {
@@ -47,7 +47,7 @@ namespace ElectionStatistics.Tests.Core.Preset
                     LineDescriptionId = lineDescriptions[2].Id, Value = 40, ProtocolId = protocol.Id
                 }
             };
-            lineNumbers.ForEach(lineNum => modelContext.Add(lineNum));
+            modelContext.AddRange(lineNumbers);
 
             var expression = $"(({lineDescriptions[0].Id} + {lineDescriptions[1].Id}) / " +
                 $"{lineDescriptions[2].Id})";
@@ -63,7 +63,7 @@ namespace ElectionStatistics.Tests.Core.Preset
             var result = service.Execute();
             var expectedVal = new LineCalculatedValue()
             {
-                Value = 1.55, PresetId = preset.Id, ProtocolId = protocolSet.Id
+                Value = 1.55, PresetId = preset.Id, ProtocolId = protocol.Id
             };
             Assert.Collection(result, item =>
             {
@@ -71,6 +71,54 @@ namespace ElectionStatistics.Tests.Core.Preset
                 Assert.Equal(expectedVal.PresetId, item.PresetId);
                 Assert.Equal(expectedVal.ProtocolId, item.ProtocolId);
             });
+        }
+
+        [Theory]
+        [InlineData(-1, 0)]
+        [InlineData(1, 0)]
+        [InlineData(0, 0)]
+        public void Execute_DivisionByZero_EvaluatesExpressionToZero(int valA, int valB)
+        {
+            var protocolSet = new ProtocolSet();
+            modelContext.Add(protocolSet);
+            var protocol = new Protocol() { ProtocolSetId = protocolSet.Id };
+            modelContext.Add(protocol);
+
+            var lineDescriptions = Enumerable.Range(1, 2).Select((n) =>
+                new LineDescription() { ProtocolSetId = protocolSet.Id }).ToList();
+            modelContext.AddRange(lineDescriptions);
+
+            var lineNumbers = new List<LineNumber>()
+            {
+                new LineNumber()
+                {
+                    LineDescriptionId = lineDescriptions[0].Id,
+                    Value = valA,
+                    ProtocolId = protocol.Id
+                },
+                new LineNumber()
+                {
+                    LineDescriptionId = lineDescriptions[1].Id,
+                    Value = valB,
+                    ProtocolId = protocol.Id
+                }
+            };
+            modelContext.AddRange(lineNumbers);
+
+            var expression = $"{lineDescriptions[0].Id} / {lineDescriptions[1].Id}";
+            var preset = new Model.Preset()
+            {
+                Expression = expression,
+                ProtocolSetId = protocolSet.Id
+            };
+            modelContext.Add(preset);
+            modelContext.SaveChanges();
+
+            var parser = new Parser();
+            var service = new Calculator(modelContext, parser, preset);
+            var result = service.Execute();
+
+            Assert.Collection(result, item => Assert.Equal(0, item.Value));
         }
     }
 }
