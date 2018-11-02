@@ -2,7 +2,7 @@ import React from 'react';
 import { Spin, Select } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 
-import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps } from '../Common';
+import { LazySelect, ILazySelectProps, LazyTreeSelect, LazyTreeSelectProps } from '../Common';
 import { HighchartComponent } from '../Highchart/Component';
 import { IProtocolSet } from '../Import/NewProtocolSet';
 import { ChartsController } from './ChartsController';
@@ -100,15 +100,16 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
     }
 
     private protocolSetSelect(): React.ReactNode {
-        const LSelect = LazySelect as new (props: LazySelectProps<IProtocolSet, number>) =>
+        const LSelect = LazySelect as new (props: ILazySelectProps<IProtocolSet, number>) =>
             LazySelect<IProtocolSet, number>;
 
         return <LSelect
             placeholder='Укажите выборы'
             itemsPromise={DictionariesController.Instance.getProtocolSets()}
             selectedValue={this.state.protocolSetId}
-            getValue={(protocolSet) => protocolSet.id ? protocolSet.id : 0}
-            getText={(protocolSet) => protocolSet ? protocolSet.titleRus : ''}
+            getValue={(protocolSet) => protocolSet.id}
+            getText={(protocolSet) => protocolSet.titleRus}
+            getDescriptionText={(protocolSet) => protocolSet.descriptionRus}
             onChange={(protocolSet) => this.setState({
                 ...this.state, protocolId: null, protocolSetId: protocolSet })} />;
     }
@@ -132,7 +133,7 @@ export class LastDigitAnalyzer extends React.Component<ILastDigitState, ILastDig
 
     private lineDescriptionsSelect(): React.ReactNode {
         if (this.state.protocolSetId) {
-            const LSelect = LazySelect as new (props: LazySelectProps<IModel, number>) =>
+            const LSelect = LazySelect as new (props: ILazySelectProps<IModel, number>) =>
                 LazySelect<IModel, number>;
 
             return <LSelect

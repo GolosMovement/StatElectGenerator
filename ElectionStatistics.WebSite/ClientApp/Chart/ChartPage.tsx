@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Spin } from 'antd';
 
 import { IProtocolSet } from 'ClientApp/Import';
-import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps, QueryString } from '../Common';
+import { LazySelect, ILazySelectProps, LazyTreeSelect, LazyTreeSelectProps, QueryString } from '../Common';
 import { IChartBuildParameters } from './ChartsController';
 import { DictionariesController } from './DictionariesController';
 import { IProtocol } from './LastDigitAnalyzer';
@@ -94,7 +94,7 @@ export abstract class ChartPage extends React.Component<IChartPageProps, IChartP
         onChange: (newSelectedParameter: number | null) => void): React.ReactNode {
 
         if (this.state.protocolSetId) {
-            const LSelect = LazySelect as new (props: LazySelectProps<IPreset, number>) =>
+            const LSelect = LazySelect as new (props: ILazySelectProps<IPreset, number>) =>
                 LazySelect<IPreset, number>;
 
             return <LSelect
@@ -175,7 +175,7 @@ export abstract class ChartPage extends React.Component<IChartPageProps, IChartP
     }
 
     private protocolSetSelect(): React.ReactNode {
-        const LSelect = LazySelect as new (props: LazySelectProps<IProtocolSet, number>) =>
+        const LSelect = LazySelect as new (props: ILazySelectProps<IProtocolSet, number>) =>
             LazySelect<IProtocolSet, number>;
 
         return <LSelect

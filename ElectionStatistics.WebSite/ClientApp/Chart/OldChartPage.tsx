@@ -8,7 +8,7 @@ import { HighchartComponent } from '../Highchart/Component';
 import { ElectionDto, ElectoralDistrictDto, NamedChartParameter, DictionariesController, ChartParameter } from './DictionariesController';
 import { ChartsController, ChartBuildParameters } from './ChartsController';
 import { SelectValue } from 'antd/lib/select';
-import { LazySelect, LazySelectProps, LazyTreeSelect, LazyTreeSelectProps, QueryString } from '../Common';
+import { LazySelect, ILazySelectProps, LazyTreeSelect, LazyTreeSelectProps, QueryString } from '../Common';
 import { Spin } from 'antd';
 
 interface QueryStringChartParameter {
@@ -93,7 +93,7 @@ export abstract class OldChartPage extends React.Component<ChartPageProps, Chart
     }
 
     private renderElectionsSelect() {
-        const Select = LazySelect as new (props: LazySelectProps<ElectionDto, number>) => LazySelect<ElectionDto, number>;
+        const Select = LazySelect as new (props: ILazySelectProps<ElectionDto, number>) => LazySelect<ElectionDto, number>;
 
         return <Select
             placeholder="Укажите выборы"
@@ -155,7 +155,7 @@ export abstract class OldChartPage extends React.Component<ChartPageProps, Chart
             return null;
         }
         else {
-            const Select = LazySelect as new (props: LazySelectProps<NamedChartParameter, ChartParameter>) => LazySelect<NamedChartParameter, ChartParameter>;
+            const Select = LazySelect as new (props: ILazySelectProps<NamedChartParameter, ChartParameter>) => LazySelect<NamedChartParameter, ChartParameter>;
 
             return <Select
                 placeholder={placeholder}

@@ -3,7 +3,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Spin } from 'antd';
 
 import { DictionariesController } from '../Chart/DictionariesController';
-import { LazySelect, LazySelectProps } from '../Common';
+import { LazySelect, ILazySelectProps } from '../Common';
 import { IProtocolSet } from '../Import/NewProtocolSet';
 import { PresetsController } from './PresetsController';
 
@@ -90,7 +90,7 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
     }
 
     private protocolSetSelect(): React.ReactNode {
-        const LSelect = LazySelect as new (props: LazySelectProps<IProtocolSet, number>) =>
+        const LSelect = LazySelect as new (props: ILazySelectProps<IProtocolSet, number>) =>
             LazySelect<IProtocolSet, number>;
 
         return <LSelect

@@ -4,7 +4,7 @@ import { Spin } from 'antd';
 
 import { IModel } from '../Chart';
 import { DictionariesController } from '../Chart/DictionariesController';
-import { LazySelect, LazySelectProps } from '../Common';
+import { LazySelect, ILazySelectProps } from '../Common';
 import { IApiResponse } from '../Import/ImportController';
 import { IProtocolSet } from '../Import/NewProtocolSet';
 import { IPreset } from './PresetList';
@@ -128,7 +128,7 @@ export abstract class PresetForm extends React.Component<IPresetFormProps, IPres
     }
 
     private protocolSetSelect(): React.ReactNode {
-        const LSelect = LazySelect as new (props: LazySelectProps<IProtocolSet, number>) =>
+        const LSelect = LazySelect as new (props: ILazySelectProps<IProtocolSet, number>) =>
             LazySelect<IProtocolSet, number>;
 
         return <LSelect

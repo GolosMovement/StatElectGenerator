@@ -1,15 +1,15 @@
 import React from 'react';
 import { deepEqual } from '.';
 
-import { Select, Spin } from 'antd';
-import { SelectValue, OptionProps } from 'antd/lib/select';
+import { Select, Spin, Tooltip } from 'antd';
+import { OptionProps, SelectValue } from 'antd/lib/select';
 
-export interface LazySelectProps<TItem, TValue>
-{
+export interface ILazySelectProps<TItem, TValue> {
     selectedValue: TValue | TValue[] | null;
     itemsPromise: Promise<TItem[]>;
     getValue: (value: TItem) => TValue;
     getText: (value: TItem) => string;
+    getDescriptionText?: (value: TItem) => string;
     onChange: (newSelectedValue: TValue | null) => void;
     onChangeMultiple?: (values: TValue[] | null) => void;
     placeholder?: string;
@@ -18,14 +18,15 @@ export interface LazySelectProps<TItem, TValue>
     mode?: 'default' | 'multiple' | 'tags' | 'combobox';
 }
 
-interface LazySelectState<TItem>
+interface ILazySelectState<TItem>
 {
     items: TItem[];
     itemsPromise: Promise<TItem[]> | null;
 }
 
-export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<TItem, TValue>, LazySelectState<TItem>> {
-    constructor(props: LazySelectProps<TItem, TValue>) {
+export class LazySelect<TItem, TValue>
+    extends React.Component<ILazySelectProps<TItem, TValue>, ILazySelectState<TItem>> {
+    constructor(props: ILazySelectProps<TItem, TValue>) {
         super(props);
         this.state = {
             items: [],
@@ -37,12 +38,6 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
         if (this.isLoading()) {
             return <Spin />;
         } else {
-            const options = this.state.items
-                .map((item, index) => {
-                    const text = this.props.getText(item);
-                    return <Select.Option key={index} value={text}>{text}</Select.Option>
-                });
-
             return (
                 <Select
                     showSearch
@@ -54,7 +49,7 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
                     filterOption={this.filterOption}
                     value={this.getSelectedText()}
                     onChange={this.onChange}>
-                    {options}
+                    {this.options()}
                 </Select>
             );
         }
@@ -102,11 +97,11 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
         return this.state.itemsPromise !== this.props.itemsPromise;
     }
 
-    private onChange = (value: SelectValue, option: React.ReactElement<any> | React.ReactElement<any>[]) => {
+    private onChange = (value: SelectValue, option: React.ReactElement<any> | Array<React.ReactElement<any>>) => {
         if (option == null) {
             this.props.onChange(null);
         } else if (this.props.mode == 'multiple') {
-            const selected = option as React.ReactElement<any>[];
+            const selected = option as Array<React.ReactElement<any>>;
 
             if (this.props.onChangeMultiple) {
                 this.props.onChangeMultiple(selected.map((opt) =>
@@ -125,5 +120,26 @@ export class LazySelect<TItem, TValue> extends React.Component<LazySelectProps<T
 
     private className(): string {
         return this.props.className ? this.props.className : 'fixed-width-select';
+    }
+
+    private options(): React.ReactNode {
+        const options = this.state.items.map((item, index) =>
+            <Select.Option key={index} value={this.props.getText(item)}>
+                {this.optionText(item)}
+            </Select.Option>
+        );
+        return options;
+    }
+
+    private optionText(item: TItem): React.ReactNode {
+        if (this.props.getDescriptionText) {
+            return (
+                <Tooltip title={this.props.getDescriptionText(item)} placement='right'>
+                    {this.props.getText(item)}
+                </Tooltip>
+            );
+        } else {
+            return this.props.getText(item);
+        }
     }
 }
