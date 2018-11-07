@@ -97,7 +97,7 @@ namespace ElectionStatistics.Core.Import
                 .OrderByDescending(o => o.Id)
                 .FirstOrDefault();
 
-            protocolId = obj == null ? defaultId : obj.Id;
+            this.protocolId = obj == null ? defaultId : obj.Id;
         }
 
         private void LoadLineNumberId()
@@ -106,7 +106,7 @@ namespace ElectionStatistics.Core.Import
                 .OrderByDescending(o => o.Id)
                 .FirstOrDefault();
 
-            lineNumberId = obj == null ? defaultId : obj.Id;
+            this.lineNumberId = obj == null ? defaultId : obj.Id;
         }
 
         private void LoadLineStringId()
@@ -115,7 +115,7 @@ namespace ElectionStatistics.Core.Import
                 .OrderByDescending(o => o.Id)
                 .FirstOrDefault();
 
-            lineStringId = obj == null ? defaultId : obj.Id;
+            this.lineStringId = obj == null ? defaultId : obj.Id;
         }
 
         private int NextProtocolId()

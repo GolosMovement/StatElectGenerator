@@ -238,9 +238,10 @@ namespace ElectionStatistics.Core.Import
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 success = false;
+                Error(line, 0, e.ToString());
                 throw;
             }
             finally
@@ -318,7 +319,7 @@ namespace ElectionStatistics.Core.Import
                     }
                     else
                     {
-                        switch(subitem.MappingLine.HierarchyLanguage)
+                        switch (subitem.MappingLine.HierarchyLanguage)
                         {
                             case LanguageEnum.Russian:
                                 hierarchyItem.Russian = subitem;
@@ -514,7 +515,6 @@ namespace ElectionStatistics.Core.Import
             return title;
         }
 
-        // TODO: inherit LineNumber and LineString from a base class for DRY
         private void CreateLines(int line, Protocol protocol,
             List<MappingEnvelope> mappings, IExcelDataReader reader)
         {
@@ -539,22 +539,32 @@ namespace ElectionStatistics.Core.Import
                     }
 
                     var lineNumber = new LineNumber();
+
                     if (columnType != null)
                     {
                         lineNumber.Value = Convert.ToInt32(
                             reader.GetDouble(columnNumber));
                     }
+                    else
+                    {
+                        lineNumber.Value = 0;
+                    }
 
                     lineNumber.ProtocolId = protocol.Id;
                     lineNumber.LineDescriptionId = item.LineDescription.Id;
+
                     serializer.CreateLineNumber(lineNumber);
                 }
                 else
                 {
                     var columnType = reader.GetFieldType(columnNumber);
 
-                    if (columnType != null &&
-                        columnType != typeof(System.String))
+                    if (columnType == null)
+                    {
+                        continue;
+                    }
+
+                    if (columnType != typeof(System.String))
                     {
                         Error(line, columnNumber,
                             String.Format(
@@ -565,13 +575,10 @@ namespace ElectionStatistics.Core.Import
                     }
 
                     var lineString = new LineString();
-                    if (columnType != null)
-                    {
-                        lineString.Value = reader.GetString(columnNumber);
-                    }
-
+                    lineString.Value = reader.GetString(columnNumber);
                     lineString.ProtocolId = protocol.Id;
                     lineString.LineDescriptionId = item.LineDescription.Id;
+
                     serializer.CreateLineString(lineString);
                 }
             }

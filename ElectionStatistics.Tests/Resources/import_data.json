@@ -520,7 +520,7 @@
       "LineStrings": null
     },
     {
-      "Id": 89,
+      "Id": 88,
       "TitleRus": "Вавожская",
       "TitleEng": null,
       "TitleNative": null,
@@ -534,21 +534,21 @@
       "LineStrings": null
     },
     {
-      "Id": 90,
+      "Id": 89,
       "TitleRus": "УИК №1212",
       "TitleEng": null,
       "TitleNative": null,
       "CommissionNumber": 1212,
       "ProtocolSetId": 1,
       "ProtocolSet": null,
-      "ParentId": 89,
+      "ParentId": 88,
       "Parent": null,
       "Children": null,
       "LineNumbers": null,
       "LineStrings": null
     },
     {
-      "Id": 94,
+      "Id": 93,
       "TitleRus": "УИК №1140",
       "TitleEng": null,
       "TitleNative": null,
@@ -562,7 +562,7 @@
       "LineStrings": null
     },
     {
-      "Id": 98,
+      "Id": 97,
       "TitleRus": "УИК №1141",
       "TitleEng": null,
       "TitleNative": null,
@@ -576,21 +576,21 @@
       "LineStrings": null
     },
     {
-      "Id": 102,
+      "Id": 101,
       "TitleRus": "УИК №1213",
       "TitleEng": null,
       "TitleNative": null,
       "CommissionNumber": 1213,
       "ProtocolSetId": 1,
       "ProtocolSet": null,
-      "ParentId": 89,
+      "ParentId": 88,
       "Parent": null,
       "Children": null,
       "LineNumbers": null,
       "LineStrings": null
     },
     {
-      "Id": 106,
+      "Id": 105,
       "TitleRus": "УИК №1142",
       "TitleEng": null,
       "TitleNative": null,
@@ -604,7 +604,7 @@
       "LineStrings": null
     },
     {
-      "Id": 110,
+      "Id": 109,
       "TitleRus": "Астраханская область",
       "TitleEng": "ASO",
       "TitleNative": "オレンジ",
@@ -618,11 +618,25 @@
       "LineStrings": null
     },
     {
-      "Id": 111,
+      "Id": 110,
       "TitleRus": "Лиманская",
       "TitleEng": null,
       "TitleNative": null,
       "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 109,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 111,
+      "TitleRus": "УИК №1204",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 1204,
       "ProtocolSetId": 1,
       "ProtocolSet": null,
       "ParentId": 110,
@@ -632,21 +646,7 @@
       "LineStrings": null
     },
     {
-      "Id": 112,
-      "TitleRus": "УИК №1204",
-      "TitleEng": null,
-      "TitleNative": null,
-      "CommissionNumber": 1204,
-      "ProtocolSetId": 1,
-      "ProtocolSet": null,
-      "ParentId": 111,
-      "Parent": null,
-      "Children": null,
-      "LineNumbers": null,
-      "LineStrings": null
-    },
-    {
-      "Id": 115,
+      "Id": 114,
       "TitleRus": "Белгородская область",
       "TitleEng": "BO",
       "TitleNative": "レモン",
@@ -660,11 +660,25 @@
       "LineStrings": null
     },
     {
-      "Id": 116,
+      "Id": 115,
       "TitleRus": "Белгородская городская",
       "TitleEng": null,
       "TitleNative": null,
       "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 114,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 116,
+      "TitleRus": "УИК №63",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 63,
       "ProtocolSetId": 1,
       "ProtocolSet": null,
       "ParentId": 115,
@@ -674,35 +688,21 @@
       "LineStrings": null
     },
     {
-      "Id": 117,
-      "TitleRus": "УИК №63",
-      "TitleEng": null,
-      "TitleNative": null,
-      "CommissionNumber": 63,
-      "ProtocolSetId": 1,
-      "ProtocolSet": null,
-      "ParentId": 116,
-      "Parent": null,
-      "Children": null,
-      "LineNumbers": null,
-      "LineStrings": null
-    },
-    {
-      "Id": 121,
+      "Id": 120,
       "TitleRus": "УИК №1206",
       "TitleEng": null,
       "TitleNative": null,
       "CommissionNumber": 1206,
       "ProtocolSetId": 1,
       "ProtocolSet": null,
-      "ParentId": 111,
+      "ParentId": 110,
       "Parent": null,
       "Children": null,
       "LineNumbers": null,
       "LineStrings": null
     },
     {
-      "Id": 125,
+      "Id": 124,
       "TitleRus": "Архангельская область",
       "TitleEng": "ARO",
       "TitleNative": null,
@@ -716,11 +716,25 @@
       "LineStrings": null
     },
     {
-      "Id": 126,
+      "Id": 125,
       "TitleRus": "Холмогорская",
       "TitleEng": null,
       "TitleNative": null,
       "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": 124,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
+    },
+    {
+      "Id": 126,
+      "TitleRus": "УИК №918",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 918,
       "ProtocolSetId": 1,
       "ProtocolSet": null,
       "ParentId": 125,
@@ -730,42 +744,28 @@
       "LineStrings": null
     },
     {
-      "Id": 127,
-      "TitleRus": "УИК №918",
-      "TitleEng": null,
-      "TitleNative": null,
-      "CommissionNumber": 918,
-      "ProtocolSetId": 1,
-      "ProtocolSet": null,
-      "ParentId": 126,
-      "Parent": null,
-      "Children": null,
-      "LineNumbers": null,
-      "LineStrings": null
-    },
-    {
-      "Id": 131,
+      "Id": 130,
       "TitleRus": "УИК №1208",
       "TitleEng": null,
       "TitleNative": null,
       "CommissionNumber": 1208,
       "ProtocolSetId": 1,
       "ProtocolSet": null,
-      "ParentId": 111,
+      "ParentId": 110,
       "Parent": null,
       "Children": null,
       "LineNumbers": null,
       "LineStrings": null
     },
     {
-      "Id": 134,
+      "Id": 133,
       "TitleRus": "УИК №1207",
       "TitleEng": null,
       "TitleNative": null,
       "CommissionNumber": 1207,
       "ProtocolSetId": 1,
       "ProtocolSet": null,
-      "ParentId": 111,
+      "ParentId": 110,
       "Parent": null,
       "Children": null,
       "LineNumbers": null,
@@ -902,105 +902,97 @@
       "LineDescription": null
     },
     {
-      "Id": 86,
-      "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184002039&tvd=4184002259111&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184002259111",
-      "ProtocolId": 85,
-      "Protocol": null,
-      "LineDescriptionId": 2,
-      "LineDescription": null
-    },
-    {
-      "Id": 91,
+      "Id": 90,
       "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184003012&tvd=4184003201784&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184003201784",
-      "ProtocolId": 90,
+      "ProtocolId": 89,
       "Protocol": null,
       "LineDescriptionId": 2,
       "LineDescription": null
     },
     {
-      "Id": 95,
+      "Id": 94,
       "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184002040&tvd=4184002259112&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184002259112",
-      "ProtocolId": 94,
+      "ProtocolId": 93,
       "Protocol": null,
       "LineDescriptionId": 2,
       "LineDescription": null
     },
     {
-      "Id": 99,
+      "Id": 98,
       "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184002041&tvd=4184002259113&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184002259113",
-      "ProtocolId": 98,
+      "ProtocolId": 97,
       "Protocol": null,
       "LineDescriptionId": 2,
       "LineDescription": null
     },
     {
-      "Id": 103,
+      "Id": 102,
       "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184003013&tvd=4184003201785&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184003201785",
-      "ProtocolId": 102,
+      "ProtocolId": 101,
       "Protocol": null,
       "LineDescriptionId": 2,
       "LineDescription": null
     },
     {
-      "Id": 107,
+      "Id": 106,
       "Value": "http://www.udmurt.vybory.izbirkom.ru/region/udmurt?action=show&global=true&root=184002042&tvd=4184002259114&vrn=100100084849062&prver=0&pronetvd=null&region=18&sub_region=18&type=226&vibid=4184002259114",
-      "ProtocolId": 106,
+      "ProtocolId": 105,
       "Protocol": null,
       "LineDescriptionId": 2,
       "LineDescription": null
     },
     {
-      "Id": 113,
+      "Id": 112,
       "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012004&tvd=4304012258584&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258584",
-      "ProtocolId": 112,
-      "Protocol": null,
-      "LineDescriptionId": 2,
-      "LineDescription": null
-    },
-    {
-      "Id": 118,
-      "Value": "http://www.belgorod.vybory.izbirkom.ru/region/belgorod?action=show&global=true&root=314002009&tvd=4314002452910&vrn=100100084849062&prver=0&pronetvd=null&region=31&sub_region=31&type=226&vibid=4314002452910",
-      "ProtocolId": 117,
-      "Protocol": null,
-      "LineDescriptionId": 2,
-      "LineDescription": null
-    },
-    {
-      "Id": 122,
-      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012006&tvd=4304012258586&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258586",
-      "ProtocolId": 121,
-      "Protocol": null,
-      "LineDescriptionId": 2,
-      "LineDescription": null
-    },
-    {
-      "Id": 128,
-      "Value": "http://www.arkhangelsk.vybory.izbirkom.ru/region/arkhangelsk?action=show&global=true&root=294031001&tvd=4294031218192&vrn=100100084849062&prver=0&pronetvd=null&region=29&sub_region=29&type=226&vibid=4294031218192",
-      "ProtocolId": 127,
-      "Protocol": null,
-      "LineDescriptionId": 2,
-      "LineDescription": null
-    },
-    {
-      "Id": 132,
-      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
-      "ProtocolId": 131,
-      "Protocol": null,
-      "LineDescriptionId": 2,
-      "LineDescription": null
-    },
-    {
-      "Id": 135,
-      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
-      "ProtocolId": 134,
-      "Protocol": null,
-      "LineDescriptionId": 2,
-      "LineDescription": null
-    },
-    {
-      "Id": 138,
-      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
       "ProtocolId": 111,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 117,
+      "Value": "http://www.belgorod.vybory.izbirkom.ru/region/belgorod?action=show&global=true&root=314002009&tvd=4314002452910&vrn=100100084849062&prver=0&pronetvd=null&region=31&sub_region=31&type=226&vibid=4314002452910",
+      "ProtocolId": 116,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 121,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012006&tvd=4304012258586&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258586",
+      "ProtocolId": 120,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 127,
+      "Value": "http://www.arkhangelsk.vybory.izbirkom.ru/region/arkhangelsk?action=show&global=true&root=294031001&tvd=4294031218192&vrn=100100084849062&prver=0&pronetvd=null&region=29&sub_region=29&type=226&vibid=4294031218192",
+      "ProtocolId": 126,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 131,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
+      "ProtocolId": 130,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 134,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
+      "ProtocolId": 133,
+      "Protocol": null,
+      "LineDescriptionId": 2,
+      "LineDescription": null
+    },
+    {
+      "Id": 137,
+      "Value": "http://www.astrakhan.vybory.izbirkom.ru/region/astrakhan?action=show&global=true&root=304012007&tvd=4304012258587&vrn=100100084849062&prver=0&pronetvd=null&region=30&sub_region=30&type=226&vibid=4304012258587",
+      "ProtocolId": 110,
       "Protocol": null,
       "LineDescriptionId": 2,
       "LineDescription": null
@@ -1264,7 +1256,7 @@
       "LineDescription": null
     },
     {
-      "Id": 87,
+      "Id": 86,
       "Value": 400,
       "ProtocolId": 85,
       "Protocol": null,
@@ -1272,7 +1264,7 @@
       "LineDescription": null
     },
     {
-      "Id": 88,
+      "Id": 87,
       "Value": 0,
       "ProtocolId": 85,
       "Protocol": null,
@@ -1280,177 +1272,177 @@
       "LineDescription": null
     },
     {
-      "Id": 92,
+      "Id": 91,
       "Value": 91,
-      "ProtocolId": 90,
+      "ProtocolId": 89,
       "Protocol": null,
       "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
-      "Id": 93,
+      "Id": 92,
       "Value": 1,
-      "ProtocolId": 90,
+      "ProtocolId": 89,
       "Protocol": null,
       "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 95,
+      "Value": 321,
+      "ProtocolId": 93,
+      "Protocol": null,
+      "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
       "Id": 96,
-      "Value": 321,
-      "ProtocolId": 94,
+      "Value": 0,
+      "ProtocolId": 93,
       "Protocol": null,
-      "LineDescriptionId": 3,
+      "LineDescriptionId": 4,
       "LineDescription": null
     },
     {
-      "Id": 97,
-      "Value": 0,
-      "ProtocolId": 94,
+      "Id": 99,
+      "Value": 742,
+      "ProtocolId": 97,
       "Protocol": null,
-      "LineDescriptionId": 4,
+      "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
       "Id": 100,
-      "Value": 742,
-      "ProtocolId": 98,
+      "Value": 7,
+      "ProtocolId": 97,
       "Protocol": null,
-      "LineDescriptionId": 3,
+      "LineDescriptionId": 4,
       "LineDescription": null
     },
     {
-      "Id": 101,
-      "Value": 7,
-      "ProtocolId": 98,
+      "Id": 103,
+      "Value": 152,
+      "ProtocolId": 101,
       "Protocol": null,
-      "LineDescriptionId": 4,
+      "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
       "Id": 104,
-      "Value": 152,
-      "ProtocolId": 102,
+      "Value": 0,
+      "ProtocolId": 101,
       "Protocol": null,
-      "LineDescriptionId": 3,
+      "LineDescriptionId": 4,
       "LineDescription": null
     },
     {
-      "Id": 105,
-      "Value": 0,
-      "ProtocolId": 102,
+      "Id": 107,
+      "Value": 576,
+      "ProtocolId": 105,
       "Protocol": null,
-      "LineDescriptionId": 4,
+      "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
       "Id": 108,
-      "Value": 576,
-      "ProtocolId": 106,
-      "Protocol": null,
-      "LineDescriptionId": 3,
-      "LineDescription": null
-    },
-    {
-      "Id": 109,
       "Value": 0,
-      "ProtocolId": 106,
+      "ProtocolId": 105,
       "Protocol": null,
       "LineDescriptionId": 4,
       "LineDescription": null
     },
     {
-      "Id": 114,
+      "Id": 113,
       "Value": 1482,
-      "ProtocolId": 112,
+      "ProtocolId": 111,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 118,
+      "Value": 1398,
+      "ProtocolId": 116,
       "Protocol": null,
       "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
       "Id": 119,
-      "Value": 1398,
-      "ProtocolId": 117,
+      "Value": 9,
+      "ProtocolId": 116,
       "Protocol": null,
-      "LineDescriptionId": 3,
+      "LineDescriptionId": 4,
       "LineDescription": null
     },
     {
-      "Id": 120,
-      "Value": 9,
-      "ProtocolId": 117,
+      "Id": 122,
+      "Value": 1377,
+      "ProtocolId": 120,
       "Protocol": null,
-      "LineDescriptionId": 4,
+      "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
       "Id": 123,
-      "Value": 1377,
-      "ProtocolId": 121,
+      "Value": 1,
+      "ProtocolId": 120,
       "Protocol": null,
-      "LineDescriptionId": 3,
+      "LineDescriptionId": 4,
       "LineDescription": null
     },
     {
-      "Id": 124,
-      "Value": 1,
-      "ProtocolId": 121,
+      "Id": 128,
+      "Value": 495,
+      "ProtocolId": 126,
       "Protocol": null,
-      "LineDescriptionId": 4,
+      "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
       "Id": 129,
-      "Value": 495,
-      "ProtocolId": 127,
+      "Value": 0,
+      "ProtocolId": 126,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 132,
+      "Value": 0,
+      "ProtocolId": 130,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 135,
+      "Value": 1071,
+      "ProtocolId": 133,
       "Protocol": null,
       "LineDescriptionId": 3,
-      "LineDescription": null
-    },
-    {
-      "Id": 130,
-      "Value": 0,
-      "ProtocolId": 127,
-      "Protocol": null,
-      "LineDescriptionId": 4,
-      "LineDescription": null
-    },
-    {
-      "Id": 133,
-      "Value": 0,
-      "ProtocolId": 131,
-      "Protocol": null,
-      "LineDescriptionId": 4,
       "LineDescription": null
     },
     {
       "Id": 136,
-      "Value": 1071,
-      "ProtocolId": 134,
-      "Protocol": null,
-      "LineDescriptionId": 3,
-      "LineDescription": null
-    },
-    {
-      "Id": 137,
       "Value": 2,
-      "ProtocolId": 134,
+      "ProtocolId": 133,
       "Protocol": null,
       "LineDescriptionId": 4,
       "LineDescription": null
     },
     {
-      "Id": 139,
+      "Id": 138,
       "Value": 1071,
-      "ProtocolId": 111,
+      "ProtocolId": 110,
       "Protocol": null,
       "LineDescriptionId": 3,
       "LineDescription": null
     },
     {
-      "Id": 140,
+      "Id": 139,
       "Value": 2,
-      "ProtocolId": 111,
+      "ProtocolId": 110,
       "Protocol": null,
       "LineDescriptionId": 4,
       "LineDescription": null
