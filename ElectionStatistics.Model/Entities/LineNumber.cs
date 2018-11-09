@@ -11,8 +11,7 @@ namespace ElectionStatistics.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
-        public int Value { get; set; }
+        public int? Value { get; set; }
 
         public int? ProtocolId { get; set; }
         public virtual Protocol Protocol { get; set; }

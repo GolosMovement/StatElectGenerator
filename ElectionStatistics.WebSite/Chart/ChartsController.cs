@@ -273,6 +273,7 @@ namespace ElectionStatistics.WebSite
                 JOIN LineDescriptions ON (LineDescriptions.Id = LineNumbers.LineDescriptionId)
                 WHERE
                     LineDescriptions.ProtocolSetId = @protocol_set
+                    AND LineNumbers.Value IS NOT NULL
                     %lineDescFilter%
                     %protocolFilter%
                     %minValueFilter%";
@@ -288,9 +289,9 @@ namespace ElectionStatistics.WebSite
                     JOIN query ON p2.ParentId = query.Id)";
 
             var lineDescFilter =
-                @"AND LineDescriptions.Id in (%lineDescriptions%)";
+                @"AND LineDescriptions.Id IN (%lineDescriptions%)";
 
-            var protocolFilter = @"AND LineNumbers.ProtocolId in (SELECT Id FROM query)";
+            var protocolFilter = @"AND LineNumbers.ProtocolId IN (SELECT Id FROM query)";
 
             var minValueFilter = @"AND LineNumbers.Value >= @min_value";
 

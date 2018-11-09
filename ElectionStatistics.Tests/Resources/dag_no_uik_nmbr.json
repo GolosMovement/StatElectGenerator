@@ -617,6 +617,20 @@
       "Children": null,
       "LineNumbers": null,
       "LineStrings": null
+    },
+    {
+      "Id": 351,
+      "TitleRus": "УИК №142",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 140,
+      "ProtocolSet": null,
+      "ParentId": 180,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
     }
   ],
   "ElectionStatistics.Model.LineNumber": [
@@ -1899,6 +1913,262 @@
       "Protocol": null,
       "LineDescriptionId": 177,
       "LineDescription": null
+    },
+    {
+      "Id": 352,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 146,
+      "LineDescription": null
+    },
+    {
+      "Id": 353,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 147,
+      "LineDescription": null
+    },
+    {
+      "Id": 354,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 148,
+      "LineDescription": null
+    },
+    {
+      "Id": 355,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 149,
+      "LineDescription": null
+    },
+    {
+      "Id": 356,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 150,
+      "LineDescription": null
+    },
+    {
+      "Id": 357,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 151,
+      "LineDescription": null
+    },
+    {
+      "Id": 358,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 152,
+      "LineDescription": null
+    },
+    {
+      "Id": 359,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 153,
+      "LineDescription": null
+    },
+    {
+      "Id": 360,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 154,
+      "LineDescription": null
+    },
+    {
+      "Id": 361,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 155,
+      "LineDescription": null
+    },
+    {
+      "Id": 362,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 156,
+      "LineDescription": null
+    },
+    {
+      "Id": 363,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 157,
+      "LineDescription": null
+    },
+    {
+      "Id": 364,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 158,
+      "LineDescription": null
+    },
+    {
+      "Id": 365,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 159,
+      "LineDescription": null
+    },
+    {
+      "Id": 366,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 160,
+      "LineDescription": null
+    },
+    {
+      "Id": 367,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 161,
+      "LineDescription": null
+    },
+    {
+      "Id": 368,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 162,
+      "LineDescription": null
+    },
+    {
+      "Id": 369,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 163,
+      "LineDescription": null
+    },
+    {
+      "Id": 370,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 164,
+      "LineDescription": null
+    },
+    {
+      "Id": 371,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 165,
+      "LineDescription": null
+    },
+    {
+      "Id": 372,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 166,
+      "LineDescription": null
+    },
+    {
+      "Id": 373,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 167,
+      "LineDescription": null
+    },
+    {
+      "Id": 374,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 168,
+      "LineDescription": null
+    },
+    {
+      "Id": 375,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 169,
+      "LineDescription": null
+    },
+    {
+      "Id": 376,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 170,
+      "LineDescription": null
+    },
+    {
+      "Id": 377,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 171,
+      "LineDescription": null
+    },
+    {
+      "Id": 378,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 172,
+      "LineDescription": null
+    },
+    {
+      "Id": 379,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 173,
+      "LineDescription": null
+    },
+    {
+      "Id": 380,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 174,
+      "LineDescription": null
+    },
+    {
+      "Id": 381,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 175,
+      "LineDescription": null
+    },
+    {
+      "Id": 382,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 176,
+      "LineDescription": null
+    },
+    {
+      "Id": 383,
+      "Value": null,
+      "ProtocolId": 351,
+      "Protocol": null,
+      "LineDescriptionId": 177,
+      "LineDescription": null
     }
   ],
   "ElectionStatistics.Model.LineString": [
@@ -1938,6 +2208,14 @@
       "Id": 350,
       "Value": "http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=true&root=52000009&tvd=2052000895876&vrn=100100067795849&prver=0&pronetvd=0&region=0&sub_region=99&type=233&vibid=2052000895876",
       "ProtocolId": 317,
+      "Protocol": null,
+      "LineDescriptionId": 145,
+      "LineDescription": null
+    },
+    {
+      "Id": 384,
+      "Value": "Null-values",
+      "ProtocolId": 351,
       "Protocol": null,
       "LineDescriptionId": 145,
       "LineDescription": null

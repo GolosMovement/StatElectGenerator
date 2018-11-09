@@ -15,7 +15,7 @@ namespace ElectionStatistics.Core.Methods
 
     public class LastDigitAnalyzer
     {
-        public LDAResult GetData(List<int> numbers)
+        public LDAResult GetData(List<int?> numbers)
         {
             if (numbers.Count == 0)
             {
@@ -32,19 +32,19 @@ namespace ElectionStatistics.Core.Methods
             return result;
         }
 
-        private double ChiSquared(List<double> frequencies, List<int> lineNumbers)
+        private double ChiSquared(List<double> frequencies, List<int?> lineNumbers)
         {
             var expectedFrequency = lineNumbers.Count / 10.0;
             return frequencies.Aggregate(0.0, (sum, num) =>
                 sum + Math.Pow(num - expectedFrequency, 2) / expectedFrequency);
         }
 
-        private double Sigma(List<int> numbers)
+        private double Sigma(List<int?> numbers)
         {
             return Math.Sqrt(0.1 * 0.9 / numbers.Count);
         }
 
-        private List<double> Frequencies(List<int> numbers)
+        private List<double> Frequencies(List<int?> numbers)
         {
             var freqs = new List<double>(new double[10]);
             foreach (int number in numbers)

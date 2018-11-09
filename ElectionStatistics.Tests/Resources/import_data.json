@@ -1193,7 +1193,7 @@
     },
     {
       "Id": 68,
-      "Value": 1401,
+      "Value": null,
       "ProtocolId": 66,
       "Protocol": null,
       "LineDescriptionId": 3,
@@ -1409,7 +1409,7 @@
     },
     {
       "Id": 132,
-      "Value": 0,
+      "Value": null,
       "ProtocolId": 130,
       "Protocol": null,
       "LineDescriptionId": 4,

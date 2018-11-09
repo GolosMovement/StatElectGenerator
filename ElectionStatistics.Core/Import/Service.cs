@@ -547,7 +547,7 @@ namespace ElectionStatistics.Core.Import
                     }
                     else
                     {
-                        lineNumber.Value = 0;
+                        lineNumber.Value = null;
                     }
 
                     lineNumber.ProtocolId = protocol.Id;
