@@ -770,6 +770,20 @@
       "Children": null,
       "LineNumbers": null,
       "LineStrings": null
+    },
+    {
+      "Id": 140,
+      "TitleRus": "9",
+      "TitleEng": null,
+      "TitleNative": null,
+      "CommissionNumber": 0,
+      "ProtocolSetId": 1,
+      "ProtocolSet": null,
+      "ParentId": null,
+      "Parent": null,
+      "Children": null,
+      "LineNumbers": null,
+      "LineStrings": null
     }
   ],
   "ElectionStatistics.Model.LineString": [
@@ -807,7 +821,7 @@
     },
     {
       "Id": 31,
-      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714014014&tvd=4714014146702&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714014146702",
+      "Value": "3344",
       "ProtocolId": 30,
       "Protocol": null,
       "LineDescriptionId": 2,
@@ -839,7 +853,7 @@
     },
     {
       "Id": 49,
-      "Value": "http://www.tula.vybory.izbirkom.ru/region/tula?action=show&global=true&root=714016002&tvd=4714016254742&vrn=100100084849062&prver=0&pronetvd=null&region=71&sub_region=71&type=226&vibid=4714016254742",
+      "Value": "12/10/19 12:00:00 AM",
       "ProtocolId": 48,
       "Protocol": null,
       "LineDescriptionId": 2,
@@ -871,7 +885,7 @@
     },
     {
       "Id": 67,
-      "Value": "http://www.tyumen.vybory.izbirkom.ru/region/tyumen?action=show&global=true&root=724001003&tvd=4724001161251&vrn=100100084849062&prver=0&pronetvd=null&region=72&sub_region=72&type=226&vibid=4724001161251",
+      "Value": "100",
       "ProtocolId": 66,
       "Protocol": null,
       "LineDescriptionId": 2,
@@ -1443,6 +1457,22 @@
       "Id": 139,
       "Value": 2,
       "ProtocolId": 110,
+      "Protocol": null,
+      "LineDescriptionId": 4,
+      "LineDescription": null
+    },
+    {
+      "Id": 141,
+      "Value": null,
+      "ProtocolId": 140,
+      "Protocol": null,
+      "LineDescriptionId": 3,
+      "LineDescription": null
+    },
+    {
+      "Id": 142,
+      "Value": null,
+      "ProtocolId": 140,
       "Protocol": null,
       "LineDescriptionId": 4,
       "LineDescription": null

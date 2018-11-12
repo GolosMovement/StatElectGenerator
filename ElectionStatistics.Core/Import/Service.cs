@@ -368,29 +368,9 @@ namespace ElectionStatistics.Core.Import
                 var mappingRus = current.Russian.MappingLine;
                 var columnRus = ColumnLine.Dehumanize(
                     mappingRus.ColumnNumber);
-
                 var isLastItem = i == hierarchy.Count - 1;
 
-                var titleType = reader.GetFieldType(columnRus);
-                if (titleType != null && titleType != typeof(System.String))
-                {
-                    if (!rootCreated)
-                    {
-                        Error(line, columnRus,
-                            "Line has been skipped. " +
-                            "Protocol title should be a string. " +
-                            "No root hierarchy");
-                        return null;
-                    }
-                    else
-                    {
-                        Error(line, columnRus,
-                            "Protocol title should be a string");
-                        continue;
-                    }
-                }
-
-                var protocolRusTitle = reader.GetString(columnRus);
+                var protocolRusTitle = reader.GetValue(columnRus)?.ToString();
 
                 if (!rootCreated && String.IsNullOrEmpty(protocolRusTitle))
                 {
@@ -497,16 +477,10 @@ namespace ElectionStatistics.Core.Import
                 return null;
             }
 
-            var mappingLine = mappingEnv.MappingLine;
-            var column = ColumnLine.Dehumanize(mappingLine.ColumnNumber);
+            var title = reader.GetValue(
+                ColumnLine.Dehumanize(
+                    mappingEnv.MappingLine.ColumnNumber))?.ToString();
 
-            var titleType = reader.GetFieldType(column);
-            if (titleType != null && titleType != typeof(System.String))
-            {
-                return null;
-            }
-
-            var title = reader.GetString(column);
             if (String.IsNullOrEmpty(title))
             {
                 return null;
@@ -564,18 +538,8 @@ namespace ElectionStatistics.Core.Import
                         continue;
                     }
 
-                    if (columnType != typeof(System.String))
-                    {
-                        Error(line, columnNumber,
-                            String.Format(
-                                "Cell value should be a string. " +
-                                "Current type is \"{0}\"",
-                                columnType));
-                        continue;
-                    }
-
                     var lineString = new LineString();
-                    lineString.Value = reader.GetString(columnNumber);
+                    lineString.Value = reader.GetValue(columnNumber).ToString();
                     lineString.ProtocolId = protocol.Id;
                     lineString.LineDescriptionId = item.LineDescription.Id;
 

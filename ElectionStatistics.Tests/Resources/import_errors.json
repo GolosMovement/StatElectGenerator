@@ -3,7 +3,7 @@
   "25:3 (C): Line has been skipped. It has no root hierarchy",
   "29:9 (I): Cell value should be a number. Current type is \"System.String\"",
   "32:3 (C): Line has been skipped. It has no root hierarchy",
-  "33:3 (C): Line has been skipped. Protocol title should be a string. No root hierarchy",
+  "33:6 (F): Protocol commission number should be a number",
   "34:3 (C): Line has been skipped. It has no root hierarchy",
   "35:3 (C): Line has been skipped. It has no root hierarchy"
 ]
