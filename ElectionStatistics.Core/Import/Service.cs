@@ -170,14 +170,15 @@ namespace ElectionStatistics.Core.Import
                 }
 
                 serializer.BeforeImport();
-                int totalLines = GetTotalLines();
-                notifier.Start(totalLines);
 
                 using (var stream = File.Open(xlsxFile, FileMode.Open,
                     FileAccess.Read))
                 {
                     using (var reader = ExcelReaderFactory.CreateReader(stream))
                     {
+                        int totalLines = reader.RowCount;
+                        notifier.Start(totalLines);
+
                         Dictionary<string, Protocol> createdProtocols =
                             new Dictionary<string, Protocol>();
 
@@ -188,51 +189,46 @@ namespace ElectionStatistics.Core.Import
                         var mappings = MappingsWithoutHierarchy(allMappings);
 
                         int emptyLinesSeq = 0;
-
-                        do
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            if (totalLines == maxXlsxRowsError &&
+                                emptyLinesSeq == maxEmptyLinesSeq)
                             {
-                                if (totalLines == maxXlsxRowsError &&
-                                    emptyLinesSeq == maxEmptyLinesSeq)
-                                {
-                                    // Stop if we encountered the issue #49
-                                    line = totalLines;
-                                    Error(line, 0, "Stop due to the issue #49");
-                                    break;
-                                }
-
-                                // Skip header lines
-                                if (++line < mapping.DataLineNumber)
-                                {
-                                    continue;
-                                }
-
-                                var protocol = UpdateHierarchy(line,
-                                    protocolSet, createdProtocols, hierarchy,
-                                    reader);
-
-                                if (protocol == null)
-                                {
-                                    emptyLinesSeq++;
-                                    continue;
-                                }
-
-                                if (emptyLinesSeq > 0)
-                                {
-                                    emptyLinesSeq = 0;
-                                }
-
-                                CreateLines(line, protocol, mappings, reader);
-
-                                // TODO: progress notifier is not useful because
-                                // all the work is on the bulk insertions
-                                // right now, see DbSerializer#AfterImport
-                                notifier.Progress(line,
-                                    errorLogger.GetErrorsCount());
+                                // Stop if we encountered the issue #49
+                                line = totalLines;
+                                Error(line, 0, "Stop due to the issue #49");
+                                break;
                             }
+
+                            // Skip header lines
+                            if (++line < mapping.DataLineNumber)
+                            {
+                                continue;
+                            }
+
+                            var protocol = UpdateHierarchy(line,
+                                protocolSet, createdProtocols, hierarchy,
+                                reader);
+
+                            if (protocol == null)
+                            {
+                                emptyLinesSeq++;
+                                continue;
+                            }
+
+                            if (emptyLinesSeq > 0)
+                            {
+                                emptyLinesSeq = 0;
+                            }
+
+                            CreateLines(line, protocol, mappings, reader);
+
+                            // TODO: progress notifier is not useful because
+                            // all the work is on the bulk insertions
+                            // right now, see DbSerializer#AfterImport
+                            notifier.Progress(line,
+                                errorLogger.GetErrorsCount());
                         }
-                        while (reader.NextResult());
 
                         serializer.AfterImport();
                     }
@@ -247,28 +243,6 @@ namespace ElectionStatistics.Core.Import
             finally
             {
                 notifier.Finish(line, success, errorLogger.GetErrorsCount());
-            }
-        }
-
-        private int GetTotalLines()
-        {
-            using (var stream = File.Open(xlsxFile, FileMode.Open,
-                FileAccess.Read))
-            {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
-                {
-                    int totalLines = 0;
-                    do
-                    {
-                        while (reader.Read())
-                        {
-                            totalLines++;
-                        }
-                    }
-                    while (reader.NextResult());
-
-                    return totalLines;
-                }
             }
         }
 
