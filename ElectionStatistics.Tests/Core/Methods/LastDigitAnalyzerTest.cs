@@ -12,21 +12,23 @@ namespace ElectionStatistics.Tests.Core.Methods
     {
         private static LastDigitAnalyzer service;
         [Fact]
-        public void GetData_OK_ReturnsData()
+        public void Calculate_OK_ReturnsData()
         {
-            var numbers = new List<int?> { 10, 10, 10, 11, 13, 14, 15, 15, 17, 18 };
-            LDAResult result = Service().GetData(numbers);
-            Assert.Equal(Math.Sqrt(0.09/numbers.Count), result.Sigma, 15);
-            Assert.Equal(8, result.ChiSquared);
-            Assert.Equal(new List<double>() { 0.3, 0.1, 0.0, 0.1, 0.1, 0.2, 0.0, 0.1, 0.1, 0.0 },
-                result.Frequency);
+            var ldaResult = Service().Calculate(25,
+                new List<int>() { 8, 1, 1, 1, 1, 3, 3, 3, 3, 1 });
+
+            Assert.Equal(17.0, ldaResult.ChiSquared, 15);
+            Assert.Equal(0.06, ldaResult.Sigma, 15);
+            Assert.Equal(
+                new List<double>() { 0.32, 0.04, 0.04, 0.04, 0.04, 0.12, 0.12, 0.12, 0.12, 0.04 },
+                ldaResult.Frequency);
         }
 
         [Fact]
-        public void GetData_NoLineNumbers_ThrowsException()
+        public void Calculate_NoLineNumbers_ReturnsNull()
         {
-            Assert.Throws<ArgumentException>(
-                () => Service().GetData(new List<int?>()));
+            Assert.Null(Service().Calculate(0, null));
+            Assert.Null(Service().Calculate(25, new List<int>() {}));
         }
 
         private LastDigitAnalyzer Service()

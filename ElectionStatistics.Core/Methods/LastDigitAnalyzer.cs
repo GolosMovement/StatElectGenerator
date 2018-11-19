@@ -6,58 +6,37 @@ using ElectionStatistics.Model;
 
 namespace ElectionStatistics.Core.Methods
 {
-    public struct LDAResult
+    public class LDAResult
     {
-        public List<double> Frequency;
-        public double ChiSquared;
-        public double Sigma;
+        public List<double> Frequency { get; set; }
+        public double ChiSquared { get; set; }
+        public double Sigma { get; set; }
     }
 
     public class LastDigitAnalyzer
     {
-        public LDAResult GetData(List<int?> numbers)
+        public LDAResult Calculate(int total, List<int> numbers)
         {
-            if (numbers.Count == 0)
+            if (total == 0 || numbers == null || numbers.Count == 0)
             {
-                throw new ArgumentException("lineNumbers should not be empty");
+                return null;
             }
 
-            var result = new LDAResult();
-            var calcFreqs = Frequencies(numbers);
-            result.ChiSquared = ChiSquared(calcFreqs, numbers);
-            result.Sigma = Sigma(numbers);
+            LDAResult result = new LDAResult();
 
-            result.Frequency = calcFreqs.Select(freq => freq / numbers.Count).ToList();
+            result.Sigma = Math.Sqrt(0.1 * 0.9 / total);
+
+            var expectedFrequency = total / 10.0;
+            result.ChiSquared = numbers.Aggregate(0.0, (sum, num) =>
+                sum + Math.Pow(num - expectedFrequency, 2) / expectedFrequency);
+
+            result.Frequency = new List<double>();
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                result.Frequency.Add(numbers[i] / (double) total);
+            }
 
             return result;
-        }
-
-        private double ChiSquared(List<double> frequencies, List<int?> lineNumbers)
-        {
-            var expectedFrequency = lineNumbers.Count / 10.0;
-            return frequencies.Aggregate(0.0, (sum, num) =>
-                sum + Math.Pow(num - expectedFrequency, 2) / expectedFrequency);
-        }
-
-        private double Sigma(List<int?> numbers)
-        {
-            return Math.Sqrt(0.1 * 0.9 / numbers.Count);
-        }
-
-        private List<double> Frequencies(List<int?> numbers)
-        {
-            var freqs = new List<double>(new double[10]);
-            foreach (int number in numbers)
-            {
-                ++freqs[LastDigit(number)];
-            }
-
-            return freqs;
-        }
-
-        private int LastDigit(int number)
-        {
-            return number % 10;
         }
     }
 }

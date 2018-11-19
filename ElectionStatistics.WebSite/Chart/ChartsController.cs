@@ -262,89 +262,23 @@ namespace ElectionStatistics.WebSite
         {
             var parameters = DeserialzeJson<LastDigitAnalyzerBuildParameters>(parametersString);
 
-            var baseQuery =
-                @"%hierarchyQuery%
-                SELECT
-                    LineNumbers.Id
-                    ,LineNumbers.ProtocolId
-                    ,LineNumbers.LineDescriptionId
-                    ,LineNumbers.Value
-                FROM LineNumbers
-                JOIN LineDescriptions ON (LineDescriptions.Id = LineNumbers.LineDescriptionId)
-                WHERE
-                    LineDescriptions.ProtocolSetId = @protocol_set
-                    AND LineNumbers.Value IS NOT NULL
-                    %lineDescFilter%
-                    %protocolFilter%
-                    %minValueFilter%";
+            var ldaRepo = new LDARepository();
+            var ldaNumbers = ldaRepo.CountNumbers(
+                (SqlConnection) modelContext.Database.GetDbConnection(),
+                parameters.ProtocolSetId,
+                parameters.LineDescriptionIds,
+                parameters.ProtocolId,
+                parameters.MinValue);
 
-            var hierarchyQuery =
-                @"WITH query AS
-                    (SELECT *
-                    FROM Protocols p1
-                    WHERE p1.id = @protocol
-                    UNION ALL
-                    SELECT p2.*
-                    FROM Protocols p2
-                    JOIN query ON p2.ParentId = query.Id)";
-
-            var lineDescFilter =
-                @"AND LineDescriptions.Id IN (%lineDescriptions%)";
-
-            var protocolFilter = @"AND LineNumbers.ProtocolId IN (SELECT Id FROM query)";
-
-            var minValueFilter = @"AND LineNumbers.Value >= @min_value";
-
-            var sql = baseQuery;
-
-            List<SqlParameter> sqlParameters = new List<SqlParameter>();
-            sqlParameters.Add(new SqlParameter("@protocol_set", parameters.ProtocolSetId));
-
-            if (parameters.LineDescriptionIds.Count() > 0)
+            if (ldaNumbers == null)
             {
-                sql = sql.Replace("%lineDescFilter%", lineDescFilter)
-                    // FIXME: possible SQL injection
-                    .Replace("%lineDescriptions%", string.Join(",", parameters.LineDescriptionIds));
-            }
-            else
-            {
-                sql = sql.Replace("%lineDescFilter%", "");
+                return new LastDigitAnalyzerData();
             }
 
-            if (parameters.ProtocolId != null)
-            {
-                sql = sql.Replace("%hierarchyQuery%", hierarchyQuery)
-                    .Replace("%protocolFilter%", protocolFilter);
+            var lda = new LastDigitAnalyzer();
+            var ldaResult = lda.Calculate(ldaNumbers.Total, ldaNumbers.Numbers);
 
-                sqlParameters.Add(new SqlParameter("@protocol", parameters.ProtocolId));
-            }
-            else
-            {
-                sql = sql.Replace("%hierarchyQuery%", "").Replace("%protocolFilter%", "");
-            }
-
-            if (parameters.MinValue != null)
-            {
-                sql = sql.Replace("%minValueFilter%", minValueFilter);
-
-                sqlParameters.Add(new SqlParameter("@min_value", parameters.MinValue));
-            }
-            else
-            {
-                sql = sql.Replace("%minValueFilter%", "");
-            }
-
-            // TODO: query plain values without an entity
-            var lns = modelContext.Set<LineNumber>().FromSql(sql,
-                    sqlParameters.Cast<object>().ToArray())
-                .Select(l => l.Value).ToList();
-
-            LDAResult results;
-            try
-            {
-                results = new LastDigitAnalyzer().GetData(lns);
-            }
-            catch (ArgumentException)
+            if (ldaResult == null)
             {
                 return new LastDigitAnalyzerData();
             }
@@ -359,8 +293,9 @@ namespace ElectionStatistics.WebSite
 
             var series = new LDAChartSeries
             {
-                Data = results.Frequency.ToArray(), Name = "Частота", Type = "column"
+                Data = ldaResult.Frequency.ToArray(), Name = "Частота", Type = "column"
             };
+
             highchartsOptions.Series = new ChartSeries[]
             {
                 series,
@@ -372,37 +307,37 @@ namespace ElectionStatistics.WebSite
                 new LDAChartSeries
                 {
                     Color = "green", Name = "+1 сигма", Type = "line",
-                    Data = Enumerable.Repeat(0.1 + results.Sigma, 10).ToArray()
+                    Data = Enumerable.Repeat(0.1 + ldaResult.Sigma, 10).ToArray()
                 },
                 new LDAChartSeries
                 {
                     Color = "green", Name = "-1 сигма", Type = "line",
-                    Data = Enumerable.Repeat(0.1 - results.Sigma, 10).ToArray()
+                    Data = Enumerable.Repeat(0.1 - ldaResult.Sigma, 10).ToArray()
                 },
                 new LDAChartSeries
                 {
                     Color = "yellow", Name = "+2 сигма", Type = "line",
-                    Data = Enumerable.Repeat(0.1 + 2 * results.Sigma, 10).ToArray()
+                    Data = Enumerable.Repeat(0.1 + 2 * ldaResult.Sigma, 10).ToArray()
                 },
                 new LDAChartSeries
                 {
                     Color = "yellow", Name = "-2 сигма", Type = "line",
-                    Data = Enumerable.Repeat(0.1 - 2 * results.Sigma, 10).ToArray()
+                    Data = Enumerable.Repeat(0.1 - 2 * ldaResult.Sigma, 10).ToArray()
                 },
                 new LDAChartSeries
                 {
                     Color = "red", Name = "+3 сигма", Type = "line",
-                    Data = Enumerable.Repeat(0.1 + 3 * results.Sigma, 10).ToArray()
+                    Data = Enumerable.Repeat(0.1 + 3 * ldaResult.Sigma, 10).ToArray()
                 },
                 new LDAChartSeries
                 {
                     Color = "red", Name = "-3 сигма", Type = "line",
-                    Data = Enumerable.Repeat(0.1 - 3 * results.Sigma, 10).ToArray()
+                    Data = Enumerable.Repeat(0.1 - 3 * ldaResult.Sigma, 10).ToArray()
                 }
             };
 
             return new LastDigitAnalyzerData {
-                ChartOptions = highchartsOptions, ChiSquared = results.ChiSquared
+                ChartOptions = highchartsOptions, ChiSquared = ldaResult.ChiSquared
             };
         }
 
