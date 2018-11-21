@@ -51,19 +51,14 @@ namespace ElectionStatistics.Core.Preset
 
         private double ExecuteSingle(Protocol protocol)
         {
-            var exprBuilder = new StringBuilder();
+            var exprBuilder = new StringBuilder(preset.Expression);
             var lineNumbers = GetMatchedLineNumbers(protocol);
 
-            var lastIndex = 0;
             for (int i = 0; i < lineDescriptionIds.Count; ++i)
             {
-                var index = preset.Expression.IndexOf(lineDescriptionIds[i].ToString());
-                exprBuilder.Append(preset.Expression.Substring(lastIndex, index - lastIndex));
-                exprBuilder.Append(lineNumbers[i].Value);
-                lastIndex = index + lineDescriptionIds[i].ToString().Length;
+                exprBuilder.Replace($"[{lineDescriptionIds[i].ToString()}]",
+                    lineNumbers[i].Value.ToString());
             }
-            exprBuilder.Append(preset.Expression.Substring(lastIndex,
-                preset.Expression.Length - lastIndex));
             var result = Convert.ToDouble(dataTable.Compute(exprBuilder.ToString(), null));
 
             // TODO: choose another way to handle NaN and infinity
@@ -74,7 +69,7 @@ namespace ElectionStatistics.Core.Preset
         {
             return lineDescriptionIds.Select(lineDescrId =>
                 protocol.LineNumbers.Where(line => line.LineDescriptionId == lineDescrId)
-                    .SingleOrDefault()).ToList();
+                    .First()).ToList();
         }
     }
 }

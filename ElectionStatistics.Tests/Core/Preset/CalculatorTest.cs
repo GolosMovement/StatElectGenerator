@@ -49,8 +49,8 @@ namespace ElectionStatistics.Tests.Core.Preset
             };
             modelContext.AddRange(lineNumbers);
 
-            var expression = $"(({lineDescriptions[0].Id} + {lineDescriptions[1].Id}) / " +
-                $"{lineDescriptions[2].Id})";
+            var expression = $"(([{lineDescriptions[0].Id}] + [{lineDescriptions[1].Id}]) / " +
+                $"[{lineDescriptions[2].Id}])";
             var preset = new Model.Preset()
             {
                 Expression = expression, ProtocolSetId = protocolSet.Id
@@ -105,7 +105,7 @@ namespace ElectionStatistics.Tests.Core.Preset
             };
             modelContext.AddRange(lineNumbers);
 
-            var expression = $"{lineDescriptions[0].Id} / {lineDescriptions[1].Id}";
+            var expression = $"[{lineDescriptions[0].Id}] / [{lineDescriptions[1].Id}]";
             var preset = new Model.Preset()
             {
                 Expression = expression,
@@ -119,6 +119,100 @@ namespace ElectionStatistics.Tests.Core.Preset
             var result = service.Execute();
 
             Assert.Collection(result, item => Assert.Equal(0, item.Value));
+        }
+
+        [Fact]
+        public void Execute_RepeatableIds_EvaluatesExpression()
+        {
+            var protocolSet = new ProtocolSet();
+            modelContext.Add(protocolSet);
+            var protocol = new Protocol() { ProtocolSetId = protocolSet.Id };
+            modelContext.Add(protocol);
+
+            var lineDescription = new LineDescription() { ProtocolSetId = protocolSet.Id };
+            modelContext.Add(lineDescription);
+
+            var lineNumber = new LineNumber()
+            {
+                LineDescriptionId = lineDescription.Id, Value = 12, ProtocolId = protocol.Id
+            };
+            modelContext.Add(lineNumber);
+
+            var expression = $"[{lineDescription.Id}] + [{lineDescription.Id}]";
+            var preset = new Model.Preset()
+            {
+                Expression = expression,
+                ProtocolSetId = protocolSet.Id
+            };
+            modelContext.Add(preset);
+            modelContext.SaveChanges();
+
+            var parser = new Parser();
+            var service = new Calculator(modelContext, parser, preset);
+            var result = service.Execute();
+            var expectedVal = new LineCalculatedValue()
+            {
+                Value = 24,
+                PresetId = preset.Id,
+                ProtocolId = protocol.Id
+            };
+            Assert.Collection(result, item =>
+            {
+                Assert.Equal(expectedVal.Value, item.Value);
+                Assert.Equal(expectedVal.PresetId, item.PresetId);
+                Assert.Equal(expectedVal.ProtocolId, item.ProtocolId);
+            });
+        }
+
+        [Fact]
+        public void Execute_WithNonReplaceable_EvaluatesExpression()
+        {
+            var protocolSet = new ProtocolSet();
+            modelContext.Add(protocolSet);
+            var protocol = new Protocol() { ProtocolSetId = protocolSet.Id };
+            modelContext.Add(protocol);
+
+            var lineDescriptions = Enumerable.Range(1, 2).Select((n) =>
+                new LineDescription() { ProtocolSetId = protocolSet.Id }).ToList();
+            modelContext.AddRange(lineDescriptions);
+
+            var lineNumbers = new List<LineNumber>()
+            {
+                new LineNumber()
+                {
+                    LineDescriptionId = lineDescriptions[0].Id, Value = 12, ProtocolId = protocol.Id
+                },
+                new LineNumber()
+                {
+                    LineDescriptionId = lineDescriptions[1].Id, Value = 50, ProtocolId = protocol.Id
+                }
+            };
+            modelContext.AddRange(lineNumbers);
+
+            var expression = $"[{lineDescriptions[0].Id}] / [{lineDescriptions[1].Id}] * 100";
+            var preset = new Model.Preset()
+            {
+                Expression = expression,
+                ProtocolSetId = protocolSet.Id
+            };
+            modelContext.Add(preset);
+            modelContext.SaveChanges();
+
+            var parser = new Parser();
+            var service = new Calculator(modelContext, parser, preset);
+            var result = service.Execute();
+            var expectedVal = new LineCalculatedValue()
+            {
+                Value = 24,
+                PresetId = preset.Id,
+                ProtocolId = protocol.Id
+            };
+            Assert.Collection(result, item =>
+            {
+                Assert.Equal(expectedVal.Value, item.Value);
+                Assert.Equal(expectedVal.PresetId, item.PresetId);
+                Assert.Equal(expectedVal.ProtocolId, item.ProtocolId);
+            });
         }
     }
 }

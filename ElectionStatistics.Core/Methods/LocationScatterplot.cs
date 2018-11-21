@@ -130,7 +130,7 @@ namespace ElectionStatistics.Core.Methods
             }
             else
             {
-                return int.Parse(protocol.TitleRus.Replace("УИК №", ""));
+                return 0;
             }
         }
 

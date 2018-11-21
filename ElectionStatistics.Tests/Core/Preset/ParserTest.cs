@@ -16,9 +16,10 @@ namespace ElectionStatistics.Tests.Core.Preset
             Assert.Empty(parser.Execute(" "));
             Assert.Empty(parser.Execute(" a b c ed "));
 
-            Assert.Equal(new [] { 30, 10 }, parser.Execute(" a b30 c ed10 "));
+            Assert.Equal(new [] { 30, 10 }, parser.Execute(" a b[30] c ed[10] "));
             Assert.Equal(new [] { 342, 493, 2243 },
-                parser.Execute("342/(493+2243)"));
+                parser.Execute("[342]/([493]+[2243])"));
+            Assert.Equal(new [] { 10, 11 }, parser.Execute("[10] / [11] * 100"));
         }
     }
 }

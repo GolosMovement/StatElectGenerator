@@ -15,9 +15,8 @@ namespace ElectionStatistics.Core.Preset
             }
 
             // TODO: memoization
-            return Regex.Split(expression, @"\D+")
-                .Where(x => !string.IsNullOrEmpty(x))
-                .Select(x => Int32.Parse(x))
+            return Regex.Matches(expression, @"(?<=\[)\d+(?=\])")
+                .Select(x => Int32.Parse(x.Value))
                 .ToList();
         }
     }

@@ -88,7 +88,7 @@ export abstract class PresetForm extends React.Component<IPresetFormProps, IPres
 
                         <div className='row'>
                             <p className='text-center'>
-                                Используя обозначения ниже, составьте формулу (например: "(323+212)/382"):
+                                Используя обозначения ниже, составьте формулу (например: "([323]+[212])/[382]"):
                             </p>
                             <div className='col-sm-10'>
                                 <input type='text' value={this.state.preset.expression} onChange={this.changeExpression}

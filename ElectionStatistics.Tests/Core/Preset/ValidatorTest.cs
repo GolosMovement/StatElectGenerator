@@ -43,7 +43,7 @@ namespace ElectionStatistics.Tests.Core.Preset
             var lineDescription = new LineDescription();
 
             Assert.Throws<ValidationException>(() =>
-                Service().Execute($"{lineDescription.Id}", protocolSet));
+                Service().Execute($"[{lineDescription.Id}]", protocolSet));
         }
 
         [Fact]
@@ -61,7 +61,8 @@ namespace ElectionStatistics.Tests.Core.Preset
 
             modelContext.SaveChanges();
 
-            Service().Execute(string.Join('+', lineDescriptions.Select(lineDes => lineDes.Id)),
+            Service().Execute(
+                string.Join('+', lineDescriptions.Select(lineDes => $"[{lineDes.Id}])")),
                 protocolSet);
         }
 
