@@ -40,6 +40,7 @@ namespace ElectionStatistics.Core.Preset
                             Id = protocol.Id, LineNumbers = lineNumbers.ToList()
                         })
                 .Where(protocol => protocol.LineNumbers.Count > 0).ToList();
+
             return protocols.Select(protocol =>
                 new LineCalculatedValue()
                 {
@@ -49,26 +50,38 @@ namespace ElectionStatistics.Core.Preset
                 }).ToList();
         }
 
-        private double ExecuteSingle(Protocol protocol)
+        private double? ExecuteSingle(Protocol protocol)
         {
             var exprBuilder = new StringBuilder(preset.Expression);
             var lineNumbers = GetMatchedLineNumbers(protocol);
 
             for (int i = 0; i < lineDescriptionIds.Count; ++i)
             {
+                var lineNumber = lineNumbers[i].Value;
+                if (lineNumber == null)
+                {
+                    return null;
+                }
+
                 exprBuilder.Replace($"[{lineDescriptionIds[i].ToString()}]",
-                    lineNumbers[i].Value.ToString());
+                    lineNumber.ToString());
             }
+
             var result = Convert.ToDouble(dataTable.Compute(exprBuilder.ToString(), null));
 
-            // TODO: choose another way to handle NaN and infinity
-            return Double.IsFinite(result) ? result : 0;
+            if (!Double.IsFinite(result))
+            {
+                return null;
+            }
+
+            return result;
         }
 
         private List<LineNumber> GetMatchedLineNumbers(Protocol protocol)
         {
             return lineDescriptionIds.Select(lineDescrId =>
-                protocol.LineNumbers.Where(line => line.LineDescriptionId == lineDescrId)
+                protocol.LineNumbers
+                    .Where(line => line.LineDescriptionId == lineDescrId)
                     .First()).ToList();
         }
     }

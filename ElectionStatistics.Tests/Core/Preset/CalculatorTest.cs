@@ -28,6 +28,9 @@ namespace ElectionStatistics.Tests.Core.Preset
             var protocol = new Protocol() { ProtocolSetId = protocolSet.Id };
             modelContext.Add(protocol);
 
+            var protocol2 = new Protocol() { ProtocolSetId = protocolSet.Id };
+            modelContext.Add(protocol2);
+
             var lineDescriptions = Enumerable.Range(1, 3).Select((n) =>
                 new LineDescription() { ProtocolSetId = protocolSet.Id }).ToList();
             modelContext.AddRange(lineDescriptions);
@@ -45,6 +48,19 @@ namespace ElectionStatistics.Tests.Core.Preset
                 new LineNumber()
                 {
                     LineDescriptionId = lineDescriptions[2].Id, Value = 40, ProtocolId = protocol.Id
+                },
+
+                new LineNumber()
+                {
+                    LineDescriptionId = lineDescriptions[1].Id, Value = 10, ProtocolId = protocol2.Id
+                },
+                new LineNumber()
+                {
+                    LineDescriptionId = lineDescriptions[0].Id, Value = 13, ProtocolId = protocol2.Id
+                },
+                new LineNumber()
+                {
+                    LineDescriptionId = lineDescriptions[2].Id, Value = null, ProtocolId = protocol2.Id
                 }
             };
             modelContext.AddRange(lineNumbers);
@@ -65,11 +81,23 @@ namespace ElectionStatistics.Tests.Core.Preset
             {
                 Value = 1.55, PresetId = preset.Id, ProtocolId = protocol.Id
             };
+
+            var expectedValNull = new LineCalculatedValue()
+            {
+                Value = null, PresetId = preset.Id, ProtocolId = protocol2.Id
+            };
+
             Assert.Collection(result, item =>
             {
                 Assert.Equal(expectedVal.Value, item.Value);
                 Assert.Equal(expectedVal.PresetId, item.PresetId);
                 Assert.Equal(expectedVal.ProtocolId, item.ProtocolId);
+            },
+            item =>
+            {
+                Assert.Equal(expectedValNull.Value, item.Value);
+                Assert.Equal(expectedValNull.PresetId, item.PresetId);
+                Assert.Equal(expectedValNull.ProtocolId, item.ProtocolId);
             });
         }
 
@@ -118,7 +146,7 @@ namespace ElectionStatistics.Tests.Core.Preset
             var service = new Calculator(modelContext, parser, preset);
             var result = service.Execute();
 
-            Assert.Collection(result, item => Assert.Equal(0, item.Value));
+            Assert.Collection(result, item => Assert.Equal(null, item.Value));
         }
 
         [Fact]

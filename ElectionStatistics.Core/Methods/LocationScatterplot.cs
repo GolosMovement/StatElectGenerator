@@ -24,6 +24,7 @@ namespace ElectionStatistics.Core.Methods
                 FROM LineCalculatedValues
                 WHERE
                     LineCalculatedValues.PresetId = @preset
+                    AND LineCalculatedValues.Value IS NOT NULL
                     %protocolFilter%";
 
             var hierarchyQuery =
@@ -113,7 +114,7 @@ namespace ElectionStatistics.Core.Methods
                 .Select((arg, index) => new Grouping
                 {
                     ProtocolName = arg.ProtocolName,
-                    Y = arg.Y,
+                    Y = (double) arg.Y,
                     TopParentProtocol = arg.TopParentProtocol,
                     Index = index
                 })

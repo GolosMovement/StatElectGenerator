@@ -81,7 +81,7 @@ namespace ElectionStatistics.Tests.Core.Methods
             {
                 Assert.Equal(new
                 {
-                    Y = calcValues[i].Value,
+                    Y = (double) calcValues[i].Value,
                     ProtocolName = protocols[i].TitleRus,
                     Id = topProtocol.Id
                 }, data[0].Values[i]);
