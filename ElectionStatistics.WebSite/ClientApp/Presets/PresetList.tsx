@@ -37,7 +37,7 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
         };
 
         this.deletePreset = this.deletePreset.bind(this);
-        this.recalcPresets = this.recalcPresets.bind(this);
+        this.recreateCalcValues = this.recreateCalcValues.bind(this);
     }
 
     public render(): React.ReactNode {
@@ -50,7 +50,7 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
                         {this.protocolSetSelect()}
                     </div>
                     <div className='col-sm-6'>
-                        {this.recalcPresetsButton()}
+                        {this.recreateCalcValuesButton()}
                     </div>
                 </div>
                 {this.protocolSetInfo()}
@@ -101,16 +101,16 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
             onChange={(protocolSet) => this.changeProtocolSet(protocolSet)} />;
     }
 
-    private recalcPresetsButton(): React.ReactNode {
+    private recreateCalcValuesButton(): React.ReactNode {
         if (this.state.isRecalcLoading) {
             return <Spin size='large' />;
         } else if (this.state.protocolSetIndex != null) {
             const protocolSet = this.state.protocolSets[this.state.protocolSetIndex];
             return (
-                <button type='button' value={protocolSet.id} onClick={this.recalcPresets}
+                <button type='button' value={protocolSet.id} onClick={this.recreateCalcValues}
                     className='btn btn-xs btn-default'
                     disabled={!protocolSet.shouldRecalculatePresets}>
-                    Рассчитать
+                    Пересоздать расчетную таблицу
                 </button>
             );
         }
@@ -244,13 +244,13 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
             .then((result) => this.setState({ ...this.state, presets: result }));
     }
 
-    private recalcPresets(e: React.MouseEvent<HTMLButtonElement>): void {
+    private recreateCalcValues(e: React.MouseEvent<HTMLButtonElement>): void {
         if (confirm('Вы уверены?')) {
             const protocolSetId = parseInt(e.currentTarget.value, 10);
 
             this.setState({ ...this.state, isRecalcLoading: true });
 
-            PresetsController.Instance.recalcPresets(protocolSetId)
+            PresetsController.Instance.recreateCalcValues(protocolSetId)
                 .then((result) => {
                     if (result.status == 'ok') {
                         const protocolSets = this.state.protocolSets;
@@ -260,10 +260,13 @@ export class PresetList extends React.Component<IPresetListProps, IPresetListSta
                             }
                         });
                         this.setState({ ...this.state, isRecalcLoading: false, protocolSets });
-                        alert('Предрасчет завершен!');
+                        alert('Расчетная таблица создана');
+                    } else if (result.status === 'fail_timeout') {
+                        this.setState({ ...this.state, isRecalcLoading: false });
+                        alert('Ошибка: запрос создания таблицы прерван по таймауту');
                     } else {
                         this.setState({ ...this.state, isRecalcLoading: false });
-                        alert('Не удалось произвести предрасчет');
+                        alert('Не удалось создать расчетную таблицу');
                     }
                 })
                 .catch(() => {

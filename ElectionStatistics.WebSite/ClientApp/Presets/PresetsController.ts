@@ -30,8 +30,8 @@ export class PresetsController {
         return fetch(`/api/presets/${id}`, { method: 'DELETE' }).then((response) => response.json());
     }
 
-    public recalcPresets(protocolSetId: number): Promise<IApiResponse> {
-        return fetch(`/api/presets/recalc/protocolSet/${protocolSetId}`, { method: 'POST' })
+    public recreateCalcValues(protocolSetId: number): Promise<IApiResponse> {
+        return fetch(`/api/presets/recreate/protocolSet/${protocolSetId}`, { method: 'POST' })
             .then((response) => response.json());
     }
 }

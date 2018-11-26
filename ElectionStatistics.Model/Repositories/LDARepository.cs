@@ -10,10 +10,14 @@ namespace ElectionStatistics.Model
         public List<int> Numbers { get; set; }
     }
 
+    // TODO: tests, DRY
     public class LDARepository : RawSQLRepository
     {
-        public LDANumbers CountNumbers(SqlConnection connection,
-            int protocolSetId,
+        public LDARepository(SqlConnection connection) : base(connection)
+        {
+        }
+
+        public LDANumbers CountNumbers(int protocolSetId,
             int [] lineDescriptionsIds,
             int? protocolId,
             int? minValue)
@@ -111,9 +115,9 @@ namespace ElectionStatistics.Model
 
             connection.Open();
 
-            using (var reader = command.ExecuteReader())
+            try
             {
-                try
+                using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
@@ -129,10 +133,10 @@ namespace ElectionStatistics.Model
                         return result;
                     }
                 }
-                finally
-                {
-                    reader.Close();
-                }
+            }
+            finally
+            {
+                connection.Close();
             }
 
             return null;

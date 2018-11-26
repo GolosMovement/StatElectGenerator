@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -118,8 +119,8 @@ namespace ElectionStatistics.WebSite
             return new ImportController.ApiResponse() { status = "ok" };
         }
 
-        [HttpPost, Route("api/presets/recalc/protocolSet/{protocolSetId}")]
-        public ImportController.ApiResponse RecalcPresets(int protocolSetId)
+        [HttpPost, Route("api/presets/recreate/protocolSet/{protocolSetId}")]
+        public ImportController.ApiResponse RecreateCalcValues(int protocolSetId)
         {
             if (HttpContext.Session.GetString("admin") == null)
             {
@@ -132,27 +133,27 @@ namespace ElectionStatistics.WebSite
                 return null;
             }
 
-            var presets = modelContext.Set<Preset>()
-                .Where(preset => preset.ProtocolSetId == protocolSetId).AsNoTracking();
-            var lineCalculatedValues = modelContext.Set<LineCalculatedValue>()
-                .Where(lcv => presets.Select(preset => preset.Id).Contains(lcv.PresetId))
-                .AsNoTracking();
+            var cvr = new CalculateValuesRepository(
+                (SqlConnection) modelContext.Database.GetDbConnection());
 
-            var parser = new Core.Preset.Parser();
-
-            using (var transaction = modelContext.Database.BeginTransaction())
+            if (cvr.Exists(protocolSetId))
             {
-                var bulkConfig = new BulkConfig { BulkCopyTimeout = 0 };
+                cvr.RemoveTable(protocolSetId);
+            }
 
-                modelContext.BulkDelete(lineCalculatedValues.ToList(), bulkConfig);
-                presets.ToList().ForEach(preset =>
+            try
+            {
+                cvr.BuildTable(protocolSetId);
+            }
+            catch (System.Data.SqlClient.SqlException e)
+            {
+                if (e.Message.Contains("Timeout expired"))
                 {
-                    var service = new Core.Preset.Calculator(modelContext, parser, preset);
-                    modelContext.BulkInsert(service.Execute(), bulkConfig);
-                });
-                protocolSet.ShouldRecalculatePresets = false;
-                modelContext.BulkUpdate(new List<ProtocolSet>() { protocolSet }, bulkConfig);
-                transaction.Commit();
+                    return new ImportController.ApiResponse()
+                        { status = "fail_timeout" };
+                }
+
+                throw;
             }
 
             return new ImportController.ApiResponse() { status = "ok" };

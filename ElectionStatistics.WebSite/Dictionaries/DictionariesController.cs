@@ -147,15 +147,13 @@ namespace ElectionStatistics.WebSite
         {
             var protocols = modelContext.Set<Protocol>().AsNoTracking()
                 .Where(protocol => protocol.ProtocolSetId == protocolSetId &&
-                    protocol.ParentId != null &&
-                    modelContext.Set<Protocol>().Any(pr => pr.ParentId == protocol.Id)).ToArray()
-                .GroupBy(protocol => protocol.ParentId)
+                    !protocol.IsLeaf).OrderBy(p => p.TitleRus).ToArray()
+                .GroupBy(protocol => protocol.ParentId == null ? 0 : protocol.ParentId)
                 .ToDictionary(grouping => grouping.Key.Value, grouping => grouping.ToArray());
-            var topProtocols = modelContext.Set<Protocol>()
-                .Where(pt => pt.ParentId == null && pt.ProtocolSetId == protocolSetId);
 
-            return topProtocols.OrderBy(protocol => protocol.TitleRus)
-                .Select(protocol => BuildProtocolDto(protocol, protocols));
+            var topProtcols = protocols[protocols[0].First().Id];
+
+            return topProtcols.Select(p => BuildProtocolDto(p, protocols));
         }
 
         private ProtocolDto BuildProtocolDto(Protocol protocol,

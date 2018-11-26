@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 using ElectionStatistics.Core.Preset;
 
@@ -20,6 +21,10 @@ namespace ElectionStatistics.Tests.Core.Preset
             Assert.Equal(new [] { 342, 493, 2243 },
                 parser.Execute("[342]/([493]+[2243])"));
             Assert.Equal(new [] { 10, 11 }, parser.Execute("[10] / [11] * 100"));
+            Assert.Equal(new [] { 3, 10, 1 }, parser.Execute(" a b[3] c ed[10] /[1] [10] "));
+
+            Assert.Equal(new List<int>(), parser.Execute("count(1)"));
+            Assert.Equal(new List<int>(), parser.Execute("sum(Value)"));
         }
     }
 }

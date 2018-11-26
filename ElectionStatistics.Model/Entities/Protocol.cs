@@ -23,6 +23,7 @@ namespace ElectionStatistics.Model
 
         public int? ParentId { get; set; }
         public virtual Protocol Parent { get; set; }
+        public bool IsLeaf { get; set; }
 
         public virtual ICollection<Protocol> Children { get; set; }
 

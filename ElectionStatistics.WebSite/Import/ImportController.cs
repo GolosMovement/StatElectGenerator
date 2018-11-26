@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -126,6 +127,10 @@ namespace ElectionStatistics.WebSite
                                     protocolSetJson);
 
                             service.Execute(serializer, notifier);
+
+                            var cvr = new CalculateValuesRepository(
+                                (SqlConnection) dbc.Database.GetDbConnection());
+                            cvr.BuildTable(protocolSetJson.Id);
                         });
                     }
                     finally

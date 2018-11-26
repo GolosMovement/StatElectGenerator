@@ -43,10 +43,6 @@ namespace ElectionStatistics.Core.Preset
         private void Validate(string expression, int protocolSetId)
         {
             List<int> ids = parser.Execute(expression);
-            if (ids.Count == 0)
-            {
-                throw new ValidationException("expression doesn't contain any id");
-            }
 
             ids.ForEach((id) =>
                 {

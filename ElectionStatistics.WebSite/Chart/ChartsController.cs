@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+
+// DEBUG
+using System.Diagnostics;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -171,41 +175,31 @@ namespace ElectionStatistics.WebSite
         [HttpGet, Route("location-scatterplot"), ResponseCache(CacheProfileName = "Default")]
         public HighchartsOptions GetDataForLocationScatterplot(string parametersString)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var parameters = DeserialzeJson<LocationScatterplotBuildParameters>(parametersString);
 
-            var results = parameters.GetLineCalculatedValues(modelContext).ToArray();
+            var connection = (SqlConnection) modelContext.Database.GetDbConnection();
+            CalculateValuesRepository cvr = new CalculateValuesRepository(connection);
+            LocationScatterplotRepository lsr = new LocationScatterplotRepository(connection, cvr);
 
-            Protocol[] higherProtocols;
-            if (parameters.ProtocolId != null)
-            {
-                var sql = @"WITH query AS
-                    (SELECT *
-                       FROM protocols p1
-                      WHERE p1.parentid = @p0
-                      UNION ALL
-                     SELECT p2.*
-                       FROM protocols p2
-                       JOIN query ON p2.ParentId = query.Id)
-                    SELECT * FROM query
-                     WHERE EXISTS (SELECT 1 FROM protocols WHERE protocols.parentid = query.id)";
-                higherProtocols = modelContext.Set<Protocol>().FromSql(sql, parameters.ProtocolId)
-                    .DefaultIfEmpty(modelContext.Find<Protocol>(parameters.ProtocolId)).ToArray();
-            }
-            else
-            {
-                higherProtocols = modelContext.Set<Protocol>().AsNoTracking()
-                    .Where(p => p.ProtocolSetId == parameters.ProtocolSetId &&
-                        modelContext.Set<Protocol>().Any(pp => pp.Id == p.ParentId)).ToArray();
-            }
-            var data = new LocationScatterplot(modelContext)
-                .GetData(parameters, results, higherProtocols);
+            var preset = modelContext.Find<Preset>(parameters.Y);
+
+            Console.WriteLine(parameters.Y);
+            Console.WriteLine(preset);
+
+            var results = lsr.Query(parameters.ProtocolSetId, parameters.ProtocolId,
+                preset.Expression);
+
+            Console.WriteLine($"results = {results.Protocols.Count}");
 
             var highchartsOptions = new HighchartsOptions
             {
                 XAxis = new AxisOptions
                 {
                     Min = 0,
-                    Max = results.Length,
+                    Max = results.Protocols.Count,
                     Labels = new AxisLabels
                     {
                         Enabled = false
@@ -214,45 +208,43 @@ namespace ElectionStatistics.WebSite
                 YAxis = new AxisOptions
                 {
                     Min = 0,
-                    Max = 100,
+                    Max = results.MaxY,
                     Title = new TitleOptions
                     {
-                        Text = modelContext.Find<Preset>(parameters.Y).TitleRus
+                        Text = preset.TitleRus
                     }
                 }
             };
 
-            var series = data
-                .Select(grouping => new FullScatterplotChartSeries
+            var byParents = results.Protocols.GroupBy(p => p.ParentId);
+            Console.WriteLine($"GROUPS:{byParents.Count()}");
+
+            var series = new [] { new FullScatterplotChartSeries
+            {
+                Name = "",
+                Tooltip = new SeriesTooltipOptions
                 {
-                    Name = grouping.Key.TitleRus,
-                    Tooltip = new SeriesTooltipOptions
-                    {
-                        PointFormat = "{point.name}<br />{point.y:.1f}%"
-                    },
-                    Data = grouping
-                        .Select(
-                            arg => new Point
-                            {
-                                Name = arg.ProtocolName,
-                                X = arg.Index,
-                                Y = Convert.ToDecimal(arg.Y) * 100
-                            })
-                        .ToArray()
-                });
+                    PointFormat = "{point.name}<br />{point.y:.1f}%"
+                },
 
-            if (results.Length >= 10000)
-            {
-                highchartsOptions.Legend = new LegendOptions { Enabled = false };
+                Data = results.Protocols
+                    .OrderBy(p => p.CommissionNumber)
+                    .ThenBy(p => p.TitleRus)
+                    .Select((p, index) => new Point
+                        {
+                            Name = p.TitleRus,
+                            X = index,
+                            Y = p.Y
+                        })
+                    .ToArray()
+            }};
 
-                highchartsOptions.Series = series
-                    .Select(s => s.ConvertToFastSeries("{point.y:.1f}%"))
-                    .ToArray();
-            }
-            else
-            {
-                highchartsOptions.Series = series.ToArray();
-            }
+            highchartsOptions.Series = series;
+            highchartsOptions.Legend = new LegendOptions { Enabled = false };
+
+            sw.Stop();
+
+            Console.WriteLine($"Time elapsed: {sw.Elapsed}");
 
             return highchartsOptions;
         }
@@ -262,9 +254,8 @@ namespace ElectionStatistics.WebSite
         {
             var parameters = DeserialzeJson<LastDigitAnalyzerBuildParameters>(parametersString);
 
-            var ldaRepo = new LDARepository();
+            var ldaRepo = new LDARepository((SqlConnection) modelContext.Database.GetDbConnection());
             var ldaNumbers = ldaRepo.CountNumbers(
-                (SqlConnection) modelContext.Database.GetDbConnection(),
                 parameters.ProtocolSetId,
                 parameters.LineDescriptionIds,
                 parameters.ProtocolId,
