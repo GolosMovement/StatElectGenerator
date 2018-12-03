@@ -187,7 +187,6 @@ namespace ElectionStatistics.Core.Import
                         CreateLineDescriptions(protocolSet, allMappings);
                         var hierarchy = WrapHierarchy(allMappings);
                         var mappings = MappingsWithoutHierarchy(allMappings);
-                        var rootProtocol = CreateRootProtocol(protocolSet);
 
                         int emptyLinesSeq = 0;
                         while (reader.Read())
@@ -207,9 +206,8 @@ namespace ElectionStatistics.Core.Import
                                 continue;
                             }
 
-                            var protocol = UpdateHierarchy(line, rootProtocol,
-                                protocolSet, createdProtocols, hierarchy,
-                                reader);
+                            var protocol = UpdateHierarchy(line, protocolSet,
+                                createdProtocols, hierarchy, reader);
 
                             if (protocol == null)
                             {
@@ -329,14 +327,13 @@ namespace ElectionStatistics.Core.Import
 
         private Protocol UpdateHierarchy(
             int line,
-            Protocol rootProtocol,
             ProtocolSet protocolSet,
             Dictionary<string, Protocol> createdProtocols,
             List<HirarchyEnvelope> hierarchy,
             IExcelDataReader reader)
         {
-            var parent = rootProtocol;
-            bool firstItemCreated = false;
+            Protocol parent = null;
+            var rootCreated = false;
 
             for (int i = 0; i < hierarchy.Count; i++)
             {
@@ -348,10 +345,10 @@ namespace ElectionStatistics.Core.Import
 
                 var protocolRusTitle = reader.GetValue(columnRus)?.ToString();
 
-                if (!firstItemCreated && String.IsNullOrEmpty(protocolRusTitle))
+                if (!rootCreated && String.IsNullOrEmpty(protocolRusTitle))
                 {
                     Error(line, columnRus, "Line has been skipped. " +
-                        "It has no hierarchy");
+                        "It has no root hierarchy");
                     return null;
                 }
                 else
@@ -401,9 +398,9 @@ namespace ElectionStatistics.Core.Import
                     {
                         parent = createdProtocols[key];
 
-                        if (!firstItemCreated)
+                        if (!rootCreated)
                         {
-                            firstItemCreated = true;
+                            rootCreated = true;
                         }
 
                         continue;
@@ -434,9 +431,9 @@ namespace ElectionStatistics.Core.Import
                 serializer.CreateProtocol(protocol);
                 createdProtocols[key] = protocol;
 
-                if (!firstItemCreated)
+                if (!rootCreated)
                 {
-                    firstItemCreated = true;
+                    rootCreated = true;
                 }
 
                 parent = protocol;
@@ -450,21 +447,6 @@ namespace ElectionStatistics.Core.Import
             parent.IsLeaf = true;
 
             return parent;
-        }
-
-        private Protocol CreateRootProtocol(ProtocolSet protocolSet)
-        {
-            var rootProtocol = new Protocol()
-            {
-                TitleRus = protocolSet.TitleRus,
-                TitleEng = protocolSet.TitleEng,
-                ProtocolSetId = protocolSet.Id,
-                ParentId = null
-            };
-
-            serializer.CreateProtocol(rootProtocol);
-
-            return rootProtocol;
         }
 
         private string ReadHierarchyTitle(MappingEnvelope mappingEnv,

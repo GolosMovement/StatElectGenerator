@@ -1,9 +1,9 @@
 [
   "24:28 (AB): Cell value should be a number. Current type is \"System.String\"",
-  "25:3 (C): Line has been skipped. It has no hierarchy",
+  "25:3 (C): Line has been skipped. It has no root hierarchy",
   "29:9 (I): Cell value should be a number. Current type is \"System.String\"",
-  "32:3 (C): Line has been skipped. It has no hierarchy",
+  "32:3 (C): Line has been skipped. It has no root hierarchy",
   "33:6 (F): Protocol commission number should be a number",
-  "34:3 (C): Line has been skipped. It has no hierarchy",
-  "35:3 (C): Line has been skipped. It has no hierarchy"
+  "34:3 (C): Line has been skipped. It has no root hierarchy",
+  "35:3 (C): Line has been skipped. It has no root hierarchy"
 ]
