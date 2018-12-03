@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { ChartPageRouteProps } from '../Chart/OldChartPage';
 import { QueryString } from '../Common';
 
+// FIXME: abandoned class
 export class NavigationMenuComponent extends React.Component {
     public render() {
         const routeProps = QueryString.parse(window.location.search) as ChartPageRouteProps;
